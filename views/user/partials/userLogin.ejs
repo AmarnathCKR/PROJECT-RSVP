@@ -1,0 +1,52 @@
+<%- include('../layouts/header') %>
+
+    <div class="row g-0 my-3">
+
+
+        <div class="col-lg-12 d-flex justify-content-center g-0 my-3">
+            <img src="/public/img/Group (1).png" alt="" />
+        </div>
+        <div class="col-lg-12 d-flex justify-content-center text-danger g-0 my-3">
+            <h5>
+                <%= locals.error %>
+            </h5>
+        </div>
+        <div class="col-lg-12 d-flex justify-content-center g-0">
+
+            <form action="" method="post" class="justify-content-center">
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                    <input type="email" name="email" class="form-control" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" />
+                    <div id="emailHelp" class="form-text">
+                        We'll never share your email with anyone else.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" />
+                </div>
+                <div class="mb-3 ">
+                    <label class="form-check-label" for="exampleCheck1">Forgot Password</label>
+                </div>
+                <div class="mb-3 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-dark m-1">Login</button><br />
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-12 d-flex justify-content-center g-0">
+            <p>Or</p>
+        </div>
+
+        <div class="col-lg-12 d-flex justify-content-center g-0">
+            <p>Don't have an account?</p>
+        </div>
+        <div class="col-lg-12 d-flex justify-content-center g-0">
+            <a href="/signUp"><button type="button" class="btn btn-dark m-2">Sign Up Now</button></a>
+        </div>
+
+
+    </div>
+
+    <%- include('../layouts/footer') %>
