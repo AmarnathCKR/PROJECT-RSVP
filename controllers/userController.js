@@ -249,7 +249,7 @@ const sendEmail = async (req, res) => {
 };
 
 const verifyEmailPage = (req, res) => {
-  if (req.session.emailOtp) {
+  if (req.session.emailOtp||req.session.resendEmailOtp) {
     res.render("user/partials/verifyEmailOTP");
   }
 };
