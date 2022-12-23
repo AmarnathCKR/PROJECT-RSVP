@@ -1,29 +1,22 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const productSchema = new mongoose.Schema({
   name: {
-    type: String
+    type: String,
   },
-  category: {
-    type: String
-  },
-  image: {
-    type: String
-  },
-  inStock: {
-    type: Number
-  },
-  status: {
-    type: Boolean
-  },
-  description: {
-    type: String
-  }
+  model :String,
+
+  image: String,
+  category : String,
+  price : String,
+  description : String,
+  color : String,
+  stock : Number,
+  status : Boolean
 
 });
 
-
-const Product = mongoose.model('Product', productSchema);
+const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product;

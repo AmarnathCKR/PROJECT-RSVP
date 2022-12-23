@@ -1,23 +1,39 @@
 <%- include('../layouts/header') %>
-    
-        <div class="row g-0 my-3">
-            <div class="col-lg-12 d-flex justify-content-center g-0 my-3">
-                <h3><%= locals.error %></h3>
-            </div>
 
-            <div class="col-lg-12 d-flex justify-content-center g-0">
-                <form action="/verifyOTP" method="post" class="justify-content-center">
-                    <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">OTP</label>
-                        <input class="form-control" id="otp" name="otp" />
-                    </div>
+    <div class="row g-0 my-3">
 
-                    <div class="mb-3 d-flex justify-content-center">
-                        <button type="submit" class="btn btn-dark m-1">VerifyOTP</button><br />
-                    </div>
-                </form>
+        <div class="col-lg-12 d-flex justify-content-center g-0 my-3">
+            <h6 class="text-danger">
+                <%= locals.error%>
+            </h6>
+        </div>
+
+        <div class="col-lg-12 d-flex justify-content-center g-0">
+            <form action="/verifyOTP" method="post" class="justify-content-center">
+                <div class="col-lg-12 d-flex justify-content-center g-0 my-3">
+                    <h6>OTP expires in 3 mins</h6>
+
+                </div>
+                <div class="mb-3">
+
+
+                    <label for="exampleInputPassword1" class="form-label">OTP</label>
+                    <input class="form-control" id="otp" name="otp" />
+
+                </div>
+
+                <div class="mb-3 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-dark m-1">VerifyOTP</button><br />
+                </div>
+            </form>
+
+        </div>
+        <div class="col-lg-12 d-flex justify-content-center g-0">
+            <div class="mb-3 d-flex justify-content-center">
+                <button id="resend-button border-0">Resend OTP</button>
             </div>
         </div>
-    
+    </div>
+
 
     <%- include('../layouts/footer') %>
