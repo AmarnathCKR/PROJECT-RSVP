@@ -171,6 +171,32 @@
     }
  </script>
 
+<script>
+  let timeRemaining = localStorage.getItem("timeRemaining") || 30; // retrieve the time remaining from local storage or set it to 60 seconds
+  document.getElementById("resend-button").disabled = true;
+  const interval = setInterval(() => {
+      
+      timeRemaining--; // decrease the time remaining by 1 second
+      localStorage.setItem("timeRemaining", timeRemaining); // update the time remaining in local storage
+      document.getElementById("resend-button").innerHTML = `Resend (${timeRemaining} seconds)`;
+      if (timeRemaining <= 0) {
+          clearInterval(interval); // stop the timer when it reaches 0
+          localStorage.removeItem("timeRemaining"); // remove the time remaining from local storage
+          document.getElementById("resend-button").innerHTML = "Resend";
+          document.getElementById("resend-button").disabled = false; // enable the button again
+      }
+  }, 1000); // run the interval every 1000 milliseconds (1 second)
+
+</script>
+
+<script>
+  document.getElementById("resend-button").addEventListener("click", () => {
+      localStorage.setItem("timeRemaining", 30); // reset the timer and store the new time remaining in local storage
+       // disable the button
+       window.location='http://127.0.0.1:3000/resend';
+  });
+
+</script>
 
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
