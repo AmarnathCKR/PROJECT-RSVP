@@ -310,29 +310,34 @@ const categorySubmit = (req, res) => {
   }
 };
 
-const adminProduct = (req, res) => {
+const adminProduct =async (req, res) => {
   if (req.session.adminAuth) {
     let search = "";
     if (req.query.search) {
       search = req.query.search;
     }
-
+    const CategoryValue =await Category.find({})
+    
+    
     const productDetails = Product.find(
       {
         $or: [
           { name: { $regex: "^" + search + ".*", $options: "i" } },
-          { category: { $regex: "^" + search + ".*", $options: "i" } },
+          
           { model: { $regex: "^" + search + ".*", $options: "i" } },
           { color: { $regex: "^" + search + ".*", $options: "i" } },
         ],
       },
       (err, Product) => {
+        
+        
         res.render("admin/layouts/adminProduct", {
           details: Product,
+          value : CategoryValue,
           stat: "On sale",
           unStat: "Not on sale",
-          blocking: "Block",
-          unBlock: "Unblock",
+          blocking: "Unlist",
+          unBlock: "List",
           blockRef: "block-product",
           unblockRef: "unBlock-product",
         });
@@ -343,21 +348,23 @@ const adminProduct = (req, res) => {
   }
 };
 
-const addProduct = (req, res) => {
+const addProduct = async(req, res) => {
   if (req.session.adminAuth) {
+    const categoryData =await Category.find({});
+    res.render("admin/layouts/addProduct",{categories : categoryData});
     
-    res.render("admin/layouts/addProduct");
   } else {
     res.redirect("/admin/");
   }
 };
 
-const submitProduct = (req, res) => {
+const submitProduct =async (req, res) => {
   try {
+    const categoryId = await Category.findOne({name : req.body.category})
     let newProduct = new Product({
       name: req.body.name,
       model: req.body.model,
-      category: req.body.category,
+      category: categoryId._id,
       description: req.body.description,
       status: true,
       stock: req.body.stock,
@@ -375,17 +382,21 @@ const submitProduct = (req, res) => {
 const editProduct = async (req, res) => {
   if (req.session.adminAuth) {
     try {
-      const categoryDetails = Category.findOne({});
+      const categoryDetails = await Category.find({});
+      
       const ProductDetails = Product.findById({ _id: req.query.id }).then(
         (result) => {
+          
+      
           res.render("admin/layouts/editProduct", {
             details: result,
-            categoryData : categoryDetails
+            
+            categories : categoryDetails
           });
         }
       );
     } catch (error) {
-      console.log("Edit user error: " + error.message);
+      console.log("Edit Product error: " + error.message);
     }
   } else {
     res.redirect("/admin/");
@@ -394,13 +405,14 @@ const editProduct = async (req, res) => {
 
 const submitEditProduct = async (req, res) => {
   if (req.session.adminAuth) {
+    const categoryId = await Category.findOne({name : req.body.category})
     const updatedProduct = await Product.updateOne(
       { _id: req.query.id },
       {
         $set: {
           name: req.body.name,
           model: req.body.model,
-          category: req.body.category,
+          category: categoryId._id,
           description: req.body.description,
           status: true,
           stock: req.body.stock,

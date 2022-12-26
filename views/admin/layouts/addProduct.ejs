@@ -60,7 +60,7 @@
 
           <!-- Email input -->
           <div class="form-outline mb-4">
-            <label for="file-upload" class="form-label" >Images to upload</label>
+            <label for="file-upload" class="form-label">Images to upload</label>
             <input class="form-control" type="file" name="image" accept="image/*">
 
           </div>
@@ -75,7 +75,18 @@
           <div class="form-outline mb-4">
 
             <label class="form-label" for="category">Category</label>
-            <input type="text" id="name" name="category" class="form-control" required />
+
+
+            <select id="inputState" class="form-control" name="category">
+              <option selected>Choose category</option>
+              <%categories.forEach((data)=>{%>
+                <option>
+                  <%=data.name%>
+                </option>
+                <%})%>
+            </select>
+
+
             <p id="nameError" class="text-danger mt-3"></p>
           </div>
 

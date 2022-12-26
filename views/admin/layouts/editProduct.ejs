@@ -68,11 +68,12 @@
 
                     <div class="form-outline mb-4">
                         <label class="form-label" for="Model">Category</label>
-                        <select class="form-select" aria-label="Default select example">
-                            <% categoryData.forEach(function(contents) { %>
-                            
-                            <option value="3"><%= contents.name %></option>
-                            <% }); %> 
+                        <select class="form-select" name="category" aria-label="Default select example">
+                            <%categories.forEach((data)=>{%>
+                                <option>
+                                  <%=data.name%>
+                                </option>
+                                <%})%>
                         </select>
                         <p id="nameError" class="text-danger mt-3"></p>
                     </div>
