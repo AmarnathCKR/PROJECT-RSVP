@@ -1,47 +1,77 @@
 <%- include('../layouts/header') %>
 
-<br>
-<br>
-<div class="container">
-<div class="row row-cols-1 row-cols-md-3 g-4">
-    <div class="col">
-      <div class="card h-100">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+  <div class="container">
+    <% if(details !=null) { %>
+      <div id="demo" class="carousel slide" data-ride="carousel">
+        <ul class="carousel-indicators">
+          <li data-target="#demo" data-slide-to="0" class="active"></li>
+          <% for(i=1;i<=details.length ; i++){ %>
+
+            <li data-target="#demo" data-slide-to="<%=i%>"></li>
+
+            <% } %>
+        </ul>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="d-flex justify-content-center" style="width: 100%;">
+              <img class="mx-4" src="/public/databaseimg/1671530546365-Golden Eyes.png" alt="slide one" width="50%"
+                height="50%">
+            </div>
+            <div class="carousel-caption">
+              <h3 class="text-white">Milkman</h3>
+              <a class="btn btn-dark " href="/product-page/id">Buy Now</a>
+            </div>
+          </div>
+
+          <% details.forEach(function(item){ %>
+            <div class="carousel-item " style="align-items: center;">
+              <div class="d-flex justify-content-center" style="width: 100%;">
+                <img class="mx-4" src="/public/databaseimg/<%=item.image%>" alt="" width="50%" height="50%">
+              </div>
+              <div class="carousel-caption">
+                <h3>
+                  <%=item.name%>
+                </h3>
+                <a class="btn btn-dark " href="/product-page/?id=<%= item._id%>">Buy Now</a>
+              </div>
+            </div>
+            <% }) %>
+
         </div>
-        <div class="card-footer">
-          <small class="text-muted">Last updated 3 mins ago</small>
-        </div>
+        <a class="carousel-control-prev" href="#demo" data-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#demo" data-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </a>
       </div>
-    </div>
-    <div class="col">
-      <div class="card h-100">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-        </div>
-        <div class="card-footer">
-          <small class="text-muted">Last updated 3 mins ago</small>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card h-100">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-        </div>
-        <div class="card-footer">
-          <small class="text-muted">Last updated 3 mins ago</small>
-        </div>
-      </div>
+      <% } %>
+
+
+
+  </div>
+
+  <div class="container py-4">
+    <% if(categories !=null) { %>
+    
+    <div class="row">
+      <% categories.forEach(function(data){ %>
+      
+          <div class="col-6 d-flex justify-content-center p-4">
+
+            <div class="card" style="width: 100%;">
+              <img src="/public/databaseimg/<%= data.image %>" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title"><%=data.name%></h5>
+                
+                <a href="/shop/?id=<%= data._id%>" class="btn btn-dark">Browse</a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+         
     </div>
   </div>
-</div>
 
-
-<%- include('../layouts/footer') %>
+  <%- include('../layouts/footer') %>

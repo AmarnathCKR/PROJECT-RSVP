@@ -1,0 +1,39 @@
+<%- include('../layouts/header') %>
+    <div class="container">
+        <div class="row my-4">
+            <div class="col-6 ">
+                <a style="text-decoration: underline;">Shop Page</a>
+            </div>
+            <div class="col-6 d-flex justify-content-end">
+                <a>Filter</a>
+                <a >Sort</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="container">
+        <% if(product.status !=false) { %>
+    
+            <div class="row">
+              <% product.forEach(function(data){ %>
+              
+                  <div class="col-6 d-flex justify-content-center p-4">
+        
+                    <div class="card" style="width: 100%;">
+                      <img src="/public/databaseimg/<%= data.image %>" class="card-img-top" alt="...">
+                      <div class="card-body">
+                        <h5 class="card-title"><%=data.name%></h5>
+                        
+                        <a href="/add-cart/?id=<%= data._id%>" class="btn btn-dark">Add to cart</a>
+                      </div>
+                    </div>
+                  </div>
+                <% }) %>
+              <% } %>
+                 
+            </div>
+    </div>
+
+    <%- include('../layouts/footer') %>

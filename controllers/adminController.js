@@ -3,7 +3,7 @@ const Category = require("../models/categoryModel");
 const Product = require("../models/productModel");
 const Coupon = require("../models/couponModel");
 const Order = require("../models/orderModel");
-
+const mongoose = require('mongoose')
 
 const adminSignin = (req, res) => {
   if (req.session.adminAuth) {
@@ -84,92 +84,7 @@ const adminCustomer = (req, res) => {
   }
 };
 
-// Add user page
-// const addUserPage = (req, res) => {
-//   if (req.session.adminAuth) {
-//     res.render("admin/layouts/adminCreate");
-//   } else {
-//     res.redirect("/admin/");
-//   }
-// };
 
-// // Admin create user
-// const addUser = async (req, res) => {
-//   try {
-//     var userDetails = new User({
-//       fname: req.body.fname,
-//       email: req.body.email,
-//       mobile: req.body.mobile,
-//       password: req.body.password,
-//       status : true
-//     });
-//     const email = req.body.email;
-//     const user = await User.findOne({ email: email });
-//     if (email === user.email) {
-//       res.render("admin/layouts/adminCreate", {
-//         error: "User already existing. Please Log in",
-//       });
-//     }
-//   } catch {
-//     const userData = userDetails.save();
-//     res.redirect("/admin/dashboard");
-//   }
-// };
-
-// Edit user
-// const editUser = async (req, res) => {
-//   if (req.session.adminAuth) {
-//     try {
-//       const userID = req.query.id;
-//       const userDetails = User.findById({ _id: req.query.id }).then(
-//         (result) => {
-//           res.render("admin/layouts/adminEdit", {
-//             details: result,
-//           });
-//         }
-//       );
-//     } catch (error) {
-//       console.log("Edit user error: " + error.message);
-//     }
-//   } else {
-//     res.redirect("/admin/");
-//   }
-// };
-
-// // After editing by admin
-// const adminEdited = async (req, res) => {
-//   try {
-//     const updatedUser = await User.updateOne(
-//       { email: req.body.email },
-//       {
-//         $set: {
-//           fname: req.body.fname,
-//           email: req.body.email,
-//           mobile : req.body.mobile,
-//           password: req.body.password,
-//         },
-//       }
-//     );
-//     console.log();
-//     res.redirect("/admin/dashboard");
-//   } catch (error) {
-//     console.log("User edit error: " + error.message);
-//   }
-// };
-
-// // Delete user
-// const deleteUser = async (req, res) => {
-//   if (req.session.adminAuth) {
-//     try {
-//       const userData = await User.findByIdAndDelete({ _id: req.query.id });
-//       res.redirect("/admin/dashboard");
-//     } catch (error) {
-//       console.log("User deleting error: " + error.message);
-//     }
-//   } else {
-//     res.redirect("/admin/");
-//   }
-// };
 
 const blockUser = async (req, res) => {
   if (req.session.adminAuth) {
@@ -223,10 +138,10 @@ const adminCategory = (req, res) => {
           details: Category,
           stat: "On sale",
           unStat: "Not on sale",
-          blocking: "Block",
-          unBlock: "Unblock",
-          blockRef: "block-product",
-          unblockRef: "unBlock-product",
+          blocking: "Unlist",
+          unBlock: "List",
+          blockRef: "block-category",
+          unblockRef: "unBlock-category",
         });
       }
     ).sort({ datefield: -1 });
@@ -277,6 +192,35 @@ const submitEditCategory = async (req, res) => {
         $set: {
           name: req.body.name,
           image: req.file.filename,
+          status : true
+        },
+      }
+    );
+    res.redirect("/admin/category");
+  }
+};
+
+const blockCategory= async (req, res) => {
+  if (req.session.adminAuth) {
+    const updatedCategory = await Category.updateOne(
+      { _id: req.query.id },
+      {
+        $set: {
+          status: false,
+        },
+      }
+    );
+    res.redirect("/admin/category");
+  }
+};
+
+const unblockCategory= async (req, res) => {
+  if (req.session.adminAuth) {
+    const updatedCategory = await Category.updateOne(
+      { _id: req.query.id },
+      {
+        $set: {
+          status: true,
         },
       }
     );
@@ -312,41 +256,23 @@ const categorySubmit = (req, res) => {
 
 const adminProduct =async (req, res) => {
   if (req.session.adminAuth) {
-    let search = "";
-    if (req.query.search) {
-      search = req.query.search;
-    }
-    const CategoryValue =await Category.find({})
+    
+    const productDetails =await Product.find({}).populate('category')
     
     
-    const productDetails = Product.find(
-      {
-        $or: [
-          { name: { $regex: "^" + search + ".*", $options: "i" } },
-          
-          { model: { $regex: "^" + search + ".*", $options: "i" } },
-          { color: { $regex: "^" + search + ".*", $options: "i" } },
-        ],
-      },
-      (err, Product) => {
-        
-        
         res.render("admin/layouts/adminProduct", {
-          details: Product,
-          value : CategoryValue,
+          details: productDetails,
+        
           stat: "On sale",
           unStat: "Not on sale",
           blocking: "Unlist",
           unBlock: "List",
           blockRef: "block-product",
           unblockRef: "unBlock-product",
-        });
-      }
-    ).sort({ datefield: -1 });
-  } else {
-    res.redirect("/admin/");
-  }
-};
+        })
+}else {
+  res.redirect('/admin')
+}};
 
 const addProduct = async(req, res) => {
   if (req.session.adminAuth) {
@@ -360,11 +286,11 @@ const addProduct = async(req, res) => {
 
 const submitProduct =async (req, res) => {
   try {
-    const categoryId = await Category.findOne({name : req.body.category})
+    
     let newProduct = new Product({
       name: req.body.name,
       model: req.body.model,
-      category: categoryId._id,
+      category: mongoose.Types.ObjectId(req.body.category),
       description: req.body.description,
       status: true,
       stock: req.body.stock,
@@ -405,14 +331,14 @@ const editProduct = async (req, res) => {
 
 const submitEditProduct = async (req, res) => {
   if (req.session.adminAuth) {
-    const categoryId = await Category.findOne({name : req.body.category})
+ 
     const updatedProduct = await Product.updateOne(
       { _id: req.query.id },
       {
         $set: {
           name: req.body.name,
           model: req.body.model,
-          category: categoryId._id,
+          category: mongoose.Types.ObjectId(req.body.category),
           description: req.body.description,
           status: true,
           stock: req.body.stock,
@@ -471,17 +397,13 @@ const unBlockProduct = async (req, res) => {
 
 const couponPage =async (req, res) => {
   if (req.session.adminAuth) {
-    let search = "";
-    if (req.query.search) {
-      search = req.query.search;
-    }
-
-    const CouponDetails = await Coupon.find(
-      {
-        $or: [{ name: { $regex: "^" + search + ".*", $options: "i" } }],
-      })
+    
+   
+    const couponData = await Coupon.find({}).populate('productId')
+    
       res.render("admin/layouts/adminCoupons", {
-        details: CouponDetails,
+        details: couponData,
+        
         stat: "Active",
         unStat: "Not active",
         blocking: "Block",
@@ -537,23 +459,29 @@ const unBlockCoupon = async (req, res) => {
   }
 };
 
-const addCoupon = (req, res) => {
+const addCoupon = async(req, res) => {
   if (req.session.adminAuth) {
-    
-    res.render("admin/layouts/addCoupon");
+    let products =await Product.find({})
+    res.render("admin/layouts/addCoupon",{details : products});
   } else {
     res.redirect("/admin/");
   }
 };
 
-const submitCoupon = (req, res) => {
+const submitCoupon = async (req, res) => {
   try {
+    console.log(req.body.newProduct)
+    
+    
+    
     let newCoupon = new Coupon({
       name: req.body.name,
-      value : req.body.value,
-      code : req.body.code,
-      status: true
-      
+      productId : mongoose.Types.ObjectId(req.body.newProduct),
+      discount : req.body.code,
+      status: true,
+      originalPrice : req.body.ogPrice,
+      finalPrice : req.body.fPrice,
+      expirationTime : req.body.expDate
     });
     newCoupon.save();
     res.redirect("/admin/coupon");
@@ -581,8 +509,8 @@ const adminOrder =async (req, res) => {
         details: OrderDetails,
         stat: "Order Active",
         unStat: "Cancelled",
-        blocking: "Block",
-        unBlock: "Unblock",
+        blocking: "Cancel",
+        unBlock: "Resume",
         blockRef: "block-order",
         unblockRef: "unBlock-order",
       });
@@ -630,6 +558,8 @@ module.exports = {
   adminCategory,
   deleteCategory,
   editCategory,
+  blockCategory,
+  unblockCategory,
   submitEditCategory,
   addCategory,
   categorySubmit,

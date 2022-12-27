@@ -1,10 +1,14 @@
 const User = require("../models/userModels");
+const Category = require("../models/categoryModel");
+const Product = require("../models/productModel");
 const nodemailer = require("nodemailer");
 const session = require("express-session");
 
-const userHome = (req, res) => {
+const userHome =async (req, res) => {
   if (req.session.auth) {
-    res.render("user/partials/homepage");
+    const categoryData = await Category.find({})
+    const products = await Product.find({})
+    res.render("user/partials/homepage",{details: products, categories: categoryData});
   } else {
     res.redirect("/login");
   }
@@ -349,6 +353,26 @@ const submitPassword =async (req,res) =>{
   }
 }
 
+
+//product page
+
+const productPage = async (req,res)=>{
+  if (req.session.auth) {
+    const categoryData = await Category.find({})
+    const productData = await Product.find({})
+
+    res.render('user/partials/product',{product : productData, categories : categoryData})
+  } else {
+    res.render("user/partials/userLogin", {
+      error: "Enter your email and Password",
+    });
+  }
+}
+
+
+
+
+
 module.exports = {
   userHome,
   userLogin,
@@ -365,5 +389,6 @@ module.exports = {
   resendEmail,
   verifyEmailOTP,
   newPassword,
-  submitPassword
+  submitPassword,
+  productPage
 };

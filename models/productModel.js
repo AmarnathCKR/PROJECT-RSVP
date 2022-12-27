@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const Category = require("./categoryModel")
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -8,7 +9,12 @@ const productSchema = new mongoose.Schema({
   model :String,
 
   image: String,
-  category : String,
+  category :{
+    type : mongoose.Types.ObjectId,
+    ref : Category,
+    required: true,
+  },
+
   price : String,
   description : String,
   color : String,
