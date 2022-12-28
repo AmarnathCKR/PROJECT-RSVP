@@ -1,8 +1,12 @@
 <%- include('../layouts/header') %>
     <div class="container">
         <div class="row my-4">
-            <div class="col-6 ">
-                <a style="text-decoration: underline;">Shop Page</a>
+            <div class="col-6 d-flex flex-column">
+                <a style="text-decoration: underline;font-size: x-large;">Shop Page</a>
+                
+                <a class="py-3 " style="text-decoration: underline; font-size: medium;"><%=locals.category%></a>
+               
+
             </div>
             <div class="col-6 d-flex justify-content-end">
                 <a>Filter</a>
@@ -19,14 +23,15 @@
             <div class="row">
               <% product.forEach(function(data){ %>
               
-                  <div class="col-6 d-flex justify-content-center p-4">
+                  <div class="col-3 d-flex justify-content-center p-4">
         
                     <div class="card" style="width: 100%;">
                       <img src="/public/databaseimg/<%= data.image %>" class="card-img-top" alt="...">
                       <div class="card-body">
                         <h5 class="card-title"><%=data.name%></h5>
                         
-                        <a href="/add-cart/?id=<%= data._id%>" class="btn btn-dark">Add to cart</a>
+                        <a href="/add-cart/?id=<%= data._id%>" class="btn btn-dark my-2">Add to cart</a>
+                        <a href="/add-wish-list/?id=<%= data._id%>"><i class="fa fa-heart" aria-hidden="true">Add to Wishlist</i></a>
                       </div>
                     </div>
                   </div>

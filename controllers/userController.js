@@ -6,9 +6,9 @@ const session = require("express-session");
 
 const userHome =async (req, res) => {
   if (req.session.auth) {
-    const categoryData = await Category.find({})
-    const products = await Product.find({})
-    res.render("user/partials/homepage",{details: products, categories: categoryData});
+    const categoryData = await Category.find({status :true})
+    const products = await Product.find({status : true})
+    res.render("user/partials/homepage",{details: products, categories: categoryData,home : "active"});
   } else {
     res.redirect("/login");
   }
@@ -63,6 +63,7 @@ let otpSentTime;
 let counter = 0;
 
 const bcrypt = require("bcrypt");
+const { find } = require("../models/userModels");
 const checkSignUp = async (req, res) => {
   let user;
 
@@ -358,14 +359,22 @@ const submitPassword =async (req,res) =>{
 
 const productPage = async (req,res)=>{
   if (req.session.auth) {
-    const categoryData = await Category.find({})
-    const productData = await Product.find({})
+    if(req.query.id){
+      const categoryDetails = await Category.findOne({_id : req.query.id})
+      const categoryName = categoryDetails.name
+      console.log(categoryName)
+      const productDetails = await Product.find({category : req.query.id})
+      res.render('user/partials/product',{product : productDetails,  shop : "active",category :  categoryName})
 
-    res.render('user/partials/product',{product : productData, categories : categoryData})
+
+   }else{
+    const categoryData = await Category.find({status : true})
+    const productData = await Product.find({status : true})
+
+    res.render('user/partials/product',{product : productData, categories : categoryData, shop : "active"})
+  }
   } else {
-    res.render("user/partials/userLogin", {
-      error: "Enter your email and Password",
-    });
+    res.redirect('/login')
   }
 }
 

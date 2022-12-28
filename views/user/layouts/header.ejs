@@ -126,20 +126,15 @@
                 <div class="col-xl-8 col-lg-9 d-flex justify-content-center">
                     <nav class="header__menu ">
                         <ul>
-                            <li class="active"><a href="./index.html">Home</a></li>
-                            <li><a href="#">Women’s</a></li>
-                            <li><a href="#">Men’s</a></li>
-                            <li><a href="/shop">Shop</a></li>
-                            <li><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="./product-details.html">Product Details</a></li>
-                                    <li><a href="./shop-cart.html">Shop Cart</a></li>
-                                    <li><a href="./checkout.html">Checkout</a></li>
-                                    <li><a href="./blog-details.html">Blog Details</a></li>
-                                </ul>
+                            <li class="<%=locals.home%>"><a href="/">Home</a></li>
+                            <li class="<%=locals.womens%>" ><a href="#">Women’s</a></li>
+                            <li class="<%=locals.mens%>"><a href="#">Men’s</a></li>
+                            <li class="<%=locals.shop%>"><a href="/shop">Shop</a></li>
+                            <li class="<%=locals.pages%>"><a href="#">Pages</a>
+                               
                             </li>
-                            <li><a href="./blog.html">Blog</a></li>
-                            <li><a href="./contact.html">Contact</a></li>
+                            <li class="<%=locals.blog%>"><a href="./blog.html">Blog</a></li>
+                            <li class="<%=locals.contact%>"><a href="./contact.html">Contact</a></li>
                         </ul>
                     </nav>
                 </div>

@@ -2,7 +2,7 @@
 
   <div class="container">
     <% if(details !=null) { %>
-      <div id="demo" class="carousel slide" data-ride="carousel">
+      <div id="demo" class="carousel slide" data-ride="carousel" data-bs-interval="3000">
         <ul class="carousel-indicators">
           <li data-target="#demo" data-slide-to="0" class="active"></li>
           <% for(i=1;i<=details.length ; i++){ %>
@@ -11,11 +11,10 @@
 
             <% } %>
         </ul>
-        <div class="carousel-inner">
-          <div class="carousel-item active">
+        <div class="carousel-inner" >
+          <div class="carousel-item active" >
             <div class="d-flex justify-content-center" style="width: 100%;">
-              <img class="mx-4" src="/public/databaseimg/1671530546365-Golden Eyes.png" alt="slide one" width="50%"
-                height="50%">
+              <img class="mx-4" src="/public/databaseimg/1671530546365-Golden Eyes.png" alt="slide one"width="45%" height="45%">
             </div>
             <div class="carousel-caption">
               <h3 class="text-white">Milkman</h3>
@@ -26,10 +25,10 @@
           <% details.forEach(function(item){ %>
             <div class="carousel-item " style="align-items: center;">
               <div class="d-flex justify-content-center" style="width: 100%;">
-                <img class="mx-4" src="/public/databaseimg/<%=item.image%>" alt="" width="50%" height="50%">
+                <img class="mx-4" src="/public/databaseimg/<%=item.image%>" alt="" width="45%" height="45%">
               </div>
               <div class="carousel-caption">
-                <h3>
+                <h3 class="">
                   <%=item.name%>
                 </h3>
                 <a class="btn btn-dark " href="/product-page/?id=<%= item._id%>">Buy Now</a>
