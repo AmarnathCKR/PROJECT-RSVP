@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
   },
   model :String,
 
-  image: String,
+  image: Array,
   category :{
     type : mongoose.Types.ObjectId,
     ref : Category,

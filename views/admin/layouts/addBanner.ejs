@@ -1,0 +1,45 @@
+<%- include('../partials/adminHeader') %>
+
+
+    
+    <div class="container mx-auto row">
+    <div class="col-lg-6 mx-auto mb-4 px-2">
+
+      <h3 class="fw-bold py-3">ADD Banner</h3>
+        
+        <form action="" method="post" enctype="multipart/form-data">
+          
+          <div class="form-outline mb-4">
+            <label for="file-upload" class="form-label">Images to upload</label>
+            <input class="form-control" type="file" name="image" accept="image/png, image/gif, image/jpeg, image/svg, image/webp">
+
+          </div>
+          
+
+          <!-- Password input -->
+
+          <!-- Submit button -->
+          <input type="submit" value="Upload" class="btn upload-btn btn-dark btn-lg btn-block mb-4 py-1" />
+        </form>
+
+    </div>
+
+  </div>
+
+
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+
+    <script src="/public/js/scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+    <script src="/public/js/datatables-simple-demo.js"></script>
+</body>
+
+</html>

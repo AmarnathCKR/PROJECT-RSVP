@@ -3,6 +3,7 @@ const Category = require("../models/categoryModel");
 const Product = require("../models/productModel");
 const Coupon = require("../models/couponModel");
 const Order = require("../models/orderModel");
+const Banner = require("../models/bannerModel");
 const mongoose = require('mongoose')
 
 const adminSignin = (req, res) => {
@@ -259,7 +260,6 @@ const adminProduct =async (req, res) => {
     
     const productDetails =await Product.find({}).populate('category')
     
-    
         res.render("admin/layouts/adminProduct", {
           details: productDetails,
         
@@ -286,7 +286,10 @@ const addProduct = async(req, res) => {
 
 const submitProduct =async (req, res) => {
   try {
+    // console.log(req.files)
     
+    const allImages = [req.files[0].filename,req.files[1].filename,req.files[2].filename,req.files[3].filename,req.files[4].filename,req.files[5].filename]
+    // console.log(allImages)
     let newProduct = new Product({
       name: req.body.name,
       model: req.body.model,
@@ -296,7 +299,7 @@ const submitProduct =async (req, res) => {
       stock: req.body.stock,
       color: req.body.color,
       price: req.body.price,
-      image: req.file.filename,
+      image: allImages,
     });
     newProduct.save();
     res.redirect("/admin/products");
@@ -331,7 +334,7 @@ const editProduct = async (req, res) => {
 
 const submitEditProduct = async (req, res) => {
   if (req.session.adminAuth) {
- 
+    const allImages = [req.files[0].filename,req.files[1].filename,req.files[2].filename,req.files[3].filename,req.files[4].filename,req.files[5].filename]
     const updatedProduct = await Product.updateOne(
       { _id: req.query.id },
       {
@@ -344,7 +347,7 @@ const submitEditProduct = async (req, res) => {
           stock: req.body.stock,
           color: req.body.color,
           price: req.body.price,
-          image: req.file.filename,
+          image: allImages,
         },
       }
     );
@@ -547,6 +550,82 @@ const unBlockOrder = async (req, res) => {
   }
 };
 
+
+const bannerPage = async (req, res) => {
+  if (req.session.adminAuth) {
+    
+   
+    const bannerData = await Banner.find({})
+    
+      res.render("admin/layouts/adminBanner", {
+        details: bannerData,
+        
+        stat: "Active",
+        unStat: "Not active",
+        blocking: "UnList",
+        unBlock: "List",
+        blockRef: "block-banner",
+        unblockRef: "unBlock-banner",
+      });
+  } else {
+    res.redirect("/admin/");
+  }
+};
+
+const addBanner = async (req, res) => {
+  if (req.session.adminAuth) {
+    
+    res.render("admin/layouts/addBanner");
+  } else {
+    res.redirect("/admin/");
+  }
+};
+
+const submitBanner =  async (req, res) => {
+  try {
+    
+    let newBanner = new Banner({
+     status : true,
+     image: req.file.filename,
+    });
+    newBanner.save();
+    res.redirect("/admin/banner");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const blockBanner = async (req, res) => {
+  if (req.session.adminAuth) {
+    const updatedBanner = await Banner.updateOne(
+      { _id: req.query.id },
+      {
+        $set: {
+          status: false,
+        },
+      }
+    );
+    res.redirect("/admin/banner");
+  }
+};
+
+const unBlockBanner = async (req, res) => {
+  if (req.session.adminAuth) {
+    const updatedBanner = await Banner.updateOne(
+      { _id: req.query.id },
+      {
+        $set: {
+          status: true,
+        },
+      }
+    );
+    res.redirect("/admin/banner");
+  }
+};
+
+
+
+
 module.exports = {
   adminSignin,
   adminVerification,
@@ -579,5 +658,10 @@ module.exports = {
   submitCoupon,
   adminOrder,
   blockOrder,
-  unBlockOrder
+  unBlockOrder,
+  bannerPage, 
+  addBanner,
+  submitBanner,
+  blockBanner,
+  unBlockBanner
 };

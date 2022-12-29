@@ -37,6 +37,14 @@ app.use("/admin", adminRouter);
 
 app.use("/public", express.static(path.join(__dirname, "public")));
 
+
+app.all('*', (req,res)=>{
+  res.send("Error 404")
+})
+
+
 app.listen(port, () => {
   console.log("Lisening on http://127.0.0.1:3000");
 });
+
+

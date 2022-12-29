@@ -25,7 +25,7 @@
           <% details.forEach(function(item){ %>
             <div class="carousel-item " style="align-items: center;">
               <div class="d-flex justify-content-center" style="width: 100%;">
-                <img class="mx-4" src="/public/databaseimg/<%=item.image%>" alt="" width="45%" height="45%">
+                <img class="mx-4" src="/public/databaseimg/<%=item.image[0]%>" alt="" width="45%" height="45%">
               </div>
               <div class="carousel-caption">
                 <h3 class="">
@@ -50,13 +50,13 @@
 
   </div>
 
-  <div class="container py-4">
+  <div class="container-fluid py-4">
     <% if(categories !=null) { %>
     
     <div class="row">
       <% categories.forEach(function(data){ %>
       
-          <div class="col-6 d-flex justify-content-center p-4">
+          <div class="col-lg-6 d-flex justify-content-center p-4">
 
             <div class="card" style="width: 100%;">
               <img src="/public/databaseimg/<%= data.image %>" class="card-img-top" alt="...">
