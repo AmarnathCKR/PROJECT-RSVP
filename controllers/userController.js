@@ -3,12 +3,13 @@ const Category = require("../models/categoryModel");
 const Product = require("../models/productModel");
 const nodemailer = require("nodemailer");
 const session = require("express-session");
+const Banner = require("../models/bannerModel")
 
 const userHome =async (req, res) => {
   if (req.session.auth) {
     const categoryData = await Category.find({status :true})
-    const products = await Product.find({status : true})
-    res.render("user/partials/homepage",{details: products, categories: categoryData,home : "active"});
+    const banners = await Banner.find({status : true})
+    res.render("user/partials/homepage",{details: banners, categories: categoryData,home : "active"});
   } else {
     res.redirect("/login");
   }

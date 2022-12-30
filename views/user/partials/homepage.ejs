@@ -1,38 +1,30 @@
 <%- include('../layouts/header') %>
 
-  <div class="container">
+  <div class="container-fluid">
     <% if(details !=null) { %>
-      <div id="demo" class="carousel slide" data-ride="carousel" data-bs-interval="3000">
+      <div id="demo" class="carousel slide p-0 m-0" data-ride="carousel" data-bs-interval="3000">
         <ul class="carousel-indicators">
-          <li data-target="#demo" data-slide-to="0" class="active"></li>
+          <li data-target="#demo" hidden data-slide-to="0" class="active"></li>
           <% for(i=1;i<=details.length ; i++){ %>
 
-            <li data-target="#demo" data-slide-to="<%=i%>"></li>
+            <li data-target="#demo" hidden data-slide-to="<%=i%>"></li>
 
             <% } %>
         </ul>
-        <div class="carousel-inner" >
+        <div class="carousel-inner p-0 m-0" >
           <div class="carousel-item active" >
             <div class="d-flex justify-content-center" style="width: 100%;">
-              <img class="mx-4" src="/public/databaseimg/1671530546365-Golden Eyes.png" alt="slide one"width="45%" height="45%">
+              <img class="mx-4" src="/public/databaseimg/1672385986612-handbag-61460132332.jpg" alt="slide one"width="100%" height="40%">
             </div>
-            <div class="carousel-caption">
-              <h3 class="text-white">Milkman</h3>
-              <a class="btn btn-dark " href="/product-page/id">Buy Now</a>
-            </div>
+           
           </div>
 
           <% details.forEach(function(item){ %>
-            <div class="carousel-item " style="align-items: center;">
+            <div class="carousel-item p-0 m-o" style="align-items: center;">
               <div class="d-flex justify-content-center" style="width: 100%;">
-                <img class="mx-4" src="/public/databaseimg/<%=item.image[0]%>" alt="" width="45%" height="45%">
+                <img class="mx-4" src="/public/databaseimg/<%=item.image%>" alt="" width="100%" height="40%">
               </div>
-              <div class="carousel-caption">
-                <h3 class="">
-                  <%=item.name%>
-                </h3>
-                <a class="btn btn-dark " href="/product-page/?id=<%= item._id%>">Buy Now</a>
-              </div>
+              
             </div>
             <% }) %>
 
