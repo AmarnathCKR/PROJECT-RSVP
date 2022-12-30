@@ -1,44 +1,125 @@
 <%- include('../layouts/header') %>
-    <div class="container">
-        <div class="row my-4">
-            <div class="col-6 d-flex flex-column">
-                <a style="text-decoration: underline;font-size: x-large;">Shop Page</a>
-                
-                <a class="py-3 " style="text-decoration: underline; font-size: medium;"><%=locals.category%></a>
-               
+  <div class="container">
+    <div class="row my-4">
+      <div class="col-12 d-flex flex-column">
+        <a style="text-decoration: underline;font-size: x-large;">Shop Page</a>
 
-            </div>
-            <div class="col-6 d-flex justify-content-end">
-                <a>Filter</a>
-                <a >Sort</a>
-            </div>
+        <a class="py-3 " style="text-decoration: underline; font-size: medium;">
+          <%=locals.category%>
+        </a>
+
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+  <div class="container">
+    <% if(product.status !=false) { %>
+
+      <div class="row">
+
+        <!-- Filter sort grid -->
+        <div class="col-md-3">
+          <section class="py-4">
+            <span class="h4">Filter</span>
+          </section>
+          <section>
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                    aria-expanded="true" aria-controls="collapseOne">
+                    Category
+                  </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <!-- choices category -->
+                    <% if(categories !=null) { %>
+                      <% categories.forEach(function(stuff){ %>
+
+                        <span><i class="fas fa-dot-circle"></i></span><a href="/shop/?id=<%= stuff._id %>">
+                          <%= stuff.name %>
+                        </a>
+                        <% }) %>
+                          <% } %>
+
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      Accordion Item #2
+                    </button>
+                  </h2>
+                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <strong>This is the second item's accordion body.</strong> It is hidden by default, until the
+                      collapse plugin adds the appropriate classes that we use to style each element. These classes
+                      control the overall appearance, as well as the showing and hiding via CSS transitions. You can
+                      modify any of this with custom CSS or overriding our default variables. It's also worth noting
+                      that just about any HTML can go within the <code>.accordion-body</code>, though the transition
+                      does limit overflow.
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                      Accordion Item #3
+                    </button>
+                  </h2>
+                  <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <strong>This is the third item's accordion body.</strong> It is hidden by default, until the
+                      collapse plugin adds the appropriate classes that we use to style each element. These classes
+                      control the overall appearance, as well as the showing and hiding via CSS transitions. You can
+                      modify any of this with custom CSS or overriding our default variables. It's also worth noting
+                      that just about any HTML can go within the <code>.accordion-body</code>, though the transition
+                      does limit overflow.
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </section>
+
 
         </div>
 
-    </div>
 
-    <div class="container">
-        <% if(product.status !=false) { %>
-    
-            <div class="row">
-              <% product.forEach(function(data){ %>
-              
-                  <div class="col-lg-3 d-flex justify-content-center p-4">
-        
-                    <div class="card" style="width: 100%;">
-                      <img src="/public/databaseimg/<%= data.image[0] %>" class="card-img-top" alt="...">
-                      <div class="card-body">
-                        <h5 class="card-title"><%=data.name%></h5>
-                        
-                        <a href="/add-cart/?id=<%= data._id%>" class="btn btn-dark my-2">Add to cart</a>
-                        <a href="/add-wish-list/?id=<%= data._id%>"><i class="fa fa-heart" aria-hidden="true">Add to Wishlist</i></a>
-                      </div>
-                    </div>
+        <div class="col-md-9">
+          <div class="row">
+            <% product.forEach(function(data){ %>
+
+              <div class="col-lg-4 d-flex justify-content-center p-4">
+
+                <div class="card" style="width: 100%;">
+                  <img src="/public/databaseimg/<%= data.image[0] %>" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <%=data.name%>
+                    </h5>
+
+                    <a href="/add-cart/?id=<%= data._id%>" class="btn btn-dark my-2">Add to cart</a>
+                    <a href="/add-wish-list/?id=<%= data._id%>"><i class="fa fa-heart" aria-hidden="true">Add to
+                        Wishlist</i></a>
                   </div>
-                <% }) %>
-              <% } %>
-                 
-            </div>
-    </div>
+                </div>
+              </div>
+              <% }) %>
+                <% } %>
 
-    <%- include('../layouts/footer') %>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <%- include('../layouts/footer') %>

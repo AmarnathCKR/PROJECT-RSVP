@@ -363,9 +363,9 @@ const productPage = async (req,res)=>{
     if(req.query.id){
       const categoryDetails = await Category.findOne({_id : req.query.id})
       const categoryName = categoryDetails.name
-      console.log(categoryName)
+      
       const productDetails = await Product.find({category : req.query.id})
-      res.render('user/partials/product',{product : productDetails,  shop : "active",category :  categoryName})
+      res.render('user/partials/product',{product : productDetails,  shop : "active", category :  categoryName })
 
 
    }else{
