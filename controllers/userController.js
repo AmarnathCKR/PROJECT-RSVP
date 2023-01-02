@@ -3,13 +3,17 @@ const Category = require("../models/categoryModel");
 const Product = require("../models/productModel");
 const nodemailer = require("nodemailer");
 const session = require("express-session");
-const Banner = require("../models/bannerModel")
+const Banner = require("../models/bannerModel");
 
-const userHome =async (req, res) => {
+const userHome = async (req, res) => {
   if (req.session.auth) {
-    const categoryData = await Category.find({status :true})
-    const banners = await Banner.find({status : true})
-    res.render("user/partials/homepage",{details: banners, categories: categoryData,home : "active"});
+    const categoryData = await Category.find({ status: true });
+    const banners = await Banner.find({ status: true });
+    res.render("user/partials/homepage", {
+      details: banners,
+      categories: categoryData,
+      home: "active",
+    });
   } else {
     res.redirect("/login");
   }
@@ -255,7 +259,7 @@ const sendEmail = async (req, res) => {
 };
 
 const verifyEmailPage = (req, res) => {
-  if (req.session.emailOtp||req.session.resendEmailOtp) {
+  if (req.session.emailOtp || req.session.resendEmailOtp) {
     res.render("user/partials/verifyEmailOTP");
   }
 };
@@ -300,14 +304,15 @@ const resendEmail = (req, res) => {
       // req.session.password = hashPassword;
     }
   });
-
-  
 };
 
 const verifyEmailOTP = (req, res) => {
   console.log(req.session.emailOtp);
-    console.log(req.session.resendEmailOtp);
-  if (req.session.emailOtp == req.body.otp || req.session.resendEmailOtp == req.body.otp) {
+  console.log(req.session.resendEmailOtp);
+  if (
+    req.session.emailOtp == req.body.otp ||
+    req.session.resendEmailOtp == req.body.otp
+  ) {
     res.redirect("/new-password");
 
     console.log(req.session.emailOtp);
@@ -319,69 +324,126 @@ const verifyEmailOTP = (req, res) => {
 
 const newPassword = (req, res) => {
   if (req.session.emailOtp || req.session.resendEmailOtp) {
-    res.render("user/partials/newPassword")
-}
-}
+    res.render("user/partials/newPassword");
+  }
+};
 
-const submitPassword =async (req,res) =>{
-  if (req.session.emailOtp ||req.session.resendEmailOtp) {
-    if(req.body.password==req.body.conPassword){
+const submitPassword = async (req, res) => {
+  if (req.session.emailOtp || req.session.resendEmailOtp) {
+    if (req.body.password == req.body.conPassword) {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      const passwordData = await User.findOne(
-        { email : req.session.emailAuth },
-      )
-      
-      const match = await bcrypt.compare(req.body.password, passwordData.password);
-        if(match){
-          res.render("user/partials/newPassword",{error : "Cannot use previous password."})
-        }else{
-          
-          const updatePassword = await User.updateOne(
-            { email: req.session.emailAuth },
-            {
-              $set: {
-                password : hashedPassword
-              }
-            }
-          );
+      const passwordData = await User.findOne({ email: req.session.emailAuth });
 
-          res.redirect('/')
-        }
-        
-      
-    }else{
-      res.render("user/partials/newPassword",{error : "Password Does Not Match"})
+      const match = await bcrypt.compare(
+        req.body.password,
+        passwordData.password
+      );
+      if (match) {
+        res.render("user/partials/newPassword", {
+          error: "Cannot use previous password.",
+        });
+      } else {
+        const updatePassword = await User.updateOne(
+          { email: req.session.emailAuth },
+          {
+            $set: {
+              password: hashedPassword,
+            },
+          }
+        );
+
+        res.redirect("/");
+      }
+    } else {
+      res.render("user/partials/newPassword", {
+        error: "Password Does Not Match",
+      });
     }
   }
-}
-
+};
 
 //product page
 
-const productPage = async (req,res)=>{
+const productPage = async (req, res) => {
   if (req.session.auth) {
-    if(req.query.id){
-      const categoryDetails = await Category.findOne({_id : req.query.id})
-      const categoryName = categoryDetails.name
-      
-      const productDetails = await Product.find({category : req.query.id})
-      res.render('user/partials/product',{product : productDetails,  shop : "active", category :  categoryName })
+    if (req.query.id) {
+      const categoryDetails = await Category.findOne({ _id: req.query.id });
+      const categoryName = categoryDetails.name;
+      const categoryData = await Category.find({ status: true });
+      const productDetails = await Product.find({ category: req.query.id });
+      const colorData = await Product.find({ status: true });
 
-
-   }else{
-    const categoryData = await Category.find({status : true})
-    const productData = await Product.find({status : true})
-
-    res.render('user/partials/product',{product : productData, categories : categoryData, shop : "active"})
-  }
+      res.render("user/partials/product", {
+        product: productDetails,
+        shop: "active",
+        colors: colorData,
+        category: categoryName,
+        categories: categoryData,
+      });
+    } else if (req.query.idPro) {
+      const productColor = await Product.findOne({ _id: req.query.idPro });
+      const colorName = productColor.color;
+      const categoryData = await Category.find({ status: true });
+      const productData = await Product.find({ _id: req.query.idPro });
+      const colorData = await Product.find({ status: true });
+      res.render("user/partials/product", {
+        product: productData,
+        categories: categoryData,
+        category: colorName,
+        colors: colorData,
+        shop: "active",
+      });
+    } else if (req.query.idStock == "inStock") {
+      const colorName = "In stock";
+      const categoryData = await Category.find({ status: true });
+      const productData = await Product.find({ stock: { $gt: 0 } });
+      const colorData = await Product.find({ status: true });
+      res.render("user/partials/product", {
+        product: productData,
+        categories: categoryData,
+        category: colorName,
+        colors: colorData,
+        shop: "active",
+      });
+    } else if (req.query.idStock == "outStock") {
+      const colorName = "Out stock";
+      const categoryData = await Category.find({ status: true });
+      const productData = await Product.find({ stock: 0 });
+      const colorData = await Product.find({ status: true });
+      res.render("user/partials/product", {
+        product: productData,
+        categories: categoryData,
+        category: colorName,
+        colors: colorData,
+        shop: "active",
+      });
+    } else {
+      const categoryData = await Category.find({ status: true });
+      const productData = await Product.find({ status: true });
+      const colorData = await Product.find({ status: true });
+      res.render("user/partials/product", {
+        product: productData,
+        categories: categoryData,
+        shop: "active",
+        colors: colorData,
+      });
+    }
   } else {
-    res.redirect('/login')
+    res.redirect("/login");
   }
-}
+};
 
-
-
-
+const productDetails = async (req, res) => {
+  if (req.session.auth) {
+    if (req.query.id) {
+      const productDetails = await Product.findById(req.query.id).populate('category')
+      const productImage = productDetails.image
+      res.render("user/partials/productDetails",{products : productImage});
+    }
+  } else {
+    res.redirect("/login");
+  }
+};
 
 module.exports = {
   userHome,
@@ -400,5 +462,6 @@ module.exports = {
   verifyEmailOTP,
   newPassword,
   submitPassword,
-  productPage
+  productPage,
+  productDetails,
 };

@@ -30,23 +30,32 @@
             <div class="accordion" id="accordionExample">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                    aria-expanded="true" aria-controls="collapseOne">
+                  <button class="accordion-button text-dark" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                     Category
                   </button>
                 </h2>
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                   data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-                    <!-- choices category -->
-                    <% if(categories !=null) { %>
-                      <% categories.forEach(function(stuff){ %>
+                  <div class="accordion-body ">
+                    <div class="row">
 
-                        <span><i class="fas fa-dot-circle"></i></span><a href="/shop/?id=<%= stuff._id %>">
-                          <%= stuff.name %>
-                        </a>
-                        <% }) %>
-                          <% } %>
+                      <!-- choices category -->
+
+                      <% if(categories !=null) { %>
+                        <% categories.forEach(function(stuff){ %>
+                          <div class="col-12">
+                            <a class="text-dark" href="/shop/?id=<%= stuff._id %>">
+                              <span><i class="bi bi-arrow-right"></i></span>
+                              <%= stuff.name %>
+                            </a>
+                          </div>
+                          <% }) %>
+                            <% } %>
+
+                    </div>
+
+
 
                   </div>
                 </div>
@@ -54,18 +63,31 @@
                   <h2 class="accordion-header" id="headingTwo">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      Accordion Item #2
+                      Color
                     </button>
                   </h2>
                   <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                     data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                      <strong>This is the second item's accordion body.</strong> It is hidden by default, until the
-                      collapse plugin adds the appropriate classes that we use to style each element. These classes
-                      control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                      modify any of this with custom CSS or overriding our default variables. It's also worth noting
-                      that just about any HTML can go within the <code>.accordion-body</code>, though the transition
-                      does limit overflow.
+
+                      <div class="row">
+
+                        <!-- choices category -->
+
+                        <% if(colors !=null) { %>
+                          <% colors.forEach(function(pcolor){ %>
+                            <div class="col-12">
+                              <a class="text-dark" href="/shop/?idPro=<%= pcolor._id %>">
+                                <span><i class="bi bi-arrow-right"></i></span>
+                                <%= pcolor.color %>
+                              </a>
+                            </div>
+                            <% }) %>
+                              <% } %>
+
+                      </div>
+
+
                     </div>
                   </div>
                 </div>
@@ -73,18 +95,43 @@
                   <h2 class="accordion-header" id="headingThree">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                       data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                      Accordion Item #3
+                      Avilability
                     </button>
                   </h2>
                   <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
                     data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                      <strong>This is the third item's accordion body.</strong> It is hidden by default, until the
-                      collapse plugin adds the appropriate classes that we use to style each element. These classes
-                      control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                      modify any of this with custom CSS or overriding our default variables. It's also worth noting
-                      that just about any HTML can go within the <code>.accordion-body</code>, though the transition
-                      does limit overflow.
+
+
+                      <div class="row">
+
+                        <!-- choices category -->
+
+                        
+
+                          <div class="col-12">
+                            <a class="text-dark" href="/shop/?idStock=inStock">
+                              <span><i class="bi bi-arrow-right"></i></span>
+                              In stock
+                            </a>
+                          </div>
+
+                       
+
+                            <div class="col-12">
+                              <a class="text-dark" href="/shop/?idStock=outStock">
+                                <span><i class="bi bi-arrow-right"></i></span>
+                                Out of stock
+                              </a>
+                            </div>
+
+
+                      </div>
+
+
+
+
+
                     </div>
                   </div>
                 </div>
@@ -107,8 +154,10 @@
                     <h5 class="card-title">
                       <%=data.name%>
                     </h5>
+                    <p>Stock : <%=data.stock%></p>
+                    
 
-                    <a href="/add-cart/?id=<%= data._id%>" class="btn btn-dark my-2">Add to cart</a>
+                    <a href="/product-page/?id=<%= data._id%>" class="btn btn-dark my-2">View Product</a>
                     <a href="/add-wish-list/?id=<%= data._id%>"><i class="fa fa-heart" aria-hidden="true">Add to
                         Wishlist</i></a>
                   </div>

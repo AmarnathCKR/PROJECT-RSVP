@@ -24,6 +24,7 @@ router.post('/new-password',userController.submitPassword)
 //User Side Homepage
 
 router.get('/shop', userController.productPage)
+router.get('/product-page', userController.productDetails)
 
 
 module.exports = router;
