@@ -1,0 +1,58 @@
+<%- include('../layouts/header') %>
+
+
+<div class="cart-wrap">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="main-heading mb-10">My wishlist</div>
+                <div class="table-wishlist">
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th width="45%">Product Name</th>
+                                <th width="15%">Unit Price</th>
+                                <th width="15%">Stock Status</th>
+                                <th width="15%"></th>
+                                <th width="10%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        <% if(wishData!=null && wishData.products.length >0) {%>
+                            <% wishData.products.forEach(function(item){ %>
+                            <tr>
+                                <td width="45%">
+                                    <div class="display-flex align-center">
+                                        <div class="img-product">
+                                            <img src="/public/databaseimg/<%= item.image[0] %>" alt="" class="mCS_img_loaded">
+                                        </div>
+                                        <div class="name-product">
+                                            <%= item.name %>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="15%" class="price">₹<%= item.price %></td>
+                                <% if(item.stock > 0) {%>
+                                <td width="15%"><span class="in-stock-box ">In Stock</span></td>
+                                <%}else{%>
+                                <td width="15%"><span class="out-stock-box ">Not in stock</span></td>
+                                <%}%>
+                                <td width="15%"><a href="/add-to-cart/?id=<%=item._id%>"><button class="round-black-btn small-btn">Add to Cart</button></a></td>
+                                <td width="10%" class="text-center"><a href="/remove-wish-list/?id=<%=item._id%>" class="trash-icon"><i class="far fa-trash-alt"></i></a></td>
+                            </tr>
+
+                            <%})%>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<%- include('../layouts/footer') %>

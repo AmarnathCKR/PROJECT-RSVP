@@ -25,6 +25,9 @@ router.post('/new-password',userController.submitPassword)
 
 router.get('/shop', userController.productPage)
 router.get('/product-page', userController.productDetails)
+router.get('/wish-list', userController.wishListPage)
+router.get('/add-wish-list',userController.addWishList)
+router.get('/remove-wish-list',userController.removeWishList)
 
 
 module.exports = router;
