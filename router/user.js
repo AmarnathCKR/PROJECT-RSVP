@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
+const userSession=require('../middleware/user/usersession')
 
-router.get("/", userController.userHome);
+router.get("/",userSession.isLogin, userController.userHome);
 router.get("/login", userController.userLogin);
 router.post("/login", userController.userVerification);
 router.get("/signUp",userController.userSignUp);
@@ -23,11 +24,16 @@ router.post('/new-password',userController.submitPassword)
 
 //User Side Homepage
 
-router.get('/shop', userController.productPage)
-router.get('/product-page', userController.productDetails)
-router.get('/wish-list', userController.wishListPage)
-router.get('/add-wish-list',userController.addWishList)
-router.get('/remove-wish-list',userController.removeWishList)
+router.get('/shop', userSession.isLogin,userController.productPage)
+router.get('/product-page', userSession.isLogin, userController.productDetails)
+router.get('/wish-list', userSession.isLogin,userController.wishListPage)
+router.get('/add-wish-list',userSession.isLogin,userController.addWishList)
+router.get('/remove-wish-list',userSession.isLogin,userController.removeWishList)
+router.get('/cart',userSession.isLogin, userController.cartPage)
+router.get('/add-cart',userSession.isLogin, userController.addCart)
+router.get('/inc-queue',userSession.isLogin, userController.incrimentQuantity)
+router.get('/remove-cart',userSession.isLogin, userController.removeCart)
+
 
 
 module.exports = router;

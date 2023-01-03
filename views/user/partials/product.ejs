@@ -20,6 +20,15 @@
     <% if(product.status !=false) { %>
 
       <div class="row">
+        <dic class="col-md-12">
+          <form class="text-center">
+
+            <input type="text" name="search" id="" class="form-control my-2" placeholder="Enter Product Name or Model or category name">
+
+            <button class="btn btn-dark" value="search">Search</button>
+            <a href="/shop"><button class="btn btn-grey">Show All</button></a>
+          </form>
+        </dic>
 
         <!-- Filter sort grid -->
         <div class="col-md-3">
@@ -107,23 +116,23 @@
 
                         <!-- choices category -->
 
-                        
 
-                          <div class="col-12">
-                            <a class="text-dark" href="/shop/?idStock=inStock">
-                              <span><i class="bi bi-arrow-right"></i></span>
-                              In stock
-                            </a>
-                          </div>
 
-                       
+                        <div class="col-12">
+                          <a class="text-dark" href="/shop/?idStock=inStock">
+                            <span><i class="bi bi-arrow-right"></i></span>
+                            In stock
+                          </a>
+                        </div>
 
-                            <div class="col-12">
-                              <a class="text-dark" href="/shop/?idStock=outStock">
-                                <span><i class="bi bi-arrow-right"></i></span>
-                                Out of stock
-                              </a>
-                            </div>
+
+
+                        <div class="col-12">
+                          <a class="text-dark" href="/shop/?idStock=outStock">
+                            <span><i class="bi bi-arrow-right"></i></span>
+                            Out of stock
+                          </a>
+                        </div>
 
 
                       </div>
@@ -154,16 +163,54 @@
                     <h5 class="card-title">
                       <%=data.name%>
                     </h5>
-                    <p>Stock : <%=data.stock%></p>
-                    
+                    <p>Stock : <%=data.stock%>
+                    </p>
+
 
                     <a href="/product-page/?id=<%= data._id%>" class="btn btn-dark my-2">View Product</a>
-                   
+
                   </div>
                 </div>
               </div>
               <% }) %>
                 <% } %>
+
+                  <div class="col-md-12">
+                    <nav aria-label="Page navigation example " class="border-dark d-flex justify-content-center">
+                      <% if (pages> 0) { %>
+                        <ul class="pagination text-center">
+                          <% if (current==1) { %>
+                            <li class="disabled p-3 btn-dark"><a>First</a></li>
+                            <% } else { %>
+                              <li class="p-3 btn-dark"><a href="/shop/?page=1">First</a></li>
+                              <% } %>
+                                <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
+                                  <% if (i !==1) { %>
+                                    <li class="disabled p-3 btn-dark"><a>...</a></li>
+                                    <% } %>
+                                      <% for (; i <=(Number(current) + 4) && i <=pages; i++) { %>
+                                        <% if (i==current) { %>
+                                          <li class="active p-3 btn-dark"><a>
+                                              <%= i %>
+                                            </a></li>
+                                          <% } else { %>
+                                            <li class="p-3 btn-dark"><a href="/shop/?page=<%= i %>">
+                                                <%= i %>
+                                              </a></li>
+                                            <% } %>
+                                              <% if (i==Number(current) + 4 && i < pages) { %>
+                                                <li class="disabled p-3 btn-dark"><a>...</a></li>
+                                                <% } %>
+                                                  <% } %>
+                                                    <% if (current==pages) { %>
+                                                      <li class="disabled p-3 btn-dark"><a>Last</a></li>
+                                                      <% } else { %>
+                                                        <li class="p-3 btn-dark"><a href="/shop/?page=<%= pages %>">Last</a></li>
+                                                        <% } %>
+                        </ul>
+                        <% } %>
+                    </nav>
+                  </div>
 
           </div>
         </div>

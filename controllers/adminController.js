@@ -103,6 +103,7 @@ const blockUser = async (req, res) => {
 
 const unBlockUser = async (req, res) => {
   if (req.session.adminAuth) {
+    
     const updatedUser = await User.updateOne(
       { _id: req.query.id },
       {
@@ -111,6 +112,7 @@ const unBlockUser = async (req, res) => {
         },
       }
     );
+
     res.redirect("/admin/customer");
   }
 };
