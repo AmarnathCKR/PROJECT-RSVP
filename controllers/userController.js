@@ -11,12 +11,12 @@ const mongoose = require('mongoose')
 const userHome = async (req, res) => {
   const categoryData = await Category.find({ status: true });
   const banners = await Banner.find({ status: true });
-  let usersession=req.session.auth
- 
+  let usersession = req.session.auth
 
-  if(usersession){
-    let userDat = await User.findOne({email : usersession})
-    const wishData = await Wishlist.findOne({customer : userDat._id })
+
+  if (usersession) {
+    let userDat = await User.findOne({ email: usersession })
+    const wishData = await Wishlist.findOne({ customer: userDat._id })
 
     res.render("user/partials/homepage", {
       details: banners,
@@ -25,24 +25,24 @@ const userHome = async (req, res) => {
       wishData,
       usersession
     });
-  }else{
+  } else {
     res.render("user/partials/homepage", {
       details: banners,
       categories: categoryData,
       home: "active",
-      wishData:null,
+      wishData: null,
       usersession
     });
   }
- 
- 
+
+
 };
 
 const userLogin = (req, res) => {
   res.render("user/partials/userLogin", {
     error: "Enter your email and Password",
     wishData: null,
-    usersession : req.session.auth
+    usersession: req.session.auth
   });
 };
 
@@ -60,14 +60,14 @@ const userVerification = async (req, res) => {
         res.render("user/partials/userLogin", {
           error: "Invalid Password",
           wishData: null,
-          usersession : req.session.auth
+          usersession: req.session.auth
         });
       }
     } else {
       res.render("user/partials/userLogin", {
         error: "User not found",
         wishData: null,
-        usersession : req.session.auth
+        usersession: req.session.auth
       });
     }
   } catch (err) {
@@ -75,7 +75,7 @@ const userVerification = async (req, res) => {
     res.render("user/partials/userLogin", {
       error: "Invalid Credentials",
       wishData: null,
-      usersession : req.session.auth
+      usersession: req.session.auth
     });
   }
 };
@@ -84,7 +84,7 @@ const userSignUp = (req, res) => {
   res.render("user/partials/signUp", {
     error: "Please Login to Enjoy Our Products.",
     wishData: null,
-    usersession : req.session.auth
+    usersession: req.session.auth
   });
 };
 
@@ -105,7 +105,7 @@ const checkSignUp = async (req, res) => {
     res.render("user/partials/signUp", {
       error: "Email Already Exists.",
       wishData: null,
-      usersession : req.session.auth
+      usersession: req.session.auth
     });
   } else {
     const hashPassword = await bcrypt.hash(req.body.password, 10);
@@ -176,7 +176,7 @@ const otpVerify = async (req, res) => {
     res.render("user/partials/verifyOTP", {
       error: "Incorrect OTP",
       wishData: null,
-      usersession : req.session.auth
+      usersession: req.session.auth
     });
   }
 };
@@ -190,7 +190,7 @@ const userLogout = (req, res) => {
 
 const otpVerifyPage = (req, res) => {
   if (req.session.authOTP) {
-    res.render("user/partials/verifyOTP", { wishData: null,usersession : req.session.auth });
+    res.render("user/partials/verifyOTP", { wishData: null, usersession: req.session.auth });
   }
 };
 
@@ -239,14 +239,14 @@ const resendOTP = (req, res) => {
 };
 
 const forgotPassword = (req, res) => {
-  res.render("user/partials/forgotPassword", { wishData: null,usersession : req.session.auth });
+  res.render("user/partials/forgotPassword", { wishData: null, usersession: req.session.auth });
 };
 
 const sendEmail = async (req, res) => {
   let user;
 
   req.session.emailAuth = req.body.email;
-  user = await User.findOne({ email: req.session.emailAuth,usersession : req.session.auth });
+  user = await User.findOne({ email: req.session.emailAuth, usersession: req.session.auth });
 
   if (user) {
     if (user.status == true) {
@@ -291,21 +291,21 @@ const sendEmail = async (req, res) => {
       res.render("user/partials/forgotPassword", {
         error: "User is blocked.",
         wishData: null,
-        usersession : req.session.auth
+        usersession: req.session.auth
       });
     }
   } else {
     res.render("user/partials/forgotPassword", {
       error: "Email does not exit.Please sign up",
       wishData: null,
-      usersession : req.session.auth
+      usersession: req.session.auth
     });
   }
 };
 
 const verifyEmailPage = (req, res) => {
   if (req.session.emailOtp || req.session.resendEmailOtp) {
-    res.render("user/partials/verifyEmailOTP", { wishData: null,usersession : req.session.auth });
+    res.render("user/partials/verifyEmailOTP", { wishData: null, usersession: req.session.auth });
   }
 };
 
@@ -366,14 +366,14 @@ const verifyEmailOTP = (req, res) => {
     res.render("user/partials/verifyEmailOTP", {
       error: "Incorrect OTP",
       wishData: null,
-      usersession : req.session.auth
+      usersession: req.session.auth
     });
   }
 };
 
 const newPassword = (req, res) => {
   if (req.session.emailOtp || req.session.resendEmailOtp) {
-    res.render("user/partials/newPassword", { wishData: null,usersession : req.session.auth });
+    res.render("user/partials/newPassword", { wishData: null, usersession: req.session.auth });
   }
 };
 
@@ -391,7 +391,7 @@ const submitPassword = async (req, res) => {
         res.render("user/partials/newPassword", {
           error: "Cannot use previous password.",
           wishData: null,
-          usersession : req.session.auth
+          usersession: req.session.auth
         });
       } else {
         const updatePassword = await User.updateOne(
@@ -409,7 +409,7 @@ const submitPassword = async (req, res) => {
       res.render("user/partials/newPassword", {
         error: "Password Does Not Match",
         wishData: null,
-        usersession : req.session.auth
+        usersession: req.session.auth
       });
     }
   }
@@ -432,7 +432,7 @@ const productPage = async (req, res) => {
       customer: userDetails._id,
     }).populate("products");
 
-   
+
 
     Product.find({ category: req.query.id })
       .skip(perPage * page - perPage)
@@ -450,7 +450,7 @@ const productPage = async (req, res) => {
             wishData,
             current: page,
             pages: Math.ceil(count / perPage),
-            usersession : req.session.auth
+            usersession: req.session.auth
           });
         });
       });
@@ -467,7 +467,7 @@ const productPage = async (req, res) => {
       customer: userDetails._id,
     }).populate("products");
 
-   
+
 
     Product.find({ _id: req.query.idPro })
       .skip(perPage * page - perPage)
@@ -485,7 +485,7 @@ const productPage = async (req, res) => {
             wishData,
             current: page,
             pages: Math.ceil(count / perPage),
-            usersession : req.session.auth
+            usersession: req.session.auth
           });
         });
       });
@@ -501,7 +501,7 @@ const productPage = async (req, res) => {
       customer: userDetails._id,
     }).populate("products");
 
-   
+
 
     Product.find({ stock: { $gt: 0 } })
       .skip(perPage * page - perPage)
@@ -519,7 +519,7 @@ const productPage = async (req, res) => {
             wishData,
             current: page,
             pages: Math.ceil(count / perPage),
-            usersession : req.session.auth
+            usersession: req.session.auth
           });
         });
       });
@@ -554,7 +554,7 @@ const productPage = async (req, res) => {
             wishData,
             current: page,
             pages: Math.ceil(count / perPage),
-            usersession : req.session.auth
+            usersession: req.session.auth
           });
         });
       });
@@ -570,7 +570,7 @@ const productPage = async (req, res) => {
       customer: userDetails._id,
     }).populate("products");
 
-   
+
 
     Product.find({
       status: true,
@@ -595,11 +595,59 @@ const productPage = async (req, res) => {
             wishData,
             current: page,
             pages: Math.ceil(count / perPage),
-            usersession : req.session.auth
+            usersession: req.session.auth
           });
         });
       });
-  } else {
+  } else if (req.query.sort) {
+   
+
+    if (req.query.sort == "high") {
+      sort = { price: -1 };
+    } else if (req.query.sort == "low") {
+      sort = { price: 1 };
+    } else {
+      sort = {};
+    }
+
+
+
+    const categoryData = await Category.find({ status: true });
+
+    const colorData = await Product.find({ status: true });
+
+    const email = req.session.auth;
+    const userDetails = await User.findOne({ email: email });
+    const wishData = await Wishlist.findOne({
+      customer: userDetails._id,
+    }).populate("products");
+
+
+
+    Product.find({
+      status: true,
+      
+    }).sort(sort)
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .exec(function (err, products) {
+        Product.count().exec(function (err, count) {
+          if (err) return next(err);
+
+          res.render("user/partials/product", {
+            product: products,
+            categories: categoryData,
+            category: "Search :" + search,
+            colors: colorData,
+            shop: "active",
+            wishData,
+            current: page,
+            pages: Math.ceil(count / perPage),
+            usersession: req.session.auth
+          });
+        });
+      });
+  }else {
     const categoryData = await Category.find({ status: true });
     const productData = await Product.find({ status: true });
     const colorData = await Product.find({ status: true });
@@ -628,7 +676,7 @@ const productPage = async (req, res) => {
             wishData,
             current: page,
             pages: Math.ceil(count / perPage),
-            usersession : req.session.auth
+            usersession: req.session.auth
           });
         });
       });
@@ -658,7 +706,7 @@ const productDetails = async (req, res) => {
       others: productDetails,
       wishDetails,
       wishData,
-      usersession : req.session.auth
+      usersession: req.session.auth
     });
   }
 };
@@ -670,7 +718,7 @@ const wishListPage = async (req, res) => {
     customer: userDetails._id,
   }).populate("products");
 
-  res.render("user/partials/wishlist", { wishData ,usersession : req.session.auth});
+  res.render("user/partials/wishlist", { wishData, usersession: req.session.auth });
 };
 
 const addWishList = async (req, res) => {
@@ -721,15 +769,15 @@ const cartPage = async (req, res) => {
   const proimg = await Cart.findOne({ customer: userDetails._id }).populate(
     "products.productId"
   );
-  
-  
+
+
 
   console.log(proimg);
 
   res.render("user/partials/cart", {
     cartList: proimg,
     wishData,
-    usersession : req.session.auth
+    usersession: req.session.auth
   });
 };
 
@@ -741,7 +789,7 @@ const addCart = async (req, res) => {
   const userDetails = await User.findOne({ email: email });
 
 
-  let userCart = await Cart.findOne({ customer : userDetails._id });
+  let userCart = await Cart.findOne({ customer: userDetails._id });
 
 
   let itemIndex = userCart.products.findIndex((products) => {
@@ -752,7 +800,7 @@ const addCart = async (req, res) => {
     //-1 if no item matches
 
     let a = await Cart.updateOne(
-      { customer: userDetails._id , "products.productId": req.query.id },
+      { customer: userDetails._id, "products.productId": req.query.id },
       {
         $inc: { "products.$.quantity": 1 },
       }
@@ -772,55 +820,55 @@ const addCart = async (req, res) => {
 const removeCart = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
-  
-  
-  const qtyChech = await Cart.aggregate([
-      {
-        $match: { "products.productId": mongoose.Types.ObjectId(req.query.id) },
-      },
-      { $unwind: "$products" },
-      {
-        $match: { "products.productId": mongoose.Types.ObjectId(req.query.id) },
-      },
-      { $project: { "products.quantity": 1, _id: 0 } },
-    ]);
-    let productqty = parseInt(qtyChech[0].products.quantity);
-  
-    if (productqty - 1 <= 0) {
-      await Cart.updateOne(
-        { customer : userDetails._id },
-        { $pull: { products : { productId: req.query.id } } }
-      );
-    } else {
-     await Cart.updateOne(
-        { customer: userDetails._id, "products.productId": req.query.id },
-        {
-          $inc: { "products.$.quantity": -1 },
-        }
-      );
-    }
 
-  
+
+  const qtyChech = await Cart.aggregate([
+    {
+      $match: { "products.productId": mongoose.Types.ObjectId(req.query.id) },
+    },
+    { $unwind: "$products" },
+    {
+      $match: { "products.productId": mongoose.Types.ObjectId(req.query.id) },
+    },
+    { $project: { "products.quantity": 1, _id: 0 } },
+  ]);
+  let productqty = parseInt(qtyChech[0].products.quantity);
+
+  if (productqty - 1 <= 0) {
+    await Cart.updateOne(
+      { customer: userDetails._id },
+      { $pull: { products: { productId: req.query.id } } }
+    );
+  } else {
+    await Cart.updateOne(
+      { customer: userDetails._id, "products.productId": req.query.id },
+      {
+        $inc: { "products.$.quantity": -1 },
+      }
+    );
+  }
+
+
   res.redirect("/cart");
 };
 
-const deleteCart = async (req,res)=>{
+const deleteCart = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
 
   await Cart.updateOne(
-    { customer : userDetails._id },
-    { $pull: { products : { productId: req.query.id } } }
+    { customer: userDetails._id },
+    { $pull: { products: { productId: req.query.id } } }
   );
 
   res.redirect("/cart")
 }
 
 
-const incrimentQuantity= async (req, res)=> {
+const incrimentQuantity = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
- 
+
   let a = await Cart.updateOne(
     { customer: userDetails._id, "products.productId": req.query.id },
     {

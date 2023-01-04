@@ -35,10 +35,13 @@
                                 <td width="15%" class="price">₹<%= item.price %></td>
                                 <% if(item.stock > 0) {%>
                                 <td width="15%"><span class="in-stock-box ">In Stock</span></td>
+                                <td width="15%"><a href="/add-cart/?id=<%=item._id%>"><button class="round-black-btn small-btn">Add to Cart</button></a></td>
                                 <%}else{%>
                                 <td width="15%"><span class="out-stock-box ">Not in stock</span></td>
+                                <td width="15%"><a class="disabled" href="/add-cart/?id=<%=item._id%>"><button class="round-black-btn small-btn " disabled>Add to Cart</button></a></td>
                                 <%}%>
-                                <td width="15%"><a href="/add-to-cart/?id=<%=item._id%>"><button class="round-black-btn small-btn">Add to Cart</button></a></td>
+                                
+                    
                                 <td width="10%" class="text-center"><a href="/remove-wish-list/?id=<%=item._id%>" class="trash-icon"><i class="far fa-trash-alt"></i></a></td>
                             </tr>
 

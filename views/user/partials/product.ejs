@@ -23,7 +23,8 @@
         <dic class="col-md-12">
           <form class="text-center">
 
-            <input type="text" name="search" id="" class="form-control my-2" placeholder="Enter Product Name or Model or category name">
+            <input type="text" name="search" id="" class="form-control my-2"
+              placeholder="Enter Product Name or Model or category name">
 
             <button class="btn btn-dark" value="search">Search</button>
             <a href="/shop"><button class="btn btn-grey">Show All</button></a>
@@ -143,7 +144,49 @@
 
                     </div>
                   </div>
+                  
                 </div>
+
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingFour">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                      Sort
+                    </button>
+                  </h2>
+                  <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+
+                      <div class="row">
+
+                        <!-- choices category -->
+
+                        
+                            <div class="col-12">
+                              <a class="text-dark" href="/shop/?sort=low">
+                                <span><i class="bi bi-arrow-right"></i></span>
+                                Price Low to High
+                              </a>
+                            </div>
+
+                            <div class="col-12">
+                              <a class="text-dark" href="/shop/?sort=high">
+                                <span><i class="bi bi-arrow-right"></i></span>
+                               Price High to Low
+                              </a>
+                            </div>
+                            
+
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+
+
               </div>
           </section>
 
@@ -166,7 +209,8 @@
                     <p>Stock : <%=data.stock%>
                     </p>
 
-
+                    <p>Price : <%=data.price%>
+                    </p>
                     <a href="/product-page/?id=<%= data._id%>" class="btn btn-dark my-2">View Product</a>
 
                   </div>
@@ -178,9 +222,9 @@
                   <div class="col-md-12">
                     <nav aria-label="Page navigation example " class="border-dark d-flex justify-content-center">
                       <% if (pages> 0) { %>
-                        <ul class="pagination text-center">
+                        <ul class="pagination text-center rounded " >
                           <% if (current==1) { %>
-                            <li class="disabled p-3 btn-dark"><a>First</a></li>
+                            <li class="disabled p-3 btn-dark rounded"><a>First</a></li>
                             <% } else { %>
                               <li class="p-3 btn-dark"><a href="/shop/?page=1">First</a></li>
                               <% } %>
@@ -203,9 +247,10 @@
                                                 <% } %>
                                                   <% } %>
                                                     <% if (current==pages) { %>
-                                                      <li class="disabled p-3 btn-dark"><a>Last</a></li>
+                                                      <li class="disabled p-3 btn-dark"><a >Last</a></li>
                                                       <% } else { %>
-                                                        <li class="p-3 btn-dark"><a href="/shop/?page=<%= pages %>">Last</a></li>
+                                                        <li class="p-3 btn-dark"><a
+                                                            href="/shop/?page=<%= pages %>">Last</a></li>
                                                         <% } %>
                         </ul>
                         <% } %>
