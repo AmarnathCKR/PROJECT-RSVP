@@ -3,7 +3,7 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 const userSession=require('../middleware/user/usersession')
 
-router.get("/",userSession.isLogin, userController.userHome);
+router.get("/",userController.userHome);
 router.get("/login", userController.userLogin);
 router.post("/login", userController.userVerification);
 router.get("/signUp",userController.userSignUp);
@@ -33,7 +33,7 @@ router.get('/cart',userSession.isLogin, userController.cartPage)
 router.get('/add-cart',userSession.isLogin, userController.addCart)
 router.get('/inc-queue',userSession.isLogin, userController.incrimentQuantity)
 router.get('/remove-cart',userSession.isLogin, userController.removeCart)
-
+router.get('/delete-cart',userSession.isLogin, userController.deleteCart)
 
 
 module.exports = router;

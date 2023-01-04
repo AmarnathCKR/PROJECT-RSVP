@@ -3,16 +3,18 @@
 <div class="container bg-white rounded-top mt-5" id="zero-pad">
     <div class="row d-flex justify-content-center">
         <div class="col-lg-10 col-12 pt-3">
+            <% var subtotal = 0 %>
+
             <% if(cartList!=null) {%>
             <div class="d-flex flex-column pt-4">
                 <div><h5 class="text-uppercase font-weight-normal">Shopping cart</h5></div>
                 <div class="font-weight-normal"><%= cartList.length%></div>
             </div>
             <div class="d-flex flex-row px-lg-5 mx-lg-5 mobile" id="heading">
-                <div class="px-lg-5 mr-lg-5" id="produc">PRODUCTS</div>
-                <div class="px-lg-5 ml-lg-5" id="prc">UNIT PRICE</div>
-                <div class="px-lg-5 ml-lg-1" id="quantity">QUANTITY</div>
-                <div class="px-lg-5 ml-lg-3" id="total">TOTAL</div>
+                <div class="px-lg-5 mr-lg-5 " id="produc"><li> PRODUCTS</li></div>
+                <div class="px-lg-5 ml-lg-5" id="prc"><li> UNIT PRICE</li></div>
+                <div class="px-lg-5 ml-lg-1 d-flex justify-content-end" id="quantity"><li> QUANTITY</li></div>
+                <div class="px-lg-5 ml-lg-3" id="total"><li> TOTAL </li></div>
             </div>
 
             <% cartList.products.forEach(function(items){ %>
@@ -27,13 +29,19 @@
                 </div>
                 <div class="pl-md-0 pl-1"><b><%=items.productId.price%></b></div>
                 <div class="pl-md-0 pl-2">
-                    <a href="/remove-cart/?id=<%=items.productId._id%>"></a><span class="fa fa-minus-square text-secondary"></span><span class="px-md-3 px-1"><%=items.quantity%></span><a href="/inc-queue/?id=<%=items.productId._id%>"><span class="fa fa-plus-square text-secondary"></span></a>
+                    <a href="/remove-cart/?id=<%=items.productId._id%>"><span class="fa fa-minus-square text-secondary"></span></a><span class="px-md-3 px-1"><%=items.quantity%></span><a href="/inc-queue/?id=<%=items.productId._id%>"><span class="fa fa-plus-square text-secondary"></span></a>
                 </div>
-                <div class="pl-md-0 pl-1"><b>$19.98</b></div>
-                <div class="close">&times;</div>
+                
+               <% var addedNumber = items.productId.price * items.quantity;%>
+               
+                <div class="pl-md-0 pl-1"><%= addedNumber %><b></b></div>
+                <div class="close"><a href="/delete-cart/?id=<%=items.productId._id%>">&times;</a></div>
+                <% subtotal += addedNumber %>
+
             </div>
            <%})%>
             <%}%>
+            
 
         </div>
     </div>
@@ -43,10 +51,10 @@
         <div class="col-lg-10 col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <button class="btn btn-sm bg-light border border-dark">Continue shopping</button>
+                    <a href="/shop"><button class="btn btn-sm bg-light border border-dark">Continue shopping</button></a>
                 </div>
                 <div class="px-md-0 px-1" id="footer-font">
-                    <b class="pl-md-4">SUBTOTAL<span class="pl-md-4">$61.78</span></b>
+                    <b class="pl-md-4">SUBTOTAL<span class="pl-md-4">$<%=subtotal%></span></b>
                 </div>
                 <div>
                     <button class="btn btn-sm bg-dark text-white px-lg-5 px-3">Checkout</button>

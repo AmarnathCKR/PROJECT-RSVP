@@ -150,7 +150,7 @@
                         <a href="./index.html"><img src="/public/img/logo.png"  alt=""></a>
                     </div>
                 </div>
-                <div class="col-xl-8 col-lg-9 d-flex justify-content-center">
+                <div class="col-xl-7 d-flex justify-content-center">
                     <nav class="header__menu ">
                         <ul>
                             <li class="<%=locals.home%>"><a href="/">Home</a></li>
@@ -163,17 +163,20 @@
                         </ul>
                     </nav>
                 </div>
-                <div class="col-lg-2">
+                <div class="col-lg-3">
                     <div class="header__right">
-                        <div class="header__right__auth">
-                            
-                            
-                        </div>
+                      
                         <ul class="header__right__widget">
+                          <%if(usersession){%>
                           <li><a class="" href="/user-profile"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                             <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-                          </svg></a></li>  
-                          <li><span class="icon_search search-switch"></span></li>
+                          </svg></a></li> 
+                          <%} else{%>
+                            <li>
+                              <a href="/login">Login</a>
+                            </li> 
+                            <%}%>
+                          <li><a href="/shop?search="><span class="icon_search search-switch"></span></a></li>
                             <li><a href="/wish-list"><span class="icon_heart_alt"></span>
                               <%if(wishData!=null){%>  
                               <div class="tip"><%=wishData.products.length%></div>
