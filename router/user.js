@@ -35,5 +35,16 @@ router.get('/inc-queue',userSession.isLogin, userController.incrimentQuantity)
 router.get('/remove-cart',userSession.isLogin, userController.removeCart)
 router.get('/delete-cart',userSession.isLogin, userController.deleteCart)
 
+router.get('/checkout',userSession.isLogin,userController.checkoutPage)
+
+router.get('/user-profile',userSession.isLogin,userController.profilePage)
+
+
+
+//patch
+
+router.patch("/catFilter",userController.catFiltering)
+router.patch("/colorFilter",userController.colorFiltering)
+
 
 module.exports = router;

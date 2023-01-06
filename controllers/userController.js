@@ -971,6 +971,64 @@ const incrimentQuantity = async (req, res) => {
   }
 };
 
+const checkoutPage =async (req,res)=>{
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const wishData = await Wishlist.findOne({
+    customer: userDetails._id,
+  }).populate("products");
+  
+  
+  res.render("user/partials/checkout",{
+      wishData,
+    usersession: req.session.auth,
+  })
+}
+
+const profilePage = async (req,res) => {
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const wishData = await Wishlist.findOne({
+    customer: userDetails._id,
+  }).populate("products");
+  
+  
+  res.render("user/partials/profile",{
+      wishData,
+    usersession: req.session.auth,
+  })
+}
+
+
+const catFiltering= async (req,res)=>{
+  console.log(req.body.cat)
+  const categoryDetails = await Category.findOne({ _id: req.body.cat });
+      
+      const email = req.session.auth;
+      const userDetails = await User.findOne({ email: email });
+     
+
+      const products = await Product.find({ category: req.body.cat ,status : true})
+   
+        
+            res.json({
+              data : products
+                }) 
+       
+}
+
+const colorFiltering = async (req,res)=>{
+ 
+      const colorData = await Product.find({ color : req.body.cat,status : true })
+   
+        
+            res.json({
+              data : colorData
+                }) 
+       
+}
+
+
 module.exports = {
   userHome,
   userLogin,
@@ -998,4 +1056,8 @@ module.exports = {
   incrimentQuantity,
   removeCart,
   deleteCart,
+  checkoutPage, 
+  profilePage,
+  catFiltering,
+  colorFiltering
 };

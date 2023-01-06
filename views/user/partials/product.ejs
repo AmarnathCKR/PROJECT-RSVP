@@ -53,12 +53,15 @@
                       <!-- choices category -->
 
                       <% if(categories !=null) { %>
-                        <% categories.forEach(function(stuff){ %>
+                        <% categories.forEach(function(stuff,i){ %>
                           <div class="col-12">
-                            <a class="text-dark" href="/shop/?id=<%= stuff._id %>">
-                              <span><i class="bi bi-arrow-right"></i></span>
-                              <%= stuff.name %>
-                            </a>
+                            <button class="text-dark bg-white border-0" onclick="getCategory('<%= stuff._id %>')">
+                              <span id="categoryCount<%=i%>"><i class="bi bi-arrow-right"></i>
+                                <%= stuff.name %>
+                              </span>
+
+                            </button>
+
                           </div>
                           <% }) %>
                             <% } %>
@@ -83,17 +86,48 @@
                       <div class="row">
 
                         <!-- choices category -->
+                        
+                        <div class="col-12">
+                          <button class="text-dark bg-white border-0" onclick="getColor('Black')">
+                            <span><i class="bi bi-arrow-right"></i></span>
+                            Black
+                          </button>
+                        </div>
+                        <div class="col-12">
+                          <button class="text-dark bg-white border-0" onclick="getColor('Khakhi')">
+                            <span><i class="bi bi-arrow-right"></i></span>
+                           Khakhi
+                          </button>
+                        </div>
 
-                        <% if(colors !=null) { %>
-                          <% colors.forEach(function(pcolor){ %>
-                            <div class="col-12">
-                              <a class="text-dark" href="/shop/?idPro=<%= pcolor._id %>">
-                                <span><i class="bi bi-arrow-right"></i></span>
-                                <%= pcolor.color %>
-                              </a>
-                            </div>
-                            <% }) %>
-                              <% } %>
+                        <div class="col-12">
+                          <button class="text-dark bg-white border-0" onclick="getColor('Croco-Navy')">
+                            <span><i class="bi bi-arrow-right"></i></span>
+                            Croco-Navy
+                          </button>
+                        </div>
+                        <div class="col-12">
+                          <button class="text-dark bg-white border-0" onclick="getColor('COGNAC')">
+                            <span><i class="bi bi-arrow-right"></i></span>
+                            COGNAC
+                          </button>
+                        </div>
+                        <div class="col-12">
+                          <button class="text-dark bg-white border-0" onclick="getColor('Brown')">
+                            <span><i class="bi bi-arrow-right"></i></span>
+                            Brown
+                          </button>
+                        </div>
+                        <div class="col-12">
+                          <button class="text-dark bg-white border-0" onclick="getColor('LEAT')">
+                            <span><i class="bi bi-arrow-right"></i></span>
+                            LEAT
+                          </button>
+                        </div>
+
+                        
+                           
+                           
 
                       </div>
 
@@ -144,7 +178,7 @@
 
                     </div>
                   </div>
-                  
+
                 </div>
 
 
@@ -163,21 +197,21 @@
 
                         <!-- choices category -->
 
-                        
-                            <div class="col-12">
-                              <a class="text-dark" href="/shop/?sort=low">
-                                <span><i class="bi bi-arrow-right"></i></span>
-                                Price Low to High
-                              </a>
-                            </div>
 
-                            <div class="col-12">
-                              <a class="text-dark" href="/shop/?sort=high">
-                                <span><i class="bi bi-arrow-right"></i></span>
-                               Price High to Low
-                              </a>
-                            </div>
-                            
+                        <div class="col-12">
+                          <a class="text-dark" href="/shop/?sort=low">
+                            <span><i class="bi bi-arrow-right"></i></span>
+                            Price Low to High
+                          </a>
+                        </div>
+
+                        <div class="col-12">
+                          <a class="text-dark" href="/shop/?sort=high">
+                            <span><i class="bi bi-arrow-right"></i></span>
+                            Price High to Low
+                          </a>
+                        </div>
+
 
                       </div>
 
@@ -192,41 +226,93 @@
 
 
         </div>
+        <script>
+          var product
+          console.log(product)
+          function getCategory(catId) {
 
+            $.ajax({
+              url: "/catFilter",
+              method: "patch",
+              data: { cat: catId },
+              success: (res) => {
+                products = res.data
+                $('#product333').html('');
+              
+                products.forEach(function(items) {
+                  $('#product333').append(
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><img src="/public/databaseimg/'+items.image[0]+'" class="card-img-top" alt="..."><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">'+items.name+'</center><p>Stock : '+items.stock+'</p><p>Price : '+items.price+'</p><a href="/product-page/?id='+items._id+'" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    
+                  );
+
+                });
+              }
+              
+            })
+          }
+        </script>
+
+<script>
+  
+  
+  function getColor(catId) {
+
+    $.ajax({
+      url: "/colorFilter",
+      method: "patch",
+      data: { cat: catId },
+      success: (res) => {
+        products = res.data
+        $('#product333').html('');
+      
+        products.forEach(function(items) {
+          $('#product333').append(
+            '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><img src="/public/databaseimg/'+items.image[0]+'" class="card-img-top" alt="..."><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">'+items.name+'</center><p>Stock : '+items.stock+'</p><p>Price : '+items.price+'</p><a href="/product-page/?id='+items._id+'" class="btn btn-dark my-2">View Product</a></div></div></div>'
+            
+          );
+
+        });
+      }
+      
+    })
+  }
+</script>
 
         <div class="col-md-9">
-          <div class="row">
-            <% product.forEach(function(data){ %>
+          <div class="row" id="product333">
+            <%product.forEach(function(blah){ %>
 
               <div class="col-lg-4 d-flex justify-content-center p-4">
 
                 <div class="card" style="width: 100%;">
-                  <img src="/public/databaseimg/<%= data.image[0] %>" class="card-img-top" alt="...">
+                  <img src="/public/databaseimg/<%= blah.image[0] %>" class="card-img-top" alt="...">
                   <div class="card-body">
-                    <h5 class="card-title">
-                      <%=data.name%>
-                    </h5>
-                    <p>Stock : <%=data.stock%>
+                    <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">
+                      <%=blah.name%>
+                    </center>
+                    <p>Stock : <%=blah.stock%>
                     </p>
 
-                    <p>Price : <%=data.price%>
+                    <p>Price : <%=blah.price%>
                     </p>
-                    <a href="/product-page/?id=<%= data._id%>" class="btn btn-dark my-2">View Product</a>
+                    <a href="/product-page/?id=<%= blah._id%>" class="btn btn-dark my-2">View Product</a>
 
                   </div>
                 </div>
               </div>
+              
               <% }) %>
                 <% } %>
 
                   <div class="col-md-12">
                     <nav aria-label="Page navigation example " class="border-dark d-flex justify-content-center">
                       <% if (pages> 0) { %>
-                        <ul class="pagination text-center rounded " >
+                        <ul class="pagination text-center rounded ">
                           <% if (current==1) { %>
                             <li class="disabled p-3 btn-dark rounded"><a>First</a></li>
                             <% } else { %>
-                              <li class="p-3 btn-dark"><a href="/shop/?page=1">First</a></li>
+                              <li class="p-3 btn-dark"><a style="color: antiquewhite;" href="/shop/?page=1">First</a>
+                              </li>
                               <% } %>
                                 <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
                                   <% if (i !==1) { %>
@@ -234,11 +320,12 @@
                                     <% } %>
                                       <% for (; i <=(Number(current) + 4) && i <=pages; i++) { %>
                                         <% if (i==current) { %>
-                                          <li class="active p-3 btn-dark"><a>
+                                          <li class="active p-3 btn-dark"><a style="color: antiquewhite;">
                                               <%= i %>
                                             </a></li>
                                           <% } else { %>
-                                            <li class="p-3 btn-dark"><a href="/shop/?page=<%= i %>">
+                                            <li class="p-3 btn-dark"><a style="color: antiquewhite;"
+                                                href="/shop/?page=<%= i %>">
                                                 <%= i %>
                                               </a></li>
                                             <% } %>
@@ -247,13 +334,14 @@
                                                 <% } %>
                                                   <% } %>
                                                     <% if (current==pages) { %>
-                                                      <li class="disabled p-3 btn-dark"><a >Last</a></li>
+                                                      <li class="disabled p-3 btn-dark"><a>Last</a></li>
                                                       <% } else { %>
-                                                        <li class="p-3 btn-dark"><a
+                                                        <li class="p-3 btn-dark"><a style="color: antiquewhite;"
                                                             href="/shop/?page=<%= pages %>">Last</a></li>
                                                         <% } %>
                         </ul>
                         <% } %>
+
                     </nav>
                   </div>
 

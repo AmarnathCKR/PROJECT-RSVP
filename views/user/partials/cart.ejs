@@ -16,7 +16,7 @@
 
             <div class="d-flex flex-row justify-content-between align-items-center pt-lg-4 pt-2 pb-3 border-bottom mobile">
                 <div class="d-flex flex-row align-items-center">
-                    <div><img src="/public/databaseimg/<%=items.productId.image[0]%>" width="150" height="150" alt="" id="image"></div>
+                    <div><img src="/public/databaseimg/<%=items.productId.image[0]%>" width="120" height="150" alt="" id="image"></div>
                     <div class="d-flex flex-column pl-md-3 pl-1">
                         <div><h6><%=items.productId.name%></h6></div>
                         
@@ -52,7 +52,7 @@
                     <b class="pl-md-4">SUBTOTAL<span class="pl-md-4">₹<%=subtotal%></span></b>
                 </div>
                 <div>
-                    <button class="btn btn-sm bg-dark text-white px-lg-5 px-3">Checkout</button>
+                   <a href="/checkout"><button class="btn btn-sm bg-dark text-white px-lg-5 px-3">Checkout</button></a> 
                 </div>
             </div>
         </div>
