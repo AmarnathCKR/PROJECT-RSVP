@@ -1,7 +1,139 @@
 <%- include('../layouts/header') %>
 
+    <div class="row mx-0 py-0 g-0">
+
+        <div class="col-lg-4 mx-0 py-0 g-0">
+            <div class="d-flex flex-column flex-shrink-0 p-3 border-right" style="width: 280px;">
+                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                    <svg class="bi pe-none me-2" width="40" height="32">
+                        <use xlink:href="#bootstrap"></use>
+                    </svg>
+                    <span class="fs-4">Account</span>
+                </a>
+                <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="/user-profile" class="nav-link active" aria-current="page">
+                            <svg class="bi pe-none me-2" width="16" height="16">
+                                <use xlink:href="#home"></use>
+                            </svg>
+                            Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/user-address" class="nav-link link-dark">
+                            <svg class="bi pe-none me-2" width="16" height="16">
+                                <use xlink:href="#speedometer2"></use>
+                            </svg>
+                            Address
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/orders" class="nav-link link-dark">
+                            <svg class="bi pe-none me-2" width="16" height="16">
+                                <use xlink:href="#table"></use>
+                            </svg>
+                            Orders
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/logout" class="nav-link link-danger">
+                            <svg class="bi pe-none me-2" width="16" height="16">
+                                <use xlink:href="#people-circle"></use>
+                            </svg>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+                <hr>
 
 
 
+            </div>
+        </div>
 
-<%- include('../layouts/footer') %>
+
+        <div class="col-lg-8 mx-0 py-0 g-0">
+            <div class="card mb-3 mx-0 py-0 g-0">
+                <div class="card-body mx-0 py-0 g-0">
+                    <div class="row mx-0 py-0 g-0">
+                        <div class="col-sm-3 mx-0 py-0 g-0">
+                            <h6 class="mb-0">Full Name</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary"><%=userData.fname%></div>
+                    </div>
+                    <hr>
+                    <div class="row mx-0 py-0 g-0">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Email</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary"><%=userData.email%></div>
+                    </div>
+                    <hr>
+                    <div class="row mx-0 py-0 g-0">
+                        <div class="col-sm-3 mx-0 py-0 g-0">
+                            <h6 class="mb-0">Phone</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary"> <%=userData.mobile%></div>
+                    </div>
+                    
+                    
+                    
+                    
+                    <hr>
+                    <div class="row mx-0 py-0 g-0">
+                        <div class="col-sm-12 mx-0 py-0 g-0"> <button type="button" class="btn btn-dark px-3 py-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Edit
+                          </button></div>
+
+                          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Profile</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="" method="post">
+                                <div class="modal-body">
+                                    <div class="form-outline">
+
+                                        <label class="form-label" for="modelno">Full Name</label>
+                                        <input type="text" id="fname" name="fname" class="form-control" required />
+                                        
+                                      </div>
+                                      
+                                      <div class="form-outline">
+
+                                        <label class="form-label" for="modelno">Mobile</label>
+                                        <input type="text" id="name" name="mobile" class="form-control" required />
+                                        
+                                      </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+
+
+    </div>
+
+    
+
+    
+
+    
+
+
+    <%- include('../layouts/footer') %>

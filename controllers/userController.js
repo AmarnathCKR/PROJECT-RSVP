@@ -489,224 +489,10 @@ const submitPassword = async (req, res) => {
 
 const productPage = async (req, res) => {
   try {
-    let search = "";
-    if (req.query.id) {
-      const categoryDetails = await Category.findOne({ _id: req.query.id });
-      const categoryName = categoryDetails.name;
+    if (req.query.search != null) {
+      let search = req.query.search;
       const categoryData = await Category.find({ status: true });
 
-      const colorData = await Product.find({ status: true });
-
-      const email = req.session.auth;
-      const userDetails = await User.findOne({ email: email });
-      const wishData = await Wishlist.findOne({
-        customer: userDetails._id,
-      }).populate("products");
-
-      Product.find({ category: req.query.id })
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .exec(function (err, products) {
-          Product.count().exec(function (err, count) {
-            if (err) return next(err);
-
-            res.render("user/partials/product", {
-              product: products,
-              shop: "active",
-              colors: colorData,
-              category: categoryName,
-              categories: categoryData,
-              wishData,
-              current: page,
-              pages: Math.ceil(count / perPage),
-              usersession: req.session.auth,
-            });
-          });
-        });
-    } else if (req.query.idPro) {
-      const productColor = await Product.findOne({ _id: req.query.idPro });
-      const colorName = productColor.color;
-      const categoryData = await Category.find({ status: true });
-
-      const colorData = await Product.find({ status: true });
-
-      const email = req.session.auth;
-      const userDetails = await User.findOne({ email: email });
-      const wishData = await Wishlist.findOne({
-        customer: userDetails._id,
-      }).populate("products");
-
-      Product.find({ _id: req.query.idPro })
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .exec(function (err, products) {
-          Product.count().exec(function (err, count) {
-            if (err) return next(err);
-
-            res.render("user/partials/product", {
-              product: products,
-              categories: categoryData,
-              category: colorName,
-              colors: colorData,
-              shop: "active",
-              wishData,
-              current: page,
-              pages: Math.ceil(count / perPage),
-              usersession: req.session.auth,
-            });
-          });
-        });
-    } else if (req.query.idStock == "inStock") {
-      const colorName = "In stock";
-      const categoryData = await Category.find({ status: true });
-
-      const colorData = await Product.find({ status: true });
-
-      const email = req.session.auth;
-      const userDetails = await User.findOne({ email: email });
-      const wishData = await Wishlist.findOne({
-        customer: userDetails._id,
-      }).populate("products");
-
-      Product.find({ stock: { $gt: 0 } })
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .exec(function (err, products) {
-          Product.count().exec(function (err, count) {
-            if (err) return next(err);
-
-            res.render("user/partials/product", {
-              product: products,
-              categories: categoryData,
-              category: colorName,
-              colors: colorData,
-              shop: "active",
-              wishData,
-              current: page,
-              pages: Math.ceil(count / perPage),
-              usersession: req.session.auth,
-            });
-          });
-        });
-    } else if (req.query.idStock == "outStock") {
-      const colorName = "Out stock";
-
-      const colorData = await Product.find({ status: true });
-
-      const email = req.session.auth;
-      const userDetails = await User.findOne({ email: email });
-      const wishData = await Wishlist.findOne({
-        customer: userDetails._id,
-      }).populate("products");
-
-      const categoryData = await Category.find({ status: true });
-      Product.find({ stock: 0 })
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .exec(function (err, products) {
-          var perPage = 6;
-          var page = req.query.page || 1;
-
-          Product.count().exec(function (err, count) {
-            if (err) return next(err);
-
-            res.render("user/partials/product", {
-              product: products,
-              categories: categoryData,
-              category: colorName,
-              colors: colorData,
-              shop: "active",
-              wishData,
-              current: page,
-              pages: Math.ceil(count / perPage),
-              usersession: req.session.auth,
-            });
-          });
-        });
-    } else if (req.query.search) {
-      const search = req.query.search;
-      const categoryData = await Category.find({ status: true });
-
-      const colorData = await Product.find({ status: true });
-
-      const email = req.session.auth;
-      const userDetails = await User.findOne({ email: email });
-      const wishData = await Wishlist.findOne({
-        customer: userDetails._id,
-      }).populate("products");
-
-      Product.find({
-        status: true,
-        $or: [
-          { name: { $regex: "." + search + ".*", $options: "i" } },
-
-          { model: { $regex: "." + search + ".*", $options: "i" } },
-        ],
-      })
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .exec(function (err, products) {
-          Product.count().exec(function (err, count) {
-            if (err) return next(err);
-
-            res.render("user/partials/product", {
-              product: products,
-              categories: categoryData,
-              category: "Search :" + search,
-              colors: colorData,
-              shop: "active",
-              wishData,
-              current: page,
-              pages: Math.ceil(count / perPage),
-              usersession: req.session.auth,
-            });
-          });
-        });
-    } else if (req.query.sort) {
-      if (req.query.sort == "high") {
-        sort = { price: -1 };
-      } else if (req.query.sort == "low") {
-        sort = { price: 1 };
-      } else {
-        sort = {};
-      }
-
-      const categoryData = await Category.find({ status: true });
-
-      const colorData = await Product.find({ status: true });
-
-      const email = req.session.auth;
-      const userDetails = await User.findOne({ email: email });
-      const wishData = await Wishlist.findOne({
-        customer: userDetails._id,
-      }).populate("products");
-
-      Product.find({
-        status: true,
-      })
-        .sort(sort)
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .exec(function (err, products) {
-          Product.count().exec(function (err, count) {
-            if (err) return next(err);
-
-            res.render("user/partials/product", {
-              product: products,
-              categories: categoryData,
-              category: "Search :" + search,
-              colors: colorData,
-              shop: "active",
-              wishData,
-              current: page,
-              pages: Math.ceil(count / perPage),
-              usersession: req.session.auth,
-            });
-          });
-        });
-    } else {
-      const categoryData = await Category.find({ status: true });
-      const productData = await Product.find({ status: true });
       const colorData = await Product.find({ status: true });
 
       const email = req.session.auth;
@@ -716,10 +502,17 @@ const productPage = async (req, res) => {
       }).populate("products");
 
       var perPage = 6;
-      var page = req.query.page || 1;
+      var pages = req.query.page || 1;
 
-      Product.find({ status: true })
-        .skip(perPage * page - perPage)
+      Product.find({
+        status: true,
+        $or: [
+          { name: { $regex: "." + search + ".*", $options: "i" } },
+
+          { model: { $regex: "." + search + ".*", $options: "i" } },
+        ],
+      })
+        .skip(perPage * pages - perPage)
         .limit(perPage)
         .exec(function (err, products) {
           Product.count().exec(function (err, count) {
@@ -728,15 +521,55 @@ const productPage = async (req, res) => {
             res.render("user/partials/product", {
               product: products,
               categories: categoryData,
-              shop: "active",
+              category: "",
               colors: colorData,
+              shop: "active",
               wishData,
-              current: page,
+              current: pages,
               pages: Math.ceil(count / perPage),
               usersession: req.session.auth,
             });
           });
         });
+    } else {
+      const categoryData = await Category.find({ status: true });
+
+    const colorData = await Product.find({ status: true });
+
+    const email = req.session.auth;
+    const userDetails = await User.findOne({ email: email });
+    const wishData = await Wishlist.findOne({
+      customer: userDetails._id,
+    }).populate("products");
+
+    var perPage = 6;
+    var pages = req.query.page || 1;
+
+    Product.find({
+      status: true,
+    })
+      .skip(perPage * pages - perPage)
+      .limit(perPage)
+      .exec(function (err, products) {
+        Product.count().exec(function (err, count) {
+          if (err) return next(err);
+
+          res.render("user/partials/product", {
+            product: products,
+            categories: categoryData,
+            category: "",
+            colors: colorData,
+            shop: "active",
+            wishData,
+            current: pages,
+            pages: Math.ceil(count / perPage),
+            usersession: req.session.auth,
+          });
+        });
+      });
+
+
+
     }
   } catch (err) {
     console.log(err);
@@ -849,8 +682,6 @@ const cartPage = async (req, res) => {
     const proimg = await Cart.findOne({ customer: userDetails._id }).populate(
       "products.productId"
     );
-
-    
 
     res.render("user/partials/cart", {
       cartList: proimg,
@@ -971,63 +802,178 @@ const incrimentQuantity = async (req, res) => {
   }
 };
 
-const checkoutPage =async (req,res)=>{
+const checkoutPage = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
   const wishData = await Wishlist.findOne({
     customer: userDetails._id,
   }).populate("products");
-  
-  
-  res.render("user/partials/checkout",{
-      wishData,
+
+  res.render("user/partials/checkout", {
+    wishData,
     usersession: req.session.auth,
-  })
-}
-
-const profilePage = async (req,res) => {
-  const email = req.session.auth;
-  const userDetails = await User.findOne({ email: email });
-  const wishData = await Wishlist.findOne({
-    customer: userDetails._id,
-  }).populate("products");
-  
-  
-  res.render("user/partials/profile",{
-      wishData,
-    usersession: req.session.auth,
-  })
-}
+  });
+};
 
 
-const catFiltering= async (req,res)=>{
-  console.log(req.body.cat)
+
+const catFiltering = async (req, res) => {
+  console.log(req.body.cat);
   const categoryDetails = await Category.findOne({ _id: req.body.cat });
+
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+
+  const products = await Product.find({ category: req.body.cat, status: true });
+
+  res.json({
+    data: products,
+  });
+};
+
+const colorFiltering = async (req, res) => {
+  const colorData = await Product.find({ color: req.body.cat, status: true });
+
+  res.json({
+    data: colorData,
+  });
+};
+
+const stockStatus = async (req, res) => {
+  if (req.body.cat == "inStock") {
+    const stockData = await Product.find({ stock: { $gt: 0 } });
+    res.json({
+      data: stockData,
+    });
+  } else if (req.body.cat == "outStock") {
+    const stockData = await Product.find({ stock: 0 });
+    res.json({
+      data: stockData,
+    });
+  }
+};
+
+const sortStatus = async (req, res) => {
+  if (req.body.cat == "high") {
+    sort = { price: -1 };
+  } else if (req.body.cat == "low") {
+    sort = { price: 1 };
+  } else {
+    sort = {};
+  }
+  const sortData = await Product.find({ status: true }).sort(sort);
+
+  res.json({
+    data: sortData,
+  });
+};
+
+const pageStatus = async (req, res) => {
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+
+  var perPage = 6;
+  var page = req.body.cat || 1;
+
+  Product.find({
+    status: true,
+  })
+    .skip(perPage * page - perPage)
+    .limit(perPage)
+    .exec(function (err, products) {
+      Product.count().exec(function (err, count) {
+        if (err) return next(err);
+        const val = Math.ceil(count / perPage);
+        const currents = page;
+        res.json({
+          data: products,
+          current: currents,
+          pages: val,
+        });
+      });
+    });
+};
+
+
+
+const profilePage = async (req, res) => {
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const wishData = await Wishlist.findOne({
+    customer: userDetails._id,
+  }).populate("products");
+
+  res.render("user/partials/profile", {
+    wishData,
+    usersession: req.session.auth,
+    userData : userDetails
+  });
+};
+
+const editUserSubmit = async (req,res)=>{
+  
+  if(req.body.fname){
+    await User.updateOne({email : req.session.auth},{$set : {fname : req.body.fname, mobile : req.body.mobile} }
       
-      const email = req.session.auth;
-      const userDetails = await User.findOne({ email: email });
+      )
+      res.redirect("/user-profile")
+  }else{
+    res.redirect('/user-profile')
+  }
+
+}
+
+const addressPage = async (req,res)=>{
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const wishData = await Wishlist.findOne({
+    customer: userDetails._id,
+  }).populate("products");
+
+  res.render("user/partials/addresses", {
+    wishData,
+    usersession: req.session.auth,
+    userData : userDetails
+  });
+}
+
+
+const addAddress = async (req,res)=>{
+
+  const email = req.session.auth
+  const userDetails = await User.updateOne({ email:  email},
+     {
+      $push : {
+        address : {
+      name : req.body.name,
+     contact : req.body.contact,
+     fullAddress : req.body.fullAddress,
+     stat : false,
+     pincode : req.body.pincode}
+     }}
+  );
+  res.redirect("/user-address")
+  
+  
+}
+
+
+const editAddress = async (req,res)=>{
+  const email = req.session.auth
+  
+    await User.updateOne({email : email , address : {_id : req.body.id}},
      
-
-      const products = await Product.find({ category: req.body.cat ,status : true})
-   
-        
-            res.json({
-              data : products
-                }) 
-       
+      {
+        $set : {
+          address : {name : req.body.name , fullAddress: req.body.fulladdress, contact : req.body.contact,pincode : req.body.pincode  }
+        }
+      }
+     
+      
+      
+      )
+      res.redirect('/user-address')
 }
-
-const colorFiltering = async (req,res)=>{
- 
-      const colorData = await Product.find({ color : req.body.cat,status : true })
-   
-        
-            res.json({
-              data : colorData
-                }) 
-       
-}
-
 
 module.exports = {
   userHome,
@@ -1056,8 +1002,15 @@ module.exports = {
   incrimentQuantity,
   removeCart,
   deleteCart,
-  checkoutPage, 
+  checkoutPage,
   profilePage,
   catFiltering,
-  colorFiltering
+  colorFiltering,
+  stockStatus,
+  sortStatus,
+  pageStatus,
+  editUserSubmit,
+  addressPage,
+  addAddress,
+  editAddress
 };

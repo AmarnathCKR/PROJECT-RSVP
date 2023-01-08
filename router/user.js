@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const userSession=require('../middleware/user/usersession')
+const Product = require('../models/productModel')
 
 router.get("/",userController.userHome);
 router.get("/login", userController.userLogin);
@@ -38,6 +39,11 @@ router.get('/delete-cart',userSession.isLogin, userController.deleteCart)
 router.get('/checkout',userSession.isLogin,userController.checkoutPage)
 
 router.get('/user-profile',userSession.isLogin,userController.profilePage)
+router.get('/user-address',userSession.isLogin,userController.addressPage)
+router.post('/user-address',userSession.isLogin,userController.addAddress)
+router.post('/edit-address',userSession.isLogin,userController.editAddress)
+
+router.post('/user-profile',userSession.isLogin,userController.editUserSubmit)
 
 
 
@@ -45,6 +51,10 @@ router.get('/user-profile',userSession.isLogin,userController.profilePage)
 
 router.patch("/catFilter",userController.catFiltering)
 router.patch("/colorFilter",userController.colorFiltering)
+router.patch('/stockCheck',userController.stockStatus)
+router.patch('/sort-check',userController.sortStatus)
+router.patch('/check-page',userController.pageStatus)
 
 
 module.exports = router;
+

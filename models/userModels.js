@@ -20,7 +20,17 @@ const UserSchema = new mongoose.Schema({
   status: {
     type: Boolean,
     required: true
-  }
+  },
+
+  address : [{
+    name : String,
+    contact : String,
+    fullAddress : String,
+    stat : Boolean,
+    pincode : String
+
+  }]
+
 
 });
 

@@ -1,0 +1,245 @@
+<%- include('../layouts/header') %>
+
+    <div class="row mx-0 py-0 g-0">
+
+        <div class="col-lg-4 mx-0 py-0 g-0">
+            <div class="d-flex flex-column flex-shrink-0 p-3 border-right" style="width: 280px;">
+                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                    <svg class="bi pe-none me-2" width="40" height="32">
+                        <use xlink:href="#bootstrap"></use>
+                    </svg>
+                    <span class="fs-4">Account</span>
+                </a>
+                <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="/user-profile" class="nav-link link-dark" aria-current="page">
+                            <svg class="bi pe-none me-2" width="16" height="16">
+                                <use xlink:href="#home"></use>
+                            </svg>
+                            Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/user-address" class="nav-link  active">
+                            <svg class="bi pe-none me-2" width="16" height="16">
+                                <use xlink:href="#speedometer2"></use>
+                            </svg>
+                            Address
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/orders" class="nav-link link-dark">
+                            <svg class="bi pe-none me-2" width="16" height="16">
+                                <use xlink:href="#table"></use>
+                            </svg>
+                            Orders
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/logout" class="nav-link link-danger">
+                            <svg class="bi pe-none me-2" width="16" height="16">
+                                <use xlink:href="#people-circle"></use>
+                            </svg>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+
+
+
+            </div>
+        </div>
+
+
+        <div class="col-lg-8 mx-0 py-0 g-0">
+            <div class="card mb-3 mx-0 py-0 g-0">
+                <div class="card-body mx-0 py-0 g-0">
+
+                    <% if(userData.address[0] !=null){ %>
+
+                        <div class="row mx-0 py-0 g-0">
+                            <div class="col-sm-3 mx-0 py-0 g-0">
+                                <h6 class="mb-0">Adress</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <%=userData.address[0].fullAddress%>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mx-0 py-0 g-0">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Contact</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <%=userData.address[0].contact%>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mx-0 py-0 g-0">
+                            <div class="col-sm-3 mx-0 py-0 g-0">
+                                <h6 class="mb-0">Name</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <%=userData.address[0].name%>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mx-0 py-0 g-0">
+                            <div class="col-sm-3 mx-0 py-0 g-0">
+                                <h6 class="mb-0">Pincode</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <%=userData.address[0].pincode%>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Edit Section -->
+
+                        <hr>
+                        <div class="row mx-0 py-0 g-0">
+                            <div class="col-sm-12 mx-0 py-0 g-0"> <button type="button" class="btn btn-dark px-3 py-2"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Edit Address
+                                </button></div>
+
+                            <div class="modal fade shadow" id="exampleModal" tabindex="-1"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Address</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <form action="/edit-address" method="post">
+                                            <div class="modal-body">
+                                                <div class="form-outline">
+
+                                                    <label class="form-label" for="modelno">Name</label>
+                                                    <input type="text" id="name" name="name" class="form-control"
+                                                        required />
+
+                                                </div>
+
+                                                <div class="form-outline">
+
+                                                    <input type="text" id="name" name="id" value="<%=userData.address[0]._id%>" class="form-control"
+                                                        hidden />
+                                                    <label class="form-label" for="modelno">Contact</label>
+                                                    <input type="text" id="name" name="contact" class="form-control"
+                                                        required />
+
+                                                </div>
+                                                <div class="form-outline">
+
+                                                    <label class="form-label" for="modelno">Full Address</label>
+                                                    <input type="text" id="name" name="fullAddress" class="form-control"
+                                                        required />
+
+                                                </div>
+                                                <div class="form-outline">
+
+                                                    <label class="form-label" for="modelno">Pincode</label>
+                                                    <input type="text" id="name" name="pincode" class="form-control"
+                                                        required />
+
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <%}else{%>
+
+                            <div class="row mx-0 py-0 g-0">
+
+                                <h4>No Addresses Found</h4>
+
+                                <button type="button" class="btn btn-dark px-3 py-2" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    <i class="bi bi-plus"></i>Add Address
+                                </button>
+
+                                <div class="modal fade shadow" id="exampleModal" tabindex="-1"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Address</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <form action="" method="post">
+                                                <div class="modal-body">
+                                                    <div class="form-outline">
+
+                                                        <label class="form-label" for="modelno">Name</label>
+                                                        <input type="text" id="name" name="name" class="form-control"
+                                                            required />
+
+                                                    </div>
+
+                                                    <div class="form-outline">
+
+                                                        <label class="form-label" for="modelno">Contact</label>
+                                                        <input type="text" id="name" name="contact" class="form-control"
+                                                            required />
+
+                                                    </div>
+                                                    <div class="form-outline">
+
+                                                        <label class="form-label" for="modelno">Full Address</label>
+                                                        <input type="text" id="name" name="fullAddress"
+                                                            class="form-control" required />
+
+                                                    </div>
+                                                    <div class="form-outline">
+
+                                                        <label class="form-label" for="modelno">Pincode</label>
+                                                        <input type="text" id="name" name="pincode" class="form-control"
+                                                            required />
+
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <%}%>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+    <%- include('../layouts/footer') %>
