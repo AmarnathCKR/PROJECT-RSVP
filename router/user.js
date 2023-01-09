@@ -35,13 +35,14 @@ router.get('/add-cart',userSession.isLogin, userController.addCart)
 router.get('/inc-queue',userSession.isLogin, userController.incrimentQuantity)
 router.get('/remove-cart',userSession.isLogin, userController.removeCart)
 router.get('/delete-cart',userSession.isLogin, userController.deleteCart)
-
-router.get('/checkout',userSession.isLogin,userController.checkoutPage)
+router.get('/delete-cart',userSession.isLogin, userController.deleteCart)
+router.get('/change-stat',userSession.isLogin,userController.setDefault)
 
 router.get('/user-profile',userSession.isLogin,userController.profilePage)
 router.get('/user-address',userSession.isLogin,userController.addressPage)
 router.post('/user-address',userSession.isLogin,userController.addAddress)
 router.post('/edit-address',userSession.isLogin,userController.editAddress)
+router.get('/delete-address',userSession.isLogin,userController.deleteAddress)
 
 router.post('/user-profile',userSession.isLogin,userController.editUserSubmit)
 

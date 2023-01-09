@@ -58,129 +58,77 @@
             <div class="card mb-3 mx-0 py-0 g-0">
                 <div class="card-body mx-0 py-0 g-0">
 
-                    <% if(userData.address[0] !=null){ %>
+                    
 
-                        <div class="row mx-0 py-0 g-0">
-                            <div class="col-sm-3 mx-0 py-0 g-0">
-                                <h6 class="mb-0">Adress</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <%=userData.address[0].fullAddress%>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row mx-0 py-0 g-0">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Contact</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <%=userData.address[0].contact%>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row mx-0 py-0 g-0">
-                            <div class="col-sm-3 mx-0 py-0 g-0">
-                                <h6 class="mb-0">Name</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <%=userData.address[0].name%>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row mx-0 py-0 g-0">
-                            <div class="col-sm-3 mx-0 py-0 g-0">
-                                <h6 class="mb-0">Pincode</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <%=userData.address[0].pincode%>
-                            </div>
-                        </div>
+
+                    <% if(userData.address !=null){ %>
+
+                        <% userData.address.forEach(function(data,i){%>
 
 
 
-                        <!-- Edit Section -->
-
-                        <hr>
-                        <div class="row mx-0 py-0 g-0">
-                            <div class="col-sm-12 mx-0 py-0 g-0"> <button type="button" class="btn btn-dark px-3 py-2"
-                                    data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    Edit Address
-                                </button></div>
-
-                            <div class="modal fade shadow" id="exampleModal" tabindex="-1"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Address</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <form action="/edit-address" method="post">
-                                            <div class="modal-body">
-                                                <div class="form-outline">
-
-                                                    <label class="form-label" for="modelno">Name</label>
-                                                    <input type="text" id="name" name="name" class="form-control"
-                                                        required />
-
-                                                </div>
-
-                                                <div class="form-outline">
-
-                                                    <input type="text" id="name" name="id" value="<%=userData.address[0]._id%>" class="form-control"
-                                                        hidden />
-                                                    <label class="form-label" for="modelno">Contact</label>
-                                                    <input type="text" id="name" name="contact" class="form-control"
-                                                        required />
-
-                                                </div>
-                                                <div class="form-outline">
-
-                                                    <label class="form-label" for="modelno">Full Address</label>
-                                                    <input type="text" id="name" name="fullAddress" class="form-control"
-                                                        required />
-
-                                                </div>
-                                                <div class="form-outline">
-
-                                                    <label class="form-label" for="modelno">Pincode</label>
-                                                    <input type="text" id="name" name="pincode" class="form-control"
-                                                        required />
-
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save changes</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                            <div class="row my-3 mx-0 py-0 g-0">
+                                <div class="col-sm-3 mx-0 py-0 g-0">
+                                    <h6 class="mb-0">Adress</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <%=data.fullAddress%>
                                 </div>
                             </div>
-                        </div>
-                        <%}else{%>
-
+                            <hr>
                             <div class="row mx-0 py-0 g-0">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Contact</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <%=data.contact%>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row mx-0 py-0 g-0">
+                                <div class="col-sm-3 mx-0 py-0 g-0">
+                                    <h6 class="mb-0">Name</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <%=data.name%>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row mx-0 py-0 g-0">
+                                <div class="col-sm-3 mx-0 py-0 g-0">
+                                    <h6 class="mb-0">Pincode</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <%=data.pincode%>
+                                </div>
+                            </div>
 
-                                <h4>No Addresses Found</h4>
 
-                                <button type="button" class="btn btn-dark px-3 py-2" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal">
-                                    <i class="bi bi-plus"></i>Add Address
-                                </button>
 
-                                <div class="modal fade shadow" id="exampleModal" tabindex="-1"
+                            <!-- Edit Section -->
+
+                            <hr>
+                            <div class="row mx-0 mb-4 py-0 g-0">
+                                <div class="col-sm-12 mx-0 py-0 g-0"> <button type="button"
+                                        class="btn btn-dark px-3 py-2" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal<%=data._id%>">
+                                        Edit Address
+                                    </button><a href="/delete-address/?id=<%=data._id%>" class="btn btn-dark mx-2 px-3 py-2">Delete</a><%if(data.stat==false ){%>
+                                        <a href="/change-stat/?id=<%=data._id%>" class="btn btn-dark mx-2 px-3 py-2">Set as Default</a>
+                                        <%}else{%><p class="p-2"><i class="bi bi-patch-check"></i>Default</p><%}%></div>
+                                    
+                               
+
+                                <div class="modal fade shadow" id="exampleModal<%=data._id%>" tabindex="-1"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Address</h1>
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Address</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
-                                            <form action="" method="post">
+                                            <form action="/edit-address" method="post">
                                                 <div class="modal-body">
                                                     <div class="form-outline">
 
@@ -192,6 +140,8 @@
 
                                                     <div class="form-outline">
 
+                                                        <input type="text" id="name" name="id" value="<%=data._id%>"
+                                                            class="form-control" hidden />
                                                         <label class="form-label" for="modelno">Contact</label>
                                                         <input type="text" id="name" name="contact" class="form-control"
                                                             required />
@@ -222,7 +172,138 @@
                                     </div>
                                 </div>
                             </div>
-                            <%}%>
+
+                            <%})%>
+                                <%}else{%>
+
+                                    <div class="row mx-0 py-0 g-0">
+
+                                        <h4>No Addresses Found</h4>
+
+                                        <button type="button" class="btn btn-dark px-3 py-2" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal2">
+                                            <i class="bi bi-plus"></i>Add Address
+                                        </button>
+
+                                        <div class="modal fade shadow" id="exampleModal" tabindex="-1"
+                                            aria-labelledby="exampleModalLabel2" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Address
+                                                        </h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="/user-address" method="post">
+                                                        <div class="modal-body">
+                                                            <div class="form-outline">
+
+                                                                <label class="form-label" for="modelno">Name</label>
+                                                                <input type="text" id="name" name="name"
+                                                                    class="form-control" required />
+
+                                                            </div>
+
+                                                            <div class="form-outline">
+
+                                                                <label class="form-label" for="modelno">Contact</label>
+                                                                <input type="text" id="name" name="contact"
+                                                                    class="form-control" required />
+
+                                                            </div>
+                                                            <div class="form-outline">
+
+                                                                <label class="form-label" for="modelno">Full
+                                                                    Address</label>
+                                                                <input type="text" id="name" name="fullAddress"
+                                                                    class="form-control" required />
+
+                                                            </div>
+                                                            <div class="form-outline">
+
+                                                                <label class="form-label" for="modelno">Pincode</label>
+                                                                <input type="text" id="name" name="pincode"
+                                                                    class="form-control" required />
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Save
+                                                                changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <%}%>
+
+
+                                    <div class="row my-4 mx-0 py-0 g-0">
+
+                                        
+
+                                        <button type="button" class="btn btn-dark px-3 py-2" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal3">
+                                            <i class="bi bi-plus"></i>Add new Address
+                                        </button>
+
+                                        <div class="modal fade shadow" id="exampleModal3" tabindex="-1"
+                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Address
+                                                        </h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="/user-address" method="post">
+                                                        <div class="modal-body">
+                                                            <div class="form-outline">
+
+                                                                <label class="form-label" for="modelno">Name</label>
+                                                                <input type="text" id="name" name="name"
+                                                                    class="form-control" required />
+
+                                                            </div>
+
+                                                            <div class="form-outline">
+
+                                                                <label class="form-label" for="modelno">Contact</label>
+                                                                <input type="text" id="name" name="contact"
+                                                                    class="form-control" required />
+
+                                                            </div>
+                                                            <div class="form-outline">
+
+                                                                <label class="form-label" for="modelno">Full
+                                                                    Address</label>
+                                                                <input type="text" id="name" name="fullAddress"
+                                                                    class="form-control" required />
+
+                                                            </div>
+                                                            <div class="form-outline">
+
+                                                                <label class="form-label" for="modelno">Pincode</label>
+                                                                <input type="text" id="name" name="pincode"
+                                                                    class="form-control" required />
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Save
+                                                                changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
 
 
                 </div>

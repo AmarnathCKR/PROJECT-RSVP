@@ -534,42 +534,39 @@ const productPage = async (req, res) => {
     } else {
       const categoryData = await Category.find({ status: true });
 
-    const colorData = await Product.find({ status: true });
+      const colorData = await Product.find({ status: true });
 
-    const email = req.session.auth;
-    const userDetails = await User.findOne({ email: email });
-    const wishData = await Wishlist.findOne({
-      customer: userDetails._id,
-    }).populate("products");
+      const email = req.session.auth;
+      const userDetails = await User.findOne({ email: email });
+      const wishData = await Wishlist.findOne({
+        customer: userDetails._id,
+      }).populate("products");
 
-    var perPage = 6;
-    var pages = req.query.page || 1;
+      var perPage = 6;
+      var pages = req.query.page || 1;
 
-    Product.find({
-      status: true,
-    })
-      .skip(perPage * pages - perPage)
-      .limit(perPage)
-      .exec(function (err, products) {
-        Product.count().exec(function (err, count) {
-          if (err) return next(err);
+      Product.find({
+        status: true,
+      })
+        .skip(perPage * pages - perPage)
+        .limit(perPage)
+        .exec(function (err, products) {
+          Product.count().exec(function (err, count) {
+            if (err) return next(err);
 
-          res.render("user/partials/product", {
-            product: products,
-            categories: categoryData,
-            category: "",
-            colors: colorData,
-            shop: "active",
-            wishData,
-            current: pages,
-            pages: Math.ceil(count / perPage),
-            usersession: req.session.auth,
+            res.render("user/partials/product", {
+              product: products,
+              categories: categoryData,
+              category: "",
+              colors: colorData,
+              shop: "active",
+              wishData,
+              current: pages,
+              pages: Math.ceil(count / perPage),
+              usersession: req.session.auth,
+            });
           });
         });
-      });
-
-
-
     }
   } catch (err) {
     console.log(err);
@@ -815,8 +812,6 @@ const checkoutPage = async (req, res) => {
   });
 };
 
-
-
 const catFiltering = async (req, res) => {
   console.log(req.body.cat);
   const categoryDetails = await Category.findOne({ _id: req.body.cat });
@@ -894,8 +889,6 @@ const pageStatus = async (req, res) => {
     });
 };
 
-
-
 const profilePage = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
@@ -906,24 +899,23 @@ const profilePage = async (req, res) => {
   res.render("user/partials/profile", {
     wishData,
     usersession: req.session.auth,
-    userData : userDetails
+    userData: userDetails,
   });
 };
 
-const editUserSubmit = async (req,res)=>{
-  
-  if(req.body.fname){
-    await User.updateOne({email : req.session.auth},{$set : {fname : req.body.fname, mobile : req.body.mobile} }
-      
-      )
-      res.redirect("/user-profile")
-  }else{
-    res.redirect('/user-profile')
+const editUserSubmit = async (req, res) => {
+  if (req.body.fname) {
+    await User.updateOne(
+      { email: req.session.auth },
+      { $set: { fname: req.body.fname, mobile: req.body.mobile } }
+    );
+    res.redirect("/user-profile");
+  } else {
+    res.redirect("/user-profile");
   }
+};
 
-}
-
-const addressPage = async (req,res)=>{
+const addressPage = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
   const wishData = await Wishlist.findOne({
@@ -933,46 +925,97 @@ const addressPage = async (req,res)=>{
   res.render("user/partials/addresses", {
     wishData,
     usersession: req.session.auth,
-    userData : userDetails
+    userData: userDetails,
   });
-}
+};
 
-
-const addAddress = async (req,res)=>{
-
-  const email = req.session.auth
-  const userDetails = await User.updateOne({ email:  email},
-     {
-      $push : {
-        address : {
-      name : req.body.name,
-     contact : req.body.contact,
-     fullAddress : req.body.fullAddress,
-     stat : false,
-     pincode : req.body.pincode}
-     }}
+const addAddress = async (req, res) => {
+  const email = req.session.auth;
+  await User.updateOne(
+    { email: email },
+    {
+      $push: {
+        address: {
+          name: req.body.name,
+          contact: req.body.contact,
+          fullAddress: req.body.fullAddress,
+          stat: false,
+          pincode: req.body.pincode,
+        },
+      },
+    }
   );
-  res.redirect("/user-address")
-  
-  
-}
+
+  console.log("New address Added");
+  res.redirect("/user-address");
+};
+
+const editAddress = async (req, res) => {
+  const email = req.session.auth;
+
+  await User.updateOne(
+    { email: email, "address._id": req.body.id },
+
+    {
+      $set: {
+        "address.$.name": req.body.name,
+        "address.$.fullAddress": req.body.fullAddress,
+        "address.$.contact": req.body.contact,
+        "address.$.pincode": req.body.pincode,
+      },
+    }
+  );
+
+  console.log("address edited");
+  res.redirect("/user-address");
+};
+
+const deleteAddress = async (req, res) => {
+  const email = req.session.auth;
+  await User.updateOne(
+    { email: email },
+
+    {
+      $pull: {
+        address : {_id: req.query.id,}
+        
+      },
+    }
+  );
+
+  console.log('delete address')
+  res.redirect('/user-address')
+};
 
 
-const editAddress = async (req,res)=>{
-  const email = req.session.auth
-  
-    await User.updateOne({email : email , address : {_id : req.body.id}},
-     
-      {
-        $set : {
-          address : {name : req.body.name , fullAddress: req.body.fulladdress, contact : req.body.contact,pincode : req.body.pincode  }
-        }
-      }
-     
-      
-      
-      )
-      res.redirect('/user-address')
+const setDefault = async (req,res)=>{
+  const email = req.session.auth;
+
+  await User.updateOne(
+    { email: email, "address.stat": true },
+
+    {
+      $set: {
+        "address.$.stat": false,
+        
+      },
+    }
+  );
+ 
+ 
+ 
+  await User.updateOne(
+    { email: email, "address._id": req.query.id },
+
+    {
+      $set: {
+        "address.$.stat": true,
+      },
+    }
+  );
+
+  console.log("address defaulted");
+  res.redirect("/user-address");
 }
 
 module.exports = {
@@ -1012,5 +1055,7 @@ module.exports = {
   editUserSubmit,
   addressPage,
   addAddress,
-  editAddress
+  editAddress,
+  deleteAddress,
+  setDefault
 };
