@@ -48,10 +48,12 @@
 
 						<% if (others.stock >0) { %>
 						<a href="/add-cart/?id=<%= others._id%>" class="btn"> Add To Cart </a>
+						<a href="/check-out/?id=<%= others._id%>" class="btn"> Check Out </a>
 						<%}else{%>
 						<a href="/add-cart/?id=<%= others._id%>" class="btn disabled"> Add To Cart </a>
+						<a href="/check-out/?id=<%= others._id%>" class="btn disabled"> Check Out </a>
 						<% } %>
-						<a href="/check-out/?id=<%= others._id%>" class="btn"> Check Out </a>
+						
 						<% if (wishDetails==null) { %>
 							<a class="text-dark" href="/add-wish-list/?id=<%= others._id%>"><i
 									class="fa fa-heart text-grey" aria-hidden="true">

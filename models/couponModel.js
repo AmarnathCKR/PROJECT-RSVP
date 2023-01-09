@@ -13,11 +13,7 @@ const couponSchema = new mongoose.Schema({
         trim: true,
         required: true,
     },
-    productId: {
-        type : mongoose.Types.ObjectId,
-        ref : Product,
-        required: true,
-    },
+   
     discount: {
         type: String,
     },

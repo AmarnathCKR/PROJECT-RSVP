@@ -38,6 +38,9 @@ router.get('/delete-cart',userSession.isLogin, userController.deleteCart)
 router.get('/delete-cart',userSession.isLogin, userController.deleteCart)
 router.get('/change-stat',userSession.isLogin,userController.setDefault)
 
+
+router.get('/checkout',userSession.isLogin,userController.checkoutPage)
+
 router.get('/user-profile',userSession.isLogin,userController.profilePage)
 router.get('/user-address',userSession.isLogin,userController.addressPage)
 router.post('/user-address',userSession.isLogin,userController.addAddress)
@@ -55,6 +58,9 @@ router.patch("/colorFilter",userController.colorFiltering)
 router.patch('/stockCheck',userController.stockStatus)
 router.patch('/sort-check',userController.sortStatus)
 router.patch('/check-page',userController.pageStatus)
+router.patch('/check-address',userController.checkAddress)
+router.patch('/check-coupon',userController.checkCoupon)
+
 
 
 module.exports = router;

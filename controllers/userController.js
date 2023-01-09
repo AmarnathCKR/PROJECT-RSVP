@@ -7,6 +7,7 @@ const nodemailer = require("nodemailer");
 const session = require("express-session");
 const Banner = require("../models/bannerModel");
 const mongoose = require("mongoose");
+const Coupon = require('../models/couponModel')
 
 const userHome = async (req, res) => {
   try {
@@ -805,10 +806,15 @@ const checkoutPage = async (req, res) => {
   const wishData = await Wishlist.findOne({
     customer: userDetails._id,
   }).populate("products");
+  const cartData = await Cart.findOne({ customer: userDetails._id }).populate(
+    "products.productId"
+  );
 
   res.render("user/partials/checkout", {
+    cartData,
     wishData,
     usersession: req.session.auth,
+    userDetails,
   });
 };
 
@@ -977,18 +983,16 @@ const deleteAddress = async (req, res) => {
 
     {
       $pull: {
-        address : {_id: req.query.id,}
-        
+        address: { _id: req.query.id },
       },
     }
   );
 
-  console.log('delete address')
-  res.redirect('/user-address')
+  console.log("delete address");
+  res.redirect("/user-address");
 };
 
-
-const setDefault = async (req,res)=>{
+const setDefault = async (req, res) => {
   const email = req.session.auth;
 
   await User.updateOne(
@@ -997,13 +1001,10 @@ const setDefault = async (req,res)=>{
     {
       $set: {
         "address.$.stat": false,
-        
       },
     }
   );
- 
- 
- 
+
   await User.updateOne(
     { email: email, "address._id": req.query.id },
 
@@ -1016,6 +1017,135 @@ const setDefault = async (req,res)=>{
 
   console.log("address defaulted");
   res.redirect("/user-address");
+};
+
+const checkAddress = async (req, res) => {
+  const email = req.session.auth;
+  const userData = await User.findOne({ email: email });
+  
+ 
+    const data = req.body
+    const id = req.body.cat
+
+    const address = await User.aggregate([
+
+
+      { $match: { email: email } },
+      { $unwind: "$address" },
+      {
+        $project: {
+          address: "$address.fullAddress",
+          phone: "$address.contact",
+          name: "$address.name",
+          pincode: "$address.pincode",
+          id: "$address._id",
+
+        },
+      },
+
+      { $match: { id: new mongoose.Types.ObjectId(id) } },
+
+    ]);
+
+   
+    res.json({ data: address })
+ 
+  
+
+};
+
+
+const checkCoupon = async (req,res)=>{
+  const email = req.session.auth;
+  const userId = await User.findOne({email : email})
+
+  const couponData = await Coupon.findOne({discount : req.body.cat})
+
+  if(couponData){
+    let currentDate = Date.now()
+
+    function formatDate(date) {
+      var d = new Date(date),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+  
+      if (month.length < 2) 
+          month = '0' + month;
+      if (day.length < 2) 
+          day = '0' + day;
+  
+      return [year, month, day].join('-');
+  }
+   
+  let formatedDate = formatDate(currentDate)
+
+  if(couponData.expirationTime > formatedDate){
+    
+
+      
+      // console.log(productData)
+      const cartItems = await Cart.aggregate([
+        { $match: {customer: userId._id}},
+        { $unwind: "$products"},
+        { $project: {
+          productId: "$products.productId",
+          qty: "$products.quantity"
+        }},
+        {
+          $lookup: {
+            from: 'products',
+            localField: 'productId',
+            foreignField: '_id',
+            as: 'productDetails'
+          }
+        },
+        { $unwind: "$productDetails"},
+        {
+          $project: {
+            price: "$productDetails.price",
+            qty: "$qty"
+          }
+        },
+        
+        
+      ])
+      var final = 0;
+      const Total = cartItems.forEach(function(items){
+        let costValue = parseInt(items.price);
+        addValue = costValue*items.qty
+        
+        
+        final = final + addValue;
+        
+
+      })
+      
+     if(final >=couponData.originalPrice){
+      
+      const finalPrice = parseInt(couponData.finalPrice)
+
+      let discountInit =  Math.round((final * finalPrice) / 100)   
+
+      const discountPrice= final-discountInit
+      console.log(discountPrice)
+
+      
+      
+      res.json({ data: "Coupon Applied Succesfully", price : final,discountInit, discount : discountPrice })
+     }else{
+      res.json({data : 'Need Minimum Cart Value of ₹'+couponData.originalPrice})
+     }
+      
+  }else{
+    res.json({ data: "Coupon Expired" })
+  }
+
+  }else{
+    res.json({ data: "Coupon Doesn't Exist" })
+  }
+
+
 }
 
 module.exports = {
@@ -1057,5 +1187,7 @@ module.exports = {
   addAddress,
   editAddress,
   deleteAddress,
-  setDefault
+  setDefault,
+  checkAddress,
+  checkCoupon
 };

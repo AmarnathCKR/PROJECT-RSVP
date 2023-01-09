@@ -28,18 +28,7 @@
 
         </div>
 
-        <div class="form-outline mb-4">
-
-          <label class="form-label" for="modelno">Product</label>
-          <select name="newProduct" id="" >
-            <%details.forEach((data)=>{%>
-              <option value="<%=data._id%>">
-                <%=data.name%>
-              </option>
-              <%})%>
-          </select>
-          <p id="nameError" class="text-danger mt-3"></p>
-        </div>
+        
 
         <div class="form-outline mb-4">
           <label for="coupon" class="form-label">Min Price</label>

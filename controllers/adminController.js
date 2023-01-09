@@ -404,7 +404,7 @@ const couponPage =async (req, res) => {
   if (req.session.adminAuth) {
     
    
-    const couponData = await Coupon.find({}).populate('productId')
+    const couponData = await Coupon.find({})
     
       res.render("admin/layouts/adminCoupons", {
         details: couponData,
@@ -481,7 +481,7 @@ const submitCoupon = async (req, res) => {
     
     let newCoupon = new Coupon({
       name: req.body.name,
-      productId : mongoose.Types.ObjectId(req.body.newProduct),
+      
       discount : req.body.code,
       status: true,
       originalPrice : req.body.ogPrice,
