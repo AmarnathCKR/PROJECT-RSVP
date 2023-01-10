@@ -29,7 +29,15 @@ const UserSchema = new mongoose.Schema({
     stat : Boolean,
     pincode : String
 
-  }]
+  }],
+
+  coupons:[{
+    
+        type:mongoose.Types.ObjectId,
+        ref:'Coupon'
+    
+
+}],
 
 
 });

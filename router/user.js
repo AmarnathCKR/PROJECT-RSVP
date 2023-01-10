@@ -46,10 +46,10 @@ router.get('/user-address',userSession.isLogin,userController.addressPage)
 router.post('/user-address',userSession.isLogin,userController.addAddress)
 router.post('/edit-address',userSession.isLogin,userController.editAddress)
 router.get('/delete-address',userSession.isLogin,userController.deleteAddress)
-
+router.get('/order-success',userSession.isLogin,userController.orderSuccessPage)
 router.post('/user-profile',userSession.isLogin,userController.editUserSubmit)
-
-
+router.post('/checkout-submit',userSession.isLogin,userController.orderCheck)
+router.get('/check-payment',userSession.isLogin,userController.checkPayment)
 
 //patch
 

@@ -7,7 +7,9 @@ const nodemailer = require("nodemailer");
 const session = require("express-session");
 const Banner = require("../models/bannerModel");
 const mongoose = require("mongoose");
-const Coupon = require('../models/couponModel')
+const Coupon = require("../models/couponModel");
+const Order = require("../models/orderModel");
+var paypal = require("paypal-rest-sdk");
 
 const userHome = async (req, res) => {
   try {
@@ -1022,131 +1024,793 @@ const setDefault = async (req, res) => {
 const checkAddress = async (req, res) => {
   const email = req.session.auth;
   const userData = await User.findOne({ email: email });
-  
- 
-    const data = req.body
-    const id = req.body.cat
 
-    const address = await User.aggregate([
+  const data = req.body;
+  const id = req.body.cat;
 
-
-      { $match: { email: email } },
-      { $unwind: "$address" },
-      {
-        $project: {
-          address: "$address.fullAddress",
-          phone: "$address.contact",
-          name: "$address.name",
-          pincode: "$address.pincode",
-          id: "$address._id",
-
-        },
+  const address = await User.aggregate([
+    { $match: { email: email } },
+    { $unwind: "$address" },
+    {
+      $project: {
+        address: "$address.fullAddress",
+        phone: "$address.contact",
+        name: "$address.name",
+        pincode: "$address.pincode",
+        id: "$address._id",
       },
+    },
 
-      { $match: { id: new mongoose.Types.ObjectId(id) } },
+    { $match: { id: new mongoose.Types.ObjectId(id) } },
+  ]);
 
-    ]);
-
-   
-    res.json({ data: address })
- 
-  
-
+  res.json({ data: address });
 };
 
-
-const checkCoupon = async (req,res)=>{
+const checkCoupon = async (req, res) => {
   const email = req.session.auth;
-  const userId = await User.findOne({email : email})
+  const userId = await User.findOne({ email: email });
 
-  const couponData = await Coupon.findOne({discount : req.body.cat})
+  const couponData = await Coupon.findOne({ discount: req.body.cat });
 
-  if(couponData){
-    let currentDate = Date.now()
+  if (couponData) {
+    let userValid = await User.findOne({
+      email: email,
+      coupons: couponData._id,
+    });
 
-    function formatDate(date) {
-      var d = new Date(date),
-          month = '' + (d.getMonth() + 1),
-          day = '' + d.getDate(),
+    if (userValid == null) {
+      let currentDate = Date.now();
+
+      function formatDate(date) {
+        var d = new Date(date),
+          month = "" + (d.getMonth() + 1),
+          day = "" + d.getDate(),
           year = d.getFullYear();
-  
-      if (month.length < 2) 
-          month = '0' + month;
-      if (day.length < 2) 
-          day = '0' + day;
-  
-      return [year, month, day].join('-');
-  }
-   
-  let formatedDate = formatDate(currentDate)
 
-  if(couponData.expirationTime > formatedDate){
-    
+        if (month.length < 2) month = "0" + month;
+        if (day.length < 2) day = "0" + day;
 
-      
-      // console.log(productData)
+        return [year, month, day].join("-");
+      }
+
+      let formatedDate = formatDate(currentDate);
+
+      if (couponData.expirationTime > formatedDate) {
+        // console.log(productData)
+        const cartItems = await Cart.aggregate([
+          { $match: { customer: userId._id } },
+          { $unwind: "$products" },
+          {
+            $project: {
+              productId: "$products.productId",
+              qty: "$products.quantity",
+            },
+          },
+          {
+            $lookup: {
+              from: "products",
+              localField: "productId",
+              foreignField: "_id",
+              as: "productDetails",
+            },
+          },
+          { $unwind: "$productDetails" },
+          {
+            $project: {
+              price: "$productDetails.price",
+              qty: "$qty",
+            },
+          },
+        ]);
+        var final = 0;
+        const Total = cartItems.forEach(function (items) {
+          let costValue = parseInt(items.price);
+          addValue = costValue * items.qty;
+
+          final = final + addValue;
+        });
+
+        if (final >= couponData.originalPrice) {
+          const finalPrice = parseInt(couponData.finalPrice);
+
+          let discountInit = Math.round((final * finalPrice) / 100);
+
+          const discountPrice = final - discountInit;
+          console.log(discountPrice);
+
+          res.json({
+            data: 'Coupon Applied Succesfully <i class="fa fa-check text-success"></i>',
+            price: final,
+            discountInit,
+            discount: discountPrice,
+            finalPrice,
+          });
+        } else {
+          const cartItems = await Cart.aggregate([
+            { $match: { customer: userId._id } },
+            { $unwind: "$products" },
+            {
+              $project: {
+                productId: "$products.productId",
+                qty: "$products.quantity",
+              },
+            },
+            {
+              $lookup: {
+                from: "products",
+                localField: "productId",
+                foreignField: "_id",
+                as: "productDetails",
+              },
+            },
+            { $unwind: "$productDetails" },
+            {
+              $project: {
+                price: "$productDetails.price",
+                qty: "$qty",
+              },
+            },
+          ]);
+          var final = 0;
+          const Total = cartItems.forEach(function (items) {
+            let costValue = parseInt(items.price);
+            addValue = costValue * items.qty;
+
+            final = final + addValue;
+          });
+
+          res.json({
+            data: "Need Minimum Cart Value of ₹" + couponData.originalPrice,
+            price: final,
+          });
+        }
+      } else {
+        const cartItems = await Cart.aggregate([
+          { $match: { customer: userId._id } },
+          { $unwind: "$products" },
+          {
+            $project: {
+              productId: "$products.productId",
+              qty: "$products.quantity",
+            },
+          },
+          {
+            $lookup: {
+              from: "products",
+              localField: "productId",
+              foreignField: "_id",
+              as: "productDetails",
+            },
+          },
+          { $unwind: "$productDetails" },
+          {
+            $project: {
+              price: "$productDetails.price",
+              qty: "$qty",
+            },
+          },
+        ]);
+        var final = 0;
+        const Total = cartItems.forEach(function (items) {
+          let costValue = parseInt(items.price);
+          addValue = costValue * items.qty;
+
+          final = final + addValue;
+        });
+
+        res.json({ data: "Coupon Expired", price: final });
+      }
+    } else {
       const cartItems = await Cart.aggregate([
-        { $match: {customer: userId._id}},
-        { $unwind: "$products"},
-        { $project: {
-          productId: "$products.productId",
-          qty: "$products.quantity"
-        }},
+        { $match: { customer: userId._id } },
+        { $unwind: "$products" },
+        {
+          $project: {
+            productId: "$products.productId",
+            qty: "$products.quantity",
+          },
+        },
         {
           $lookup: {
-            from: 'products',
-            localField: 'productId',
-            foreignField: '_id',
-            as: 'productDetails'
-          }
+            from: "products",
+            localField: "productId",
+            foreignField: "_id",
+            as: "productDetails",
+          },
         },
-        { $unwind: "$productDetails"},
+        { $unwind: "$productDetails" },
         {
           $project: {
             price: "$productDetails.price",
-            qty: "$qty"
-          }
+            qty: "$qty",
+          },
         },
-        
-        
-      ])
+      ]);
       var final = 0;
-      const Total = cartItems.forEach(function(items){
+      const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
-        addValue = costValue*items.qty
-        
-        
+        addValue = costValue * items.qty;
+
         final = final + addValue;
-        
+      });
 
-      })
-      
-     if(final >=couponData.originalPrice){
-      
-      const finalPrice = parseInt(couponData.finalPrice)
+      res.json({ data: "Coupon Already Used", price: final });
+    }
+  } else {
+    const cartItems = await Cart.aggregate([
+      { $match: { customer: userId._id } },
+      { $unwind: "$products" },
+      {
+        $project: {
+          productId: "$products.productId",
+          qty: "$products.quantity",
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "productId",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      { $unwind: "$productDetails" },
+      {
+        $project: {
+          price: "$productDetails.price",
+          qty: "$qty",
+        },
+      },
+    ]);
+    var final = 0;
+    const Total = cartItems.forEach(function (items) {
+      let costValue = parseInt(items.price);
+      addValue = costValue * items.qty;
 
-      let discountInit =  Math.round((final * finalPrice) / 100)   
+      final = final + addValue;
+    });
 
-      const discountPrice= final-discountInit
-      console.log(discountPrice)
-
-      
-      
-      res.json({ data: "Coupon Applied Succesfully", price : final,discountInit, discount : discountPrice })
-     }else{
-      res.json({data : 'Need Minimum Cart Value of ₹'+couponData.originalPrice})
-     }
-      
-  }else{
-    res.json({ data: "Coupon Expired" })
+    res.json({ data: "Coupon Doesn't Exist", price: final });
   }
+};
 
-  }else{
-    res.json({ data: "Coupon Doesn't Exist" })
+paypal.configure({
+  mode: "sandbox", //sandbox or live
+  client_id:
+    "ASXJezsZfLKkUgsqc4f2V1MoQz98pKz6BikAab5nTXdbayP1c_SgTDdFGKvGiUGjA9tXPhbwOPy7SKFv",
+  client_secret:
+    "EGT_oj-35cm_RRjndBphqfu8aFb6oJ2HGEGuPiljFQPQb02D7QO4TgJMlrvh2GnUvomNdiPYwgBeBcn2",
+});
+
+var newOrder;
+
+const orderCheck = async (req, res) => {
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const cart = await Cart.findOne({ customer: userDetails._id });
+
+  if (req.body.paymentMethod == "COD") {
+    const couponData = await Coupon.findOne({ discount: req.body.couponText });
+
+    if (couponData) {
+      await User.updateOne(
+        { email: email },
+        {
+          $push: { coupons: [couponData._id] },
+        }
+      );
+      const cartItems = await Cart.aggregate([
+        { $match: { customer: userDetails._id } },
+        { $unwind: "$products" },
+        {
+          $project: {
+            productId: "$products.productId",
+            qty: "$products.quantity",
+          },
+        },
+        {
+          $lookup: {
+            from: "products",
+            localField: "productId",
+            foreignField: "_id",
+            as: "productDetails",
+          },
+        },
+        { $unwind: "$productDetails" },
+        {
+          $project: {
+            price: "$productDetails.price",
+            qty: "$qty",
+          },
+        },
+      ]);
+      var final = 0;
+      const Total = cartItems.forEach(function (items) {
+        let costValue = parseInt(items.price);
+        addValue = costValue * items.qty;
+
+        final = final + addValue;
+      });
+
+      const finalPrice = parseInt(couponData.finalPrice);
+
+      let discountInit = Math.round((final * finalPrice) / 100);
+
+      const discountPrice = final - discountInit;
+      console.log(discountPrice);
+
+      const orderItems = await Cart.aggregate([
+        {
+          $match: { customer: userDetails._id },
+        },
+        {
+          $unwind: "$products",
+        },
+        {
+          $project: {
+            productId: "$products.productId",
+            qtyItems: "$products.quantity",
+          },
+        },
+      ]);
+
+      const address = await User.aggregate([
+        { $match: { email: email } },
+        { $unwind: "$address" },
+        {
+          $project: {
+            address: "$address.fullAddress",
+            phone: "$address.contact",
+            name: "$address.name",
+            pincode: "$address.pincode",
+            id: "$address._id",
+          },
+        },
+
+        { $match: { id: new mongoose.Types.ObjectId(req.body.address) } },
+      ]);
+      let nowDate = Date.now();
+
+      newOrder = new Order({
+        customer: userDetails._id,
+        status: "placed",
+        date: nowDate,
+        coupon: req.body.couponText,
+        Totalprice: final,
+        finalPrice: discountPrice,
+        discount: discountInit,
+        address: [
+          {
+            fullAddress: address[0].address,
+            contact: address[0].phone,
+            name: address[0].name,
+            pincode: address[0].pincode,
+          },
+        ],
+        product: orderItems,
+        orderType: "COD",
+      });
+
+      newOrder.save();
+      console.log("order saved");
+      await Cart.updateOne(
+        { customer: userDetails._id },
+        {
+          $set: { products: [] },
+        }
+      );
+
+      res.redirect("/order-success");
+    } else {
+      const cartItems = await Cart.aggregate([
+        { $match: { customer: userDetails._id } },
+        { $unwind: "$products" },
+        {
+          $project: {
+            productId: "$products.productId",
+            qty: "$products.quantity",
+          },
+        },
+        {
+          $lookup: {
+            from: "products",
+            localField: "productId",
+            foreignField: "_id",
+            as: "productDetails",
+          },
+        },
+        { $unwind: "$productDetails" },
+        {
+          $project: {
+            price: "$productDetails.price",
+            qty: "$qty",
+          },
+        },
+      ]);
+      var final = 0;
+      const Total = cartItems.forEach(function (items) {
+        let costValue = parseInt(items.price);
+        addValue = costValue * items.qty;
+
+        final = final + addValue;
+      });
+
+      const orderItems = await Cart.aggregate([
+        {
+          $match: { customer: userDetails._id },
+        },
+        {
+          $unwind: "$products",
+        },
+        {
+          $project: {
+            productId: "$products.productId",
+            qtyItems: "$products.quantity",
+          },
+        },
+      ]);
+
+      const address = await User.aggregate([
+        { $match: { email: email } },
+        { $unwind: "$address" },
+        {
+          $project: {
+            address: "$address.fullAddress",
+            phone: "$address.contact",
+            name: "$address.name",
+            pincode: "$address.pincode",
+            id: "$address._id",
+          },
+        },
+
+        { $match: { id: new mongoose.Types.ObjectId(req.body.address) } },
+      ]);
+      let nowDate = Date.now();
+      console.log(nowDate);
+      newOrder = new Order({
+        customer: userDetails._id,
+        status: "placed",
+        date: nowDate,
+        coupon: "Nil",
+        Totalprice: final,
+        finalPrice: final,
+        discount: 0,
+        address: [
+          {
+            fullAddress: address[0].address,
+            contact: address[0].phone,
+            name: address[0].name,
+            pincode: address[0].pincode,
+          },
+        ],
+        product: orderItems,
+        orderType: "COD",
+      });
+
+      newOrder.save();
+      console.log("order saved");
+      await Cart.updateOne(
+        { customer: userDetails._id },
+        {
+          $set: { products: [] },
+        }
+      );
+
+      res.redirect("/order-success");
+    }
+  } else {
+    const couponData = await Coupon.findOne({ discount: req.body.couponText });
+
+    if (couponData) {
+      await User.updateOne(
+        { email: email },
+        {
+          $push: { coupons: [couponData._id] },
+        }
+      );
+      const cartItems = await Cart.aggregate([
+        { $match: { customer: userDetails._id } },
+        { $unwind: "$products" },
+        {
+          $project: {
+            productId: "$products.productId",
+            qty: "$products.quantity",
+          },
+        },
+        {
+          $lookup: {
+            from: "products",
+            localField: "productId",
+            foreignField: "_id",
+            as: "productDetails",
+          },
+        },
+        { $unwind: "$productDetails" },
+        {
+          $project: {
+            price: "$productDetails.price",
+            qty: "$qty",
+          },
+        },
+      ]);
+      var final = 0;
+      const Total = cartItems.forEach(function (items) {
+        let costValue = parseInt(items.price);
+        addValue = costValue * items.qty;
+
+        final = final + addValue;
+      });
+
+      const finalPrice = parseInt(couponData.finalPrice);
+
+      let discountInit = Math.round((final * finalPrice) / 100);
+
+      const discountPrice = final - discountInit;
+      console.log(discountPrice);
+
+      const orderItems = await Cart.aggregate([
+        {
+          $match: { customer: userDetails._id },
+        },
+        {
+          $unwind: "$products",
+        },
+        {
+          $project: {
+            productId: "$products.productId",
+            qtyItems: "$products.quantity",
+          },
+        },
+      ]);
+
+      const address = await User.aggregate([
+        { $match: { email: email } },
+        { $unwind: "$address" },
+        {
+          $project: {
+            address: "$address.fullAddress",
+            phone: "$address.contact",
+            name: "$address.name",
+            pincode: "$address.pincode",
+            id: "$address._id",
+          },
+        },
+
+        { $match: { id: new mongoose.Types.ObjectId(req.body.address) } },
+      ]);
+      let nowDate = Date.now();
+
+      newOrder = new Order({
+        customer: userDetails._id,
+        status: "placed",
+        date: nowDate,
+        coupon: req.body.couponText,
+        Totalprice: final,
+        finalPrice: discountPrice,
+        discount: discountInit,
+        address: [
+          {
+            fullAddress: address[0].address,
+            contact: address[0].phone,
+            name: address[0].name,
+            pincode: address[0].pincode,
+          },
+        ],
+        product: orderItems,
+        orderType: "PayPal",
+      });
+
+      
+      console.log("order saved");
+      await Cart.updateOne(
+        { customer: userDetails._id },
+        {
+          $set: { products: [] },
+        }
+      );
+
+      const create_payment_json = {
+        intent: "sale",
+        payer: {
+          payment_method: "paypal",
+        },
+        redirect_urls: {
+          return_url: "http://127.0.0.1:3000/check-payment",
+          cancel_url: "http://127.0.0.1:3000/checkout",
+        },
+        transactions: [
+          {
+            item_list: {
+              items: [
+                {
+                  name: "item",
+                  sku: "item",
+                  price: "12",
+                  currency: "USD",
+                  quantity: 1,
+                },
+              ],
+            },
+            amount: {
+              currency: "USD",
+              total: "12",
+            },
+            description: "This is the payment description.",
+          },
+        ],
+      };
+      paypal.payment.create(
+        create_payment_json,
+        async function (error, payment) {
+          if (error) {
+            throw error;
+          } else {
+            for (let i = 0; i < payment.links.length; i++) {
+              if (payment.links[i].rel === "approval_url") {
+                res.redirect(payment.links[i].href);
+              }
+            }
+          }
+        }
+      );
+    } else {
+      const cartItems = await Cart.aggregate([
+        { $match: { customer: userDetails._id } },
+        { $unwind: "$products" },
+        {
+          $project: {
+            productId: "$products.productId",
+            qty: "$products.quantity",
+          },
+        },
+        {
+          $lookup: {
+            from: "products",
+            localField: "productId",
+            foreignField: "_id",
+            as: "productDetails",
+          },
+        },
+        { $unwind: "$productDetails" },
+        {
+          $project: {
+            price: "$productDetails.price",
+            qty: "$qty",
+          },
+        },
+      ]);
+      var final = 0;
+      const Total = cartItems.forEach(function (items) {
+        let costValue = parseInt(items.price);
+        addValue = costValue * items.qty;
+
+        final = final + addValue;
+      });
+
+      const orderItems = await Cart.aggregate([
+        {
+          $match: { customer: userDetails._id },
+        },
+        {
+          $unwind: "$products",
+        },
+        {
+          $project: {
+            productId: "$products.productId",
+            qtyItems: "$products.quantity",
+          },
+        },
+      ]);
+
+      const address = await User.aggregate([
+        { $match: { email: email } },
+        { $unwind: "$address" },
+        {
+          $project: {
+            address: "$address.fullAddress",
+            phone: "$address.contact",
+            name: "$address.name",
+            pincode: "$address.pincode",
+            id: "$address._id",
+          },
+        },
+
+        { $match: { id: new mongoose.Types.ObjectId(req.body.address) } },
+      ]);
+      let nowDate = Date.now();
+      console.log(nowDate);
+      newOrder = new Order({
+        customer: userDetails._id,
+        status: "placed",
+        date: nowDate,
+        coupon: "Nil",
+        Totalprice: final,
+        finalPrice: final,
+        discount: 0,
+        address: [
+          {
+            fullAddress: address[0].address,
+            contact: address[0].phone,
+            name: address[0].name,
+            pincode: address[0].pincode,
+          },
+        ],
+        product: orderItems,
+        orderType: "PayPal",
+      });
+
+      console.log("order saved");
+      await Cart.updateOne(
+        { customer: userDetails._id },
+        {
+          $set: { products: [] },
+        }
+      );
+
+      const create_payment_json = {
+        intent: "sale",
+        payer: {
+          payment_method: "paypal",
+        },
+        redirect_urls: {
+          return_url: "http://127.0.0.1:3000/check-payment",
+          cancel_url: "http://127.0.0.1:3000/checkout",
+        },
+        transactions: [
+          {
+            item_list: {
+              items: [
+                {
+                  name: "item",
+                  sku: "item",
+                  price: "12",
+                  currency: "USD",
+                  quantity: 1,
+                },
+              ],
+            },
+            amount: {
+              currency: "USD",
+              total: "12",
+            },
+            description: "This is the payment description.",
+          },
+        ],
+      };
+      paypal.payment.create(
+        create_payment_json,
+        async function (error, payment) {
+          if (error) {
+            throw error;
+          } else {
+            for (let i = 0; i < payment.links.length; i++) {
+              if (payment.links[i].rel === "approval_url") {
+                res.redirect(payment.links[i].href);
+              }
+            }
+          }
+        }
+      );
+    }
   }
+};
 
+const orderSuccessPage = async (req, res) => {
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const userValid = await Order.findOne({ customer: userDetails._id });
+  if (userValid) {
+    console.log("visit success");
+    res.send("Order Success");
+  }
+};
 
+const checkPayment = async (req,res)=>{
+  newOrder.save()
+  res.send("payment Succss")
 }
+//jadnaijdnsdjfksdnfjksdnfjkdsfnsdjkfsdnkdsnfjksnfjksdfnsdjkf
 
 module.exports = {
   userHome,
@@ -1189,5 +1853,8 @@ module.exports = {
   deleteAddress,
   setDefault,
   checkAddress,
-  checkCoupon
+  checkCoupon,
+  orderCheck,
+  orderSuccessPage,
+  checkPayment
 };
