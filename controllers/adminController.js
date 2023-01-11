@@ -48,9 +48,15 @@ const adminVerification = (req, res) => {
 };
 
 // Dashboard
-const adminDashboard = (req, res) => {
+const adminDashboard =async (req, res) => {
   if (req.session.adminAuth) {
-    res.render("admin/layouts/adminDashboard");
+
+
+    const OrderDetails = await Order.find(
+      {  
+        
+      }).populate('product.productId').populate('customer')
+    res.render("admin/layouts/adminDashboard" ,{OrderDetails});
   }
 };
 
@@ -400,6 +406,8 @@ const unBlockProduct = async (req, res) => {
   }
 };
 
+
+
 const couponPage =async (req, res) => {
   if (req.session.adminAuth) {
     
@@ -505,11 +513,12 @@ const adminOrder =async (req, res) => {
 
     const OrderDetails = await Order.find(
       {
-        $or: [{ orderId: { $regex: "^" + search + ".*", $options: "i" } },
-        { product: { $regex: "^" + search + ".*", $options: "i" } },
-        { user: { $regex: "^" + search + ".*", $options: "i" } }]
+        $or: [{ status: { $regex: "^" + search + ".*", $options: "i" } },
+        { coupon : { $regex: "^" + search + ".*", $options: "i" } },
+        { orderType : { $regex: "^" + search + ".*", $options: "i" } }
+      ]
         
-      })
+      }).populate('product.productId').populate('customer')
       res.render("admin/layouts/adminOrders", {
         details: OrderDetails,
         stat: "Order Active",
@@ -524,33 +533,6 @@ const adminOrder =async (req, res) => {
   }
 };
 
-const blockOrder = async (req, res) => {
-  if (req.session.adminAuth) {
-    const updatedOrder = await Order.updateOne(
-      { _id: req.query.id },
-      {
-        $set: {
-          status: false,
-        },
-      }
-    );
-    res.redirect("/admin/order");
-  }
-};
-
-const unBlockOrder = async (req, res) => {
-  if (req.session.adminAuth) {
-    const updatedOrder = await Order.updateOne(
-      { _id: req.query.id },
-      {
-        $set: {
-          status: true,
-        },
-      }
-    );
-    res.redirect("/admin/order");
-  }
-};
 
 
 const bannerPage = async (req, res) => {
@@ -624,7 +606,20 @@ const unBlockBanner = async (req, res) => {
     res.redirect("/admin/banner");
   }
 };
+ 
+const changeOrder= async (req,res)=>{
+  console.log('been here')
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  
+  
+  const orderDetails = await Order.updateOne({_id : req.body.id},{
+    $set : {status : req.body.stu }
+  })
+  res.json({ data: req.body.stu });
 
+
+}
 
 
 
@@ -659,11 +654,12 @@ module.exports = {
   addCoupon,
   submitCoupon,
   adminOrder,
-  blockOrder,
-  unBlockOrder,
+ 
   bannerPage, 
   addBanner,
   submitBanner,
   blockBanner,
-  unBlockBanner
+  unBlockBanner,
+  changeOrder
+
 };

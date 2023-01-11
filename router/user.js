@@ -51,6 +51,9 @@ router.post('/user-profile',userSession.isLogin,userController.editUserSubmit)
 router.post('/checkout-submit',userSession.isLogin,userController.orderCheck)
 router.get('/check-payment',userSession.isLogin,userController.checkPayment)
 
+router.get('/orders',userSession.isLogin,userController.orderPage)
+router.get('/order-detail',userSession.isLogin,userController.orderDetailPage)
+
 //patch
 
 router.patch("/catFilter",userController.catFiltering)
@@ -60,6 +63,7 @@ router.patch('/sort-check',userController.sortStatus)
 router.patch('/check-page',userController.pageStatus)
 router.patch('/check-address',userController.checkAddress)
 router.patch('/check-coupon',userController.checkCoupon)
+router.patch('/cancel-order',userController.cancelOrder)
 
 
 

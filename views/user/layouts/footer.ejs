@@ -2,7 +2,7 @@
   <div class="row py-4 border-bottom border-top footer-part-1">
     <div class="col-lg-4 px-5 my-3">
       <div class="col-12 d-flex justify-content-center mb-3">
-        <img src="/public/img/icon-tree-02_2x_256x256_crop_center_8d3c7e4d-4f32-481e-a77e-4015cba8eeba_small.png.png"
+        <img loading="lazy" src="/public/img/icon-tree-02_2x_256x256_crop_center_8d3c7e4d-4f32-481e-a77e-4015cba8eeba_small.png.png"
           alt="" />
       </div>
 
@@ -26,7 +26,7 @@
 
     <div class="col-lg-4 px-5 my-3">
       <div class="col-12 d-flex justify-content-center mb-3">
-        <img
+        <img loading="lazy"
           src="/public/img/icon-invert-process_2x_256x256_crop_center_9c1d5c5d-2314-409b-a5e0-3de26ac09033_small.png.png"
           alt="" />
       </div>
@@ -51,7 +51,7 @@
 
     <div class="col-lg-4 px-5 my-3">
       <div class="col-12 d-flex justify-content-center mb-3">
-        <img
+        <img loading="lazy"
           src="/public/img/icon-delivery-fast_2x_256x256_crop_center_a79414e0-3aa6-4ea1-b516-802f4f006612_small.png.png"
           alt="" />
       </div>
@@ -81,6 +81,26 @@
 
   </div>
 </div>
+
+<script>
+   $(function(){
+    $.each(document.images, function(){
+               var this_image = this;
+               var src = $(this_image).attr('src') || '' ;
+               if(!src.length > 0){
+                   //this_image.src = options.loading; // show loading
+                   var lsrc = $(this_image).attr('lsrc') || '' ;
+                   if(lsrc.length > 0){
+                       var img = new Image();
+                       img.src = lsrc;
+                       $(img).load(function() {
+                           this_image.src = this.src;
+                       });
+                   }
+               }
+           });
+  });
+</script>
 
 <script>
   if (window.history.replaceState) {
@@ -124,7 +144,7 @@
   });
 
 </script>
-<script src="/public/zoom/assets/js/jquery-3.6.0.min.js"></script>
+
 <script src="/public/zoom/assets/js/xzoom.min.js"></script>
 
 </body>

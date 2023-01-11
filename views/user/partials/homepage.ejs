@@ -1,46 +1,49 @@
 <%- include('../layouts/header') %>
 
   <div class="container-fluid g-0">
+    
     <% if(details !=null) { %>
-      <div id="demo" class="carousel slide p-0 m-0" data-ride="carousel" data-bs-interval="3000">
-        <ul class="carousel-indicators">
-          <li data-target="#demo" hidden data-slide-to="0" class="active"></li>
-          <% for(i=1;i<=details.length ; i++){ %>
-
-            <li data-target="#demo" hidden data-slide-to="<%=i%>"></li>
-
-            <% } %>
-        </ul>
-        <div class="carousel-inner p-0 m-0" >
-          <div class="carousel-item active" >
-            <div class="d-flex justify-content-center" style="width: 100%; ">
-              <img class="mx-4" src="/public/databaseimg/1672386014107-Screenshot 2022-12-30 123636.png" alt="slide one"width="100%" >
-            </div>
-           
-          </div>
-
-          <% details.forEach(function(item){ %>
-            <div class="carousel-item p-0 m-o" style="align-items: center;">
-              <div class="d-flex justify-content-center" style="width: 100%; ">
-                <img class="mx-4" src="/public/databaseimg/<%=item.image%>" alt="" width="100%" >
-              </div>
-              
-            </div>
-            <% }) %>
-
+    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="2000">
+          <img src="/public/databaseimg/1672386014107-Screenshot 2022-12-30 123636.png" class="d-block w-100" alt="...">
         </div>
-        <a class="carousel-control-prev" href="#demo" data-slide="prev">
-          
-        </a>
-        <a class="carousel-control-next" href="#demo" data-slide="next">
-          
-        </a>
+        
+        <% details.forEach(function(item){ %>
+        <div class="carousel-item" data-bs-interval="2000">
+          <img src="/public/databaseimg/1672386003444-Screenshot 2022-12-30 123533.png" class="d-block w-100" alt="...">
+        </div>
+        <% }) %>
       </div>
-      <% } %>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <% } %>
+
+
+    
 
 
 
   </div>
+
+  <div class="container-fluid mx-0 px-0 g-0">
+    <div class="corousal-item">
+      <video loading="lazy" src="/public/videos/bb1aa53af278ad3ab012205a5249d96a.mp4" width="100%" autoplay muted loop></video>
+      <div class="carousel-caption d-none d-md-block">
+        <h5 class="text-white">Voted Favorite Brand of all time</h5>
+        <p class="text-white">The Golden Eyes is our iconic design from our very first collection. It was so named for the two pieces of gold-tone hardware that feature on the front and are evocative of a face.</p>
+      </div>
+    </div>
+    
+  </div>
+  
 
   <div class="container-fluid py-4">
     <% if(categories !=null) { %>
@@ -51,7 +54,7 @@
           <div class="col-lg-6 d-flex justify-content-center">
 
             <div class="card" style="width: 100%;">
-              <img src="/public/databaseimg/<%= data.image %>" class="card-img-top" alt="...">
+              <img loading="lazy" src="/public/databaseimg/<%= data.image %>" class="card-img-top" alt="...">
               <div class="card-body">
                 <center class="card-title" style="font-size: larger; font-weight: bold;"><%=data.name%></center>
                 
@@ -63,6 +66,52 @@
       <% } %>
          
     </div>
+  </div>
+
+  <div class="container-fluid mx-0 px-0 g-0">
+    
+  </div>
+
+
+
+
+  <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <video loading="lazy" src="/public/videos/kj8hJa0eJr_HD.mp4" width="100%" autoplay muted loop></video>
+        <div class="carousel-caption d-none d-md-block">
+          <h5 class="text-white">Voted Favorite Brand of all time</h5>
+          <p class="text-white">The Golden Eyes is our iconic design from our very first collection. It was so named for the two pieces of gold-tone hardware that feature on the front and are evocative of a face.</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <video loading="lazy" src="/public/videos/pp0aJuc2ev_HD.mp4" width="100%" autoplay muted loop></video>
+        <div class="carousel-caption d-none d-md-block">
+          <h5 class="text-white">Voted Favorite Brand of all time</h5>
+          <p class="text-white">The Golden Eyes is our iconic design from our very first collection. It was so named for the two pieces of gold-tone hardware that feature on the front and are evocative of a face.</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <video loading="lazy" src="/public/videos/kj8hJa0eJr_HD.mp4" width="100%" muted loop></video>
+        <div class="carousel-caption d-none d-md-block">
+          <h5 class="text-white">Voted Favorite Brand of all time</h5>
+          <p class="text-white">The Golden Eyes is our iconic design from our very first collection. It was so named for the two pieces of gold-tone hardware that feature on the front and are evocative of a face.</p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
   </div>
 
   <%- include('../layouts/footer') %>

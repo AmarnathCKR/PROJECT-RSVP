@@ -8,7 +8,15 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
     },
 
-    product: {},
+    product: [{
+      productId : {
+        type: mongoose.Types.ObjectId,
+        
+        ref: 'Product'
+      },
+
+      qtyItems : Number
+    }],
 
     address: [
       {

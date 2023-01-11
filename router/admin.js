@@ -48,12 +48,13 @@ router.get('/block-banner',adminController.blockBanner)
 router.get('/unBlock-banner',adminController.unBlockBanner)
 
 
-router.get('/block-order',adminController.blockOrder)
-router.get('/unBlock-order',adminController.unBlockOrder)
+    
 // router.get('/edit-user', adminController.editUser)
 // router.post('/edit-user', adminController.adminEdited)
 
 router.get('/logout', adminController.adminLogOut)
+
+router.patch('/change-stat', adminController.changeOrder)
 
 
 module.exports = router;

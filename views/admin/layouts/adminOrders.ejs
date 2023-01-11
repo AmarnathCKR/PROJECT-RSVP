@@ -8,7 +8,7 @@
 
     <div class="card mb-4 px-2">
 
-        <div class="card-body">
+        <div id="dataPop" class="card-body">
             <% if(details !=null) { %>
                 <table id="datatablesSimple">
                     <thead>
@@ -16,9 +16,10 @@
                             <th>Order Id</th>
                             <th>User</th>
                             <th>Product</th>
-                            <th>Quantity</th>
                             <th>Coupons</th>
-                            <th>Total amount</th>
+                            <th>Coupon Discount</th>
+                            <th>Total Payment</th>
+                            <th>Order Type</th>
                             <th>Status</th>
                             <th></th>
 
@@ -30,9 +31,10 @@
                             <th>Order Id</th>
                             <th>User</th>
                             <th>Product</th>
-                            <th>Quantity</th>
                             <th>Coupons</th>
-                            <th>Total amount</th>
+                            <th>Coupon Discount</th>
+                            <th>Total Payment</th>
+                            <th>Order Type</th>
                             <th>Status</th>
                             <th></th>
                         </tr>
@@ -41,42 +43,54 @@
                         <% details.forEach(function(item){ %>
                             <tr>
                                 <td>
-                                    <%= item.orderId %>
+                                    <%= item._id %>
                                 </td>
                                 <td>
-                                    <%= item.user %>
+                                    <%= item.customer.fname %>
                                 </td>
                                 <td>
-                                    <%= item.product %>
-                                </td>
-                                <td>
-                                    <%= item.quantity %>
+                                    <%item.product.forEach(function(items){ %>
+                                        <%= items.productId.name %> X <%= items.qtyItems %>
+                                                <%})%>
                                 </td>
                                 <td>
                                     <%= item.coupon %>
                                 </td>
                                 <td>
-                                    <%= item.price %>
+                                    <%= item.discount %>
+
                                 </td>
                                 <td>
-                                    <% if (item.status==true) { %>
-                                        <%= locals.stat %>
+                                    <%= item.finalPrice %>
+                                </td>
+                                <td>
+                                    <%= item.orderType %>
+                                </td>
+                                <td>
+                                    <div id="statis<%= item._id %>">
+                                        <% if (item.status=="placed" ) { %>
+                                            Order Placed
                                             <%} else { %>
-                                                <%= locals.unStat %>
+                                                <%= item.status %>
                                                     <% } %>
+                                    </div>
                                 </td>
 
 
 
                                 <td>
-                                    <a href="/admin/<% if (item.status==true) { %><%= locals.blockRef %><%} else { %><%= locals.unblockRef %><% } %>/?id=<%= item._id%>"
-                                        onclick="return confirm('Are you sure?')" class="btn btn-dark btn-sm">
-                                        <% if (item.status==true) { %>
-                                            <%= locals.blocking %>
-                                                <%} else { %>
-                                                    <%= locals.unBlock %>
-                                                        <% } %>
-                                    </a>
+                                    <select name="changeStat" onchange="changeStat(this.value,'<%= item._id %>')">
+                                        <% if(item.status!="cancelled" ){ %>
+                                            <option value="" selected>Choose</option>
+                                            <option value="shipped">Shipped</option>
+                                            <option value="delivered">Delivered</option>
+                                            <option value="pending">Pending</option>
+                                            <%}%>
+
+
+                                    </select>
+
+
 
                                 </td>
 
@@ -93,6 +107,29 @@
 
 
 
+    <script>
+
+        function changeStat(stu, id) {
+            console.log('janjfo');
+            $.ajax({
+                url: "/admin/change-stat",
+                method: "patch",
+                data: { id: id, stu: stu },
+                success: (res) => {
+                    $(`#statis${id}`).load(location.href + ` #statis${id}`)
+                    
+
+
+                }
+
+            })
+        }
+
+    </script>
+
+
+
+
 
     <script>
         if (window.history.replaceState) {
@@ -102,11 +139,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
 
 
-    <script src="/public/js/scripts.js"></script>
+
+        <script src="/public/js/scripts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
     <script src="/public/js/datatables-simple-demo.js"></script>
-</body>
+    </body>
 
-</html>
+    </html>

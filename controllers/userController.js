@@ -1610,6 +1610,10 @@ const orderCheck = async (req, res) => {
         }
       );
 
+      
+      let lots = discountPrice * 0.012
+      let paytm = parseInt(lots)
+
       const create_payment_json = {
         intent: "sale",
         payer: {
@@ -1626,7 +1630,7 @@ const orderCheck = async (req, res) => {
                 {
                   name: "item",
                   sku: "item",
-                  price: "12",
+                  price: paytm,
                   currency: "USD",
                   quantity: 1,
                 },
@@ -1634,7 +1638,7 @@ const orderCheck = async (req, res) => {
             },
             amount: {
               currency: "USD",
-              total: "12",
+              total: paytm,
             },
             description: "This is the payment description.",
           },
@@ -1740,6 +1744,12 @@ const orderCheck = async (req, res) => {
         orderType: "PayPal",
       });
 
+      
+      let loter = final * 0.012
+      let paym = parseInt(loter)
+
+      
+
       console.log("order saved");
       await Cart.updateOne(
         { customer: userDetails._id },
@@ -1764,7 +1774,7 @@ const orderCheck = async (req, res) => {
                 {
                   name: "item",
                   sku: "item",
-                  price: "12",
+                  price: paym,
                   currency: "USD",
                   quantity: 1,
                 },
@@ -1772,7 +1782,7 @@ const orderCheck = async (req, res) => {
             },
             amount: {
               currency: "USD",
-              total: "12",
+              total: paym,
             },
             description: "This is the payment description.",
           },
@@ -1812,6 +1822,58 @@ const checkPayment = async (req,res)=>{
 }
 //jadnaijdnsdjfksdnfjksdnfjkdsfnsdjkfsdnkdsnfjksnfjksdfnsdjkf
 
+const orderPage = async (req,res)=>{
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const wishData = await Wishlist.findOne({
+    customer: userDetails._id,
+  }).populate("products");
+  
+  const orderDetails = await Order.find({customer : userDetails._id}).populate("product.productId")
+
+  res.render("user/partials/order", {
+    
+    wishData,
+    usersession: req.session.auth,
+    userDetails,
+    orderDetails
+  });
+}
+
+
+const orderDetailPage = async (req,res)=>{
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const wishData = await Wishlist.findOne({
+    customer: userDetails._id,
+  }).populate("products");
+  
+  const orderDetails = await Order.findOne({_id : req.query.id}).populate("product.productId")
+
+  res.render("user/partials/orderDetail", {
+    
+    wishData,
+    usersession: req.session.auth,
+    userDetails,
+    orderDetails
+  });
+}
+
+const cancelOrder= async (req,res)=>{
+
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const wishData = await Wishlist.findOne({
+    customer: userDetails._id,
+  }).populate("products");
+  
+  const orderDetails = await Order.updateOne({_id : req.body.id},{
+    $set : {status : "cancelled" }
+  })
+  res.json({ data: "cancelled" });
+
+
+}
 module.exports = {
   userHome,
   userLogin,
@@ -1856,5 +1918,8 @@ module.exports = {
   checkCoupon,
   orderCheck,
   orderSuccessPage,
-  checkPayment
+  checkPayment,
+  orderPage,
+  orderDetailPage,
+  cancelOrder
 };

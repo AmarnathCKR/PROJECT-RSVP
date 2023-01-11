@@ -39,7 +39,11 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 
 
 app.all('*', (req,res)=>{
-  res.send("Error 404")
+  res.render('user/partials/error404',{
+    
+    home: "active",
+    wishData : null,
+    usersession : null,})
 })
 
 
