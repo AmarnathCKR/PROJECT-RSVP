@@ -57,83 +57,152 @@
         <div class="col-lg-8 mx-0 py-0 g-0">
             <div class="card mb-3 mx-0 py-0 g-0">
                 <div class="card-body mx-0 py-0 g-0">
-                    <div class="row mx-0 py-0 g-0">
+                    <div class="row mx-0 py-0 g-0 my-3">
                         <div class="col-sm-3 mx-0 py-0 g-0">
                             <h6 class="mb-0">Full Name</h6>
                         </div>
-                        <div class="col-sm-9 text-secondary"><%=userData.fname%></div>
+                        <div class="col-sm-9 text-secondary">
+                            <%=userData.fname%>
+                        </div>
                     </div>
                     <hr>
                     <div class="row mx-0 py-0 g-0">
                         <div class="col-sm-3">
                             <h6 class="mb-0">Email</h6>
                         </div>
-                        <div class="col-sm-9 text-secondary"><%=userData.email%></div>
+                        <div class="col-sm-9 text-secondary">
+                            <%=userData.email%>
+                        </div>
                     </div>
                     <hr>
                     <div class="row mx-0 py-0 g-0">
                         <div class="col-sm-3 mx-0 py-0 g-0">
                             <h6 class="mb-0">Phone</h6>
                         </div>
-                        <div class="col-sm-9 text-secondary"> <%=userData.mobile%></div>
+                        <div class="col-sm-9 text-secondary">
+                            <%=userData.mobile%>
+                        </div>
                     </div>
-                    
-                    
-                    
-                    
+
+
+
+
                     <hr>
                     <div class="row mx-0 py-0 g-0">
-                        <div class="col-sm-12 mx-0 py-0 g-0"> <button type="button" class="btn btn-dark px-3 py-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Edit
-                          </button></div>
+                        <div class="col-sm-12 mx-0 py-0 g-0"> <button type="button" class="btn btn-dark px-4 py-1"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Edit
+                            </button></div>
 
-                          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
                             <div class="modal-dialog">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Profile</h1>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <form action="" method="post">
-                                <div class="modal-body">
-                                    <div class="form-outline">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Profile</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <form action="" method="post">
+                                        <div class="modal-body">
+                                            <div class="form-outline">
 
-                                        <label class="form-label" for="modelno">Full Name</label>
-                                        <input type="text" id="fname" name="fname" class="form-control" required />
-                                        
-                                      </div>
-                                      
-                                      <div class="form-outline">
+                                                <label class="form-label" for="modelno">Full Name</label>
+                                                <input type="text" id="fname" name="fname" class="form-control"
+                                                    required />
 
-                                        <label class="form-label" for="modelno">Mobile</label>
-                                        <input type="text" id="name" name="mobile" class="form-control" required />
-                                        
-                                      </div>
+                                            </div>
+
+                                            <div class="form-outline">
+
+                                                <label class="form-label" for="modelno">Mobile</label>
+                                                <input type="text" id="name" name="mobile" class="form-control"
+                                                    required />
+
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                  <button type="submit" class="btn btn-primary">Save changes</button>
-                                </div>
-                                </form>
-                              </div>
                             </div>
-                          </div>
+                        </div>
                     </div>
                 </div>
+
+                <div class="row mx-0 my-3 py-0 g-0">
+                    <form action="/profile-passowrd" method="post"  onkeydown="return event.key != 'Enter';">
+                        <div class="col-md-3 mx-0 py-0 g-0">
+                            <label for="" >Current Password</label>
+                            <input type="text" onkeyup="checkPassword(this.value)" name="currentPassword">
+                            <a id="passwordText">  </a>
+                            
+                        </div>
+                        <div class="col-md-3">
+                            <label for="">New Password</label>
+                            <input type="text" id="newPassword" name="newPassword">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="">Confirm Password</label>
+                            <input type="text" id="conPassowrd" onkeyup="checkMatch(this.value)" name="confirmPassword">
+                        <span id="passwordMismatch"></span>
+                        </div>
+                        <script>
+                            function checkMatch(confirmPassword) {
+                                var newPass = document.getElementById('newPassword').value
+                                if (newPass != confirmPassword) {
+                                    $('#passwordMismatch').html('<b class="text-danger">Password does not match</b>')
+                                    $('#changeButton').css('pointer-events','none' )
+                                }else{
+                                    $('#passwordMismatch').html('<b class="text-success">Password match</b>')
+                                    $('#changeButton').css('pointer-events','auto' )
+                                }
+                            }
+                        </script>
+                        <button class="btn btn-dark px-4 py-1 my-3" type="submit" id="changeButton">Change Password</button>
+                    </form>
+                </div>
+                <hr>
             </div>
         </div>
 
-        
+
 
 
 
     </div>
 
-    
 
-    
+    <script>
+        var product
+        
+        function checkPassword(value) {
 
-    
+          $.ajax({
+            url: "/check-password",
+            method: "patch",
+            data: { data : value },
+            success: (res) => {
+              adds = res.data
+              $('#passwordText').html('');
+              $('#passwordText').html(adds);
+              if(res.att == 'wrong'){
+                $('#changeButton').css('pointer-events','none' )
+              }else{
+                $('#changeButton').css('pointer-events','none' )
+              }
+              
+            }
+
+          })
+        }
+      </script>
+
+
+
 
 
     <%- include('../layouts/footer') %>

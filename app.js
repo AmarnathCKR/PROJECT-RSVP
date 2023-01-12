@@ -7,7 +7,7 @@ const adminRouter = require("./router/admin");
 
 const cookieParser = require('cookie-parser');
 const sessions = require('express-session');
-const { nextTick } = require("process");
+
 
 const port = 3000;
 
@@ -35,6 +35,7 @@ app.use(cookieParser());
 app.use("/", userRouter);
 app.use("/admin", adminRouter);
 
+// eslint-disable-next-line no-undef
 app.use("/public", express.static(path.join(__dirname, "public")));
 
 

@@ -4,7 +4,8 @@ const Product = require("../models/productModel");
 const Coupon = require("../models/couponModel");
 const Order = require("../models/orderModel");
 const Banner = require("../models/bannerModel");
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
+const excelJS = require('exceljs');
 
 const adminSignin = (req, res) => {
   if (req.session.adminAuth) {
@@ -19,7 +20,6 @@ const adminDetails = {
   password: "adminPassword",
 };
 
-// Admin verification
 const adminVerification = (req, res) => {
   try {
     const email = req.body.adminEmail;
@@ -47,27 +47,24 @@ const adminVerification = (req, res) => {
   }
 };
 
-// Dashboard
-const adminDashboard =async (req, res) => {
+
+const adminDashboard = async (req, res) => {
   if (req.session.adminAuth) {
-
-
-    const OrderDetails = await Order.find(
-      {  
-        
-      }).populate('product.productId').populate('customer')
-    res.render("admin/layouts/adminDashboard" ,{OrderDetails});
+    const OrderDetails = await Order.find({})
+      .populate("product.productId")
+      .populate("customer");
+    res.render("admin/layouts/adminDashboard", { OrderDetails });
   }
 };
 
-const adminCustomer = (req, res) => {
+const adminCustomer = async (req, res) => {
   if (req.session.adminAuth) {
     let search = "";
     if (req.query.search) {
       search = req.query.search;
     }
 
-    const userDetails = User.find(
+    await User.find(
       {
         $or: [
           { fname: { $regex: "^" + search + ".*", $options: "i" } },
@@ -91,11 +88,9 @@ const adminCustomer = (req, res) => {
   }
 };
 
-
-
 const blockUser = async (req, res) => {
   if (req.session.adminAuth) {
-    const updatedUser = await User.updateOne(
+     await User.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -109,8 +104,7 @@ const blockUser = async (req, res) => {
 
 const unBlockUser = async (req, res) => {
   if (req.session.adminAuth) {
-    
-    const updatedUser = await User.updateOne(
+    await User.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -123,7 +117,6 @@ const unBlockUser = async (req, res) => {
   }
 };
 
-// Admin Logout
 const adminLogOut = (req, res) => {
   req.session.destroy();
   console.log("Admin session destroyed");
@@ -131,14 +124,14 @@ const adminLogOut = (req, res) => {
   res.end();
 };
 
-const adminCategory = (req, res) => {
+const adminCategory =async (req, res) => {
   if (req.session.adminAuth) {
     let search = "";
     if (req.query.search) {
       search = req.query.search;
     }
 
-    const CategoryDetails = Category.find(
+    await Category.find(
       {
         $or: [{ name: { $regex: "^" + search + ".*", $options: "i" } }],
       },
@@ -162,7 +155,7 @@ const adminCategory = (req, res) => {
 const deleteCategory = async (req, res) => {
   if (req.session.adminAuth) {
     try {
-      const CategoryData = await Category.findByIdAndDelete({
+      await Category.findByIdAndDelete({
         _id: req.query.id,
       });
       res.redirect("/admin/category");
@@ -174,11 +167,10 @@ const deleteCategory = async (req, res) => {
   }
 };
 
-
 const editCategory = async (req, res) => {
   if (req.session.adminAuth) {
     try {
-      const CategoryDetails = Category.findById({ _id: req.query.id }).then(
+      await Category.findById({ _id: req.query.id }).then(
         (result) => {
           res.render("admin/layouts/editCategory", {
             details: result,
@@ -195,13 +187,13 @@ const editCategory = async (req, res) => {
 
 const submitEditCategory = async (req, res) => {
   if (req.session.adminAuth) {
-    const updatedCategory = await Category.updateOne(
+    await Category.updateOne(
       { _id: req.query.id },
       {
         $set: {
           name: req.body.name,
           image: req.file.filename,
-          status : true
+          status: true,
         },
       }
     );
@@ -209,9 +201,9 @@ const submitEditCategory = async (req, res) => {
   }
 };
 
-const blockCategory= async (req, res) => {
+const blockCategory = async (req, res) => {
   if (req.session.adminAuth) {
-    const updatedCategory = await Category.updateOne(
+    await Category.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -223,9 +215,9 @@ const blockCategory= async (req, res) => {
   }
 };
 
-const unblockCategory= async (req, res) => {
+const unblockCategory = async (req, res) => {
   if (req.session.adminAuth) {
-    const updatedCategory = await Category.updateOne(
+    await Category.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -237,7 +229,7 @@ const unblockCategory= async (req, res) => {
   }
 };
 
-// Add user page
+
 const addCategory = (req, res) => {
   if (req.session.adminAuth) {
     res.render("admin/layouts/addCategory");
@@ -246,7 +238,7 @@ const addCategory = (req, res) => {
   }
 };
 
-// Admin create category
+
 const categorySubmit = (req, res) => {
   try {
     let newCategory = new Category({
@@ -263,41 +255,46 @@ const categorySubmit = (req, res) => {
   }
 };
 
-const adminProduct =async (req, res) => {
+const adminProduct = async (req, res) => {
   if (req.session.adminAuth) {
-    
-    const productDetails =await Product.find({}).populate('category')
-    
-        res.render("admin/layouts/adminProduct", {
-          details: productDetails,
-        
-          stat: "On sale",
-          unStat: "Not on sale",
-          blocking: "Unlist",
-          unBlock: "List",
-          blockRef: "block-product",
-          unblockRef: "unBlock-product",
-        })
-}else {
-  res.redirect('/admin')
-}};
+    const productDetails = await Product.find({}).populate("category");
 
-const addProduct = async(req, res) => {
+    res.render("admin/layouts/adminProduct", {
+      details: productDetails,
+
+      stat: "On sale",
+      unStat: "Not on sale",
+      blocking: "Unlist",
+      unBlock: "List",
+      blockRef: "block-product",
+      unblockRef: "unBlock-product",
+    });
+  } else {
+    res.redirect("/admin");
+  }
+};
+
+const addProduct = async (req, res) => {
   if (req.session.adminAuth) {
-    const categoryData =await Category.find({});
-    res.render("admin/layouts/addProduct",{categories : categoryData});
-    
+    const categoryData = await Category.find({});
+    res.render("admin/layouts/addProduct", { categories: categoryData });
   } else {
     res.redirect("/admin/");
   }
 };
 
-const submitProduct =async (req, res) => {
+const submitProduct = async (req, res) => {
   try {
-    // console.log(req.files)
     
-    const allImages = [req.files[0].filename,req.files[1].filename,req.files[2].filename,req.files[3].filename,req.files[4].filename,req.files[5].filename]
-    // console.log(allImages)
+
+    const allImages = [
+      req.files[0].filename,
+      req.files[1].filename,
+      req.files[2].filename,
+      req.files[3].filename,
+      req.files[4].filename,
+      req.files[5].filename,
+    ];
     let newProduct = new Product({
       name: req.body.name,
       model: req.body.model,
@@ -320,15 +317,13 @@ const editProduct = async (req, res) => {
   if (req.session.adminAuth) {
     try {
       const categoryDetails = await Category.find({});
-      
-      const ProductDetails = Product.findById({ _id: req.query.id }).then(
+
+      await Product.findById({ _id: req.query.id }).then(
         (result) => {
-          
-      
           res.render("admin/layouts/editProduct", {
             details: result,
-            
-            categories : categoryDetails
+
+            categories: categoryDetails,
           });
         }
       );
@@ -342,8 +337,15 @@ const editProduct = async (req, res) => {
 
 const submitEditProduct = async (req, res) => {
   if (req.session.adminAuth) {
-    const allImages = [req.files[0].filename,req.files[1].filename,req.files[2].filename,req.files[3].filename,req.files[4].filename,req.files[5].filename]
-    const updatedProduct = await Product.updateOne(
+    const allImages = [
+      req.files[0].filename,
+      req.files[1].filename,
+      req.files[2].filename,
+      req.files[3].filename,
+      req.files[4].filename,
+      req.files[5].filename,
+    ];
+   await Product.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -363,10 +365,10 @@ const submitEditProduct = async (req, res) => {
   }
 };
 
-const deleteProduct= async (req, res) => {
+const deleteProduct = async (req, res) => {
   if (req.session.adminAuth) {
     try {
-      const ProductData = await Product.findByIdAndDelete({
+      await Product.findByIdAndDelete({
         _id: req.query.id,
       });
       res.redirect("/admin/products");
@@ -380,7 +382,7 @@ const deleteProduct= async (req, res) => {
 
 const blockProduct = async (req, res) => {
   if (req.session.adminAuth) {
-    const updatedProduct = await Product.updateOne(
+    await Product.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -394,7 +396,7 @@ const blockProduct = async (req, res) => {
 
 const unBlockProduct = async (req, res) => {
   if (req.session.adminAuth) {
-    const updatedProduct = await Product.updateOne(
+    await Product.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -406,33 +408,29 @@ const unBlockProduct = async (req, res) => {
   }
 };
 
-
-
-const couponPage =async (req, res) => {
+const couponPage = async (req, res) => {
   if (req.session.adminAuth) {
-    
-   
-    const couponData = await Coupon.find({})
-    
-      res.render("admin/layouts/adminCoupons", {
-        details: couponData,
-        
-        stat: "Active",
-        unStat: "Not active",
-        blocking: "Block",
-        unBlock: "Unblock",
-        blockRef: "block-coupon",
-        unblockRef: "unBlock-coupon",
-      });
+    const couponData = await Coupon.find({});
+
+    res.render("admin/layouts/adminCoupons", {
+      details: couponData,
+
+      stat: "Active",
+      unStat: "Not active",
+      blocking: "Block",
+      unBlock: "Unblock",
+      blockRef: "block-coupon",
+      unblockRef: "unBlock-coupon",
+    });
   } else {
     res.redirect("/admin/");
   }
 };
 
-const deleteCoupon= async (req, res) => {
+const deleteCoupon = async (req, res) => {
   if (req.session.adminAuth) {
     try {
-      const CouponData = await Coupon.findByIdAndDelete({
+       await Coupon.findByIdAndDelete({
         _id: req.query.id,
       });
       res.redirect("/admin/coupon");
@@ -446,7 +444,7 @@ const deleteCoupon= async (req, res) => {
 
 const blockCoupon = async (req, res) => {
   if (req.session.adminAuth) {
-    const updatedCoupon = await Coupon.updateOne(
+    await Coupon.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -460,7 +458,7 @@ const blockCoupon = async (req, res) => {
 
 const unBlockCoupon = async (req, res) => {
   if (req.session.adminAuth) {
-    const updatedCoupon = await Coupon.updateOne(
+    await Coupon.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -472,10 +470,10 @@ const unBlockCoupon = async (req, res) => {
   }
 };
 
-const addCoupon = async(req, res) => {
+const addCoupon = async (req, res) => {
   if (req.session.adminAuth) {
-    let products =await Product.find({})
-    res.render("admin/layouts/addCoupon",{details : products});
+    let products = await Product.find({});
+    res.render("admin/layouts/addCoupon", { details: products });
   } else {
     res.redirect("/admin/");
   }
@@ -483,18 +481,16 @@ const addCoupon = async(req, res) => {
 
 const submitCoupon = async (req, res) => {
   try {
-    console.log(req.body.newProduct)
-    
-    
-    
+    console.log(req.body.newProduct);
+
     let newCoupon = new Coupon({
       name: req.body.name,
-      
-      discount : req.body.code,
+
+      discount: req.body.code,
       status: true,
-      originalPrice : req.body.ogPrice,
-      finalPrice : req.body.fPrice,
-      expirationTime : req.body.expDate
+      originalPrice: req.body.ogPrice,
+      finalPrice: req.body.fPrice,
+      expirationTime: req.body.expDate,
     });
     newCoupon.save();
     res.redirect("/admin/coupon");
@@ -503,54 +499,50 @@ const submitCoupon = async (req, res) => {
   }
 };
 
-
-const adminOrder =async (req, res) => {
+const adminOrder = async (req, res) => {
   if (req.session.adminAuth) {
     let search = "";
     if (req.query.search) {
       search = req.query.search;
     }
 
-    const OrderDetails = await Order.find(
-      {
-        $or: [{ status: { $regex: "^" + search + ".*", $options: "i" } },
-        { coupon : { $regex: "^" + search + ".*", $options: "i" } },
-        { orderType : { $regex: "^" + search + ".*", $options: "i" } }
-      ]
-        
-      }).populate('product.productId').populate('customer')
-      res.render("admin/layouts/adminOrders", {
-        details: OrderDetails,
-        stat: "Order Active",
-        unStat: "Cancelled",
-        blocking: "Cancel",
-        unBlock: "Resume",
-        blockRef: "block-order",
-        unblockRef: "unBlock-order",
-      });
+    const OrderDetails = await Order.find({
+      $or: [
+        { status: { $regex: "^" + search + ".*", $options: "i" } },
+        { coupon: { $regex: "^" + search + ".*", $options: "i" } },
+        { orderType: { $regex: "^" + search + ".*", $options: "i" } },
+      ],
+    })
+      .populate("product.productId")
+      .populate("customer");
+    res.render("admin/layouts/adminOrders", {
+      details: OrderDetails,
+      stat: "Order Active",
+      unStat: "Cancelled",
+      blocking: "Cancel",
+      unBlock: "Resume",
+      blockRef: "block-order",
+      unblockRef: "unBlock-order",
+    });
   } else {
     res.redirect("/admin/");
   }
 };
 
-
-
 const bannerPage = async (req, res) => {
   if (req.session.adminAuth) {
-    
-   
-    const bannerData = await Banner.find({})
-    
-      res.render("admin/layouts/adminBanner", {
-        details: bannerData,
-        
-        stat: "Active",
-        unStat: "Not active",
-        blocking: "UnList",
-        unBlock: "List",
-        blockRef: "block-banner",
-        unblockRef: "unBlock-banner",
-      });
+    const bannerData = await Banner.find({});
+
+    res.render("admin/layouts/adminBanner", {
+      details: bannerData,
+
+      stat: "Active",
+      unStat: "Not active",
+      blocking: "UnList",
+      unBlock: "List",
+      blockRef: "block-banner",
+      unblockRef: "unBlock-banner",
+    });
   } else {
     res.redirect("/admin/");
   }
@@ -558,19 +550,17 @@ const bannerPage = async (req, res) => {
 
 const addBanner = async (req, res) => {
   if (req.session.adminAuth) {
-    
     res.render("admin/layouts/addBanner");
   } else {
     res.redirect("/admin/");
   }
 };
 
-const submitBanner =  async (req, res) => {
+const submitBanner = async (req, res) => {
   try {
-    
     let newBanner = new Banner({
-     status : true,
-     image: req.file.filename,
+      status: true,
+      image: req.file.filename,
     });
     newBanner.save();
     res.redirect("/admin/banner");
@@ -581,7 +571,7 @@ const submitBanner =  async (req, res) => {
 
 const blockBanner = async (req, res) => {
   if (req.session.adminAuth) {
-    const updatedBanner = await Banner.updateOne(
+     await Banner.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -595,7 +585,7 @@ const blockBanner = async (req, res) => {
 
 const unBlockBanner = async (req, res) => {
   if (req.session.adminAuth) {
-    const updatedBanner = await Banner.updateOne(
+     await Banner.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -606,22 +596,77 @@ const unBlockBanner = async (req, res) => {
     res.redirect("/admin/banner");
   }
 };
- 
-const changeOrder= async (req,res)=>{
-  console.log('been here')
-  const email = req.session.auth;
-  const userDetails = await User.findOne({ email: email });
+
+const changeOrder = async (req, res) => {
+  console.log("been here");
   
-  
-  const orderDetails = await Order.updateOne({_id : req.body.id},{
-    $set : {status : req.body.stu }
-  })
+
+ await Order.updateOne(
+    { _id: req.body.id },
+    {
+      $set: { status: req.body.stu },
+    }
+  );
   res.json({ data: req.body.stu });
+};
 
-
+const salesReport=async (req,res)=>{
+  if(req.session.adminAuth){
+    const OrderDetails = await Order.find({})
+      .populate("product.productId")
+      .populate("customer");
+      try{
+        const workbook = new excelJS.Workbook();
+        const  worksheet = workbook.addWorksheet("Sales Roport")
+        worksheet.columns=[
+          {header:"s no.", key:"s_no"},
+          {header:"Date", key:"data"},
+          {header:"User", key:"user"},
+          {header:"Payment", key:"payment"},
+          {header:"Status", key:"status"},
+          {header:"Items", key:"item"},
+          {header:"total", key:"total"},
+        ];
+        let counter =1;
+        
+        
+        OrderDetails.forEach((sale)=>{
+          const date = sale.date;
+          const isoString = date.toISOString();
+          const newDate = isoString.split('T')[0];
+          sale.data=newDate
+        sale.s_no = counter;
+        sale.user=sale.address[0].name
+        sale.payment = sale.orderType
+        sale.total = sale.finalPrice
+        sale.item=sale.product.length
+        worksheet.addRow(sale);
+        counter++;
+        });
+        
+        
+        worksheet.getRow(1).eachCell((cell)=>{
+          cell.font={bold:true};
+        });
+        
+        res.setHeader(
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.spreadsheatml.sheet'
+        );
+        
+        res.setHeader('Content-Disposition',`attachment; filename=sales_Report.xlsx`);
+        
+        return workbook.xlsx.write(res).then(()=>{
+          res.status(200);
+        });
+        
+          }
+          catch(error){
+        console.log(error.message)
+          }
+        
+  }
 }
-
-
 
 module.exports = {
   adminSignin,
@@ -654,12 +699,12 @@ module.exports = {
   addCoupon,
   submitCoupon,
   adminOrder,
- 
-  bannerPage, 
+
+  bannerPage,
   addBanner,
   submitBanner,
   blockBanner,
   unBlockBanner,
-  changeOrder
-
+  changeOrder,
+  salesReport,
 };

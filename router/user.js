@@ -64,7 +64,8 @@ router.patch('/check-page',userController.pageStatus)
 router.patch('/check-address',userController.checkAddress)
 router.patch('/check-coupon',userController.checkCoupon)
 router.patch('/cancel-order',userController.cancelOrder)
-
+router.patch('/check-password',userController.checkPassword)
+router.post('/profile-passowrd',userSession.isLogin, userController.passwordChange)
 
 
 module.exports = router;

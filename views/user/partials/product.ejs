@@ -241,7 +241,7 @@
 
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
 
                   );
 
@@ -267,7 +267,7 @@
 
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
 
                   );
 
@@ -295,7 +295,7 @@
 
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
 
                   );
 
@@ -322,7 +322,7 @@
 
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
 
                   );
 
@@ -344,7 +344,7 @@
               <div class="col-lg-4 d-flex justify-content-center p-4">
 
                 <div class="card" style="width: 100%;">
-                  <img src="/public/databaseimg/<%= blah.image[0] %>" class="card-img-top" alt="...">
+                  <a href="/product-page/?id=<%= blah._id%>" class=""><img src="/public/databaseimg/<%= blah.image[0] %>" class="card-img-top" alt="..."></a>
                   <div class="card-body">
                     <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">
                       <%=blah.name%>
@@ -383,25 +383,25 @@
             <% if (pages> 0) { %>
               <ul id="1100" class="pagination text-center rounded ">
                 <% if (current==1) { %>
-                  <li id="2200" class="disabled p-3 btn-dark rounded"><a>First</a></li>
+                  <li id="2200" class="disabled p-3 btn-dark rounded"><a style="color: black;">First</a></li>
                   <% } else { %>
-                    <li id="3300" class="p-3 btn-dark"><a style="color: antiquewhite;"
+                    <li id="3300" class="p-3 btn-dark"><a style="color: black;"
                         onclick="pageButton(1)">First</a>
                     </li>
                     <% } %>
                       <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
                         <% if (i !==1) { %>
-                          <li id="4400" class="disabled p-3 btn-dark"><a>...</a></li>
+                          <li id="4400" class="disabled p-3 btn-dark"><a style="color: black;">...</a></li>
                           <% } %>
                             <% for (; i <=(Number(current) + 4) && i <=pages; i++) { %>
                               <% if (i==current) { %>
-                                <li id="5500" class="active p-3 btn-dark"><a style="color: antiquewhite;">
+                                <li id="5500" class="active p-3 btn-dark"><a style="color: black;">
                                   <%= i %>
                                 </a></li>
                                 <% } else { %>
                                   
 
-                                  <li id="6600" class="p-3 btn-dark"><a style="color: antiquewhite;"
+                                  <li id="6600" class="p-3 btn-dark"><a style="color: black;"
                                     onclick="pageButton('<%= i %>')">
                                     <%= i %>
                                   </a></li>
@@ -414,7 +414,7 @@
                                           <% if (current==pages) { %>
                                             <li id="8800" class="disabled p-3 btn-dark"><a>Last</a></li>
                                             <% } else { %>
-                                              <li id="9900" class="p-3 btn-dark"><a style="color: antiquewhite;"
+                                              <li id="9900" class="p-3 btn-dark"><a style="color: black;"
                                                   onclick="pageButton('<%= pages %>')">Last</a></li>
                                               <% } %>
               </ul>
@@ -459,7 +459,7 @@
 
           products.forEach(function (items) {
             $('#product333').append(
-              '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+              '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
             );
 
 
@@ -471,9 +471,9 @@
 
             
             if (currents == 1) {
-              $('#2200').html('<a style="color: antiquewhite;">First</a>') 
+              $('#2200').html('<a style="color: black;">First</a>') 
             } else {
-              $('#2200').html('<a style="color: antiquewhite;" onclick="pageButton(1)">First</a>')
+              $('#2200').html('<a style="color: black;" onclick="pageButton(1)">First</a>')
             }
             var i = (Number(currents) > 5 ? Number(currents) - 4 : 1)
             if (i !== 1) {
@@ -482,10 +482,10 @@
             for (i=1; i <= (Number(currents) + 4) && i <= page; i++) {
 
               if (i == currents) {
-                $('#5500').html('<a style="color: antiquewhite;"> '+ i+' </a>')
+                $('#5500').html('<a style="color: black;"> '+ i+' </a>')
               } else {
 
-                $('#6600').html('<a style="color: antiquewhite;" onclick="pageButton('+i+')"> '+ i+' </a>')
+                $('#6600').html('<a style="color: black;" onclick="pageButton('+i+')"> '+ i+' </a>')
               }
               if (i == Number(currents) + 4 && i < page) {
                 $('#7700').html('<a>...</a>')
@@ -496,7 +496,7 @@
 
 
             } else {
-              $('#9900').html('<a style="color: antiquewhite;" onclick="pageButton('+page+')">Last</a>')
+              $('#9900').html('<a style="color: black;" onclick="pageButton('+page+')">Last</a>')
             }
 
 

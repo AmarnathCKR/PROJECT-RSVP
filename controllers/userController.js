@@ -9,7 +9,7 @@ const Banner = require("../models/bannerModel");
 const mongoose = require("mongoose");
 const Coupon = require("../models/couponModel");
 const Order = require("../models/orderModel");
-var paypal = require("paypal-rest-sdk");
+const paypal = require("paypal-rest-sdk");
 
 const userHome = async (req, res) => {
   try {
@@ -100,7 +100,7 @@ const userSignUp = (req, res) => {
   }
 };
 
-var userData;
+let userData;
 
 const bcrypt = require("bcrypt");
 const { find } = require("../models/userModels");
@@ -122,7 +122,7 @@ const checkSignUp = async (req, res) => {
 
       const otp = Math.floor(Math.random() * 1000000 + 1);
       console.log(otp);
-      // const authPassword = "icnzdiqbjvqrydak";
+      
       req.session.authOTP = otp;
       setTimeout(() => {
         req.session.authOTP = false;
@@ -137,7 +137,7 @@ const checkSignUp = async (req, res) => {
         status: true,
       });
 
-      // email
+ 
       var transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -150,7 +150,7 @@ const checkSignUp = async (req, res) => {
         from: "amarnathchakkiyar@gmail.com",
         to: req.body.email,
         subject: "YOUR OTP",
-        //   text: `enterotp`
+     
         html: `<h3>Your OTP is here<h3> <br> <p>${otp}</p>`,
       };
 
@@ -161,9 +161,7 @@ const checkSignUp = async (req, res) => {
           console.log("Email sent: " + info.response);
           res.redirect("/verifyOTP");
 
-          // req.session.email = req.body.email;
-          // req.session.fname = req.body.fname;
-          // req.session.password = hashPassword;
+         
         }
       });
     }
@@ -225,7 +223,7 @@ const otpVerifyPage = (req, res) => {
 const resendOTP = (req, res) => {
   try {
     const otp = Math.floor(Math.random() * 1000000 + 1);
-    // const authPassword = "icnzdiqbjvqrydak";
+    
     req.session.authOTP = otp;
 
     setTimeout(() => {
@@ -233,7 +231,7 @@ const resendOTP = (req, res) => {
       console.log("Resend OTP Expired");
     }, 180000);
 
-    // email
+
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -246,7 +244,7 @@ const resendOTP = (req, res) => {
       from: "amarnathchakkiyar@gmail.com",
       to: req.session.emailOTP,
       subject: "YOUR OTP",
-      //   text: `enterotp`
+      
       html: `<h3>Your OTP is here<h3> <br> <p>${otp}</p>`,
     };
 
@@ -257,10 +255,6 @@ const resendOTP = (req, res) => {
         console.log("Email sent: " + info.response);
         console.log("Nre OTP : " + otp);
         res.redirect("/verifyOTP");
-
-        // req.session.email = req.body.email;
-        // req.session.fname = req.body.fname;
-        // req.session.password = hashPassword;
       }
     });
 
@@ -372,7 +366,7 @@ const resendEmail = (req, res) => {
       console.log("Resend OTP Expired");
     }, 180000);
 
-    // email
+    ``
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -385,7 +379,6 @@ const resendEmail = (req, res) => {
       from: "amarnathchakkiyar@gmail.com",
       to: req.session.emailAuth,
       subject: "YOUR OTP",
-      //   text: `enterotp`
       html: `<h3>Your OTP is here<h3> <br> <p>${otp}</p>`,
     };
 
@@ -396,10 +389,6 @@ const resendEmail = (req, res) => {
         console.log("Email sent: " + info.response);
         console.log("New OTP : " + otp);
         res.redirect("/verifyEmail");
-
-        // req.session.email = req.body.email;
-        // req.session.fname = req.body.fname;
-        // req.session.password = hashPassword;
       }
     });
   } catch (err) {
@@ -488,7 +477,7 @@ const submitPassword = async (req, res) => {
   }
 };
 
-//product page
+
 
 const productPage = async (req, res) => {
   try {
@@ -504,8 +493,7 @@ const productPage = async (req, res) => {
         customer: userDetails._id,
       }).populate("products");
 
-      var perPage = 6;
-      var pages = req.query.page || 1;
+      
 
       Product.find({
         status: true,
@@ -693,7 +681,7 @@ const cartPage = async (req, res) => {
   }
 };
 
-//dstatatatatatatatatatattatatatatatattatatatatatatattaat
+
 
 const addCart = async (req, res) => {
   try {
@@ -707,7 +695,7 @@ const addCart = async (req, res) => {
     });
 
     if (itemIndex > -1) {
-      //-1 if no item matches
+    
 
       let a = await Cart.updateOne(
         { customer: userDetails._id, "products.productId": req.query.id },
@@ -795,7 +783,7 @@ const incrimentQuantity = async (req, res) => {
       }
     );
 
-    // res.redirect('/cartpage')
+    
     res.redirect("/cart");
   } catch (err) {
     console.log(err);
@@ -1077,7 +1065,7 @@ const checkCoupon = async (req, res) => {
       let formatedDate = formatDate(currentDate);
 
       if (couponData.expirationTime > formatedDate) {
-        // console.log(productData)
+        
         const cartItems = await Cart.aggregate([
           { $match: { customer: userId._id } },
           { $unwind: "$products" },
@@ -1276,7 +1264,7 @@ const checkCoupon = async (req, res) => {
 };
 
 paypal.configure({
-  mode: "sandbox", //sandbox or live
+  mode: "sandbox", 
   client_id:
     "ASXJezsZfLKkUgsqc4f2V1MoQz98pKz6BikAab5nTXdbayP1c_SgTDdFGKvGiUGjA9tXPhbwOPy7SKFv",
   client_secret:
@@ -1820,7 +1808,7 @@ const checkPayment = async (req,res)=>{
   newOrder.save()
   res.send("payment Succss")
 }
-//jadnaijdnsdjfksdnfjksdnfjkdsfnsdjkfsdnkdsnfjksnfjksdfnsdjkf
+
 
 const orderPage = async (req,res)=>{
   const email = req.session.auth;
@@ -1874,6 +1862,47 @@ const cancelOrder= async (req,res)=>{
 
 
 }
+
+const  checkPassword = async (req,res)=>{
+  console.log('hereeeee')
+  console.log(req.body.data)
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const match = await bcrypt.compare(
+    req.body.data,
+    userDetails.password
+  );
+  if(match){
+    res.json({ data: '<b class="text-success">Correct password</b>',att : 'right' });
+  }else{
+    res.json({data : '<b class="text-danger">Wrong Password</b>',att : 'wrong'})
+  }
+}
+
+
+const passwordChange = async (req,res)=>{
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const match = await bcrypt.compare(
+    req.body.currentPassword,
+    userDetails.password
+  );
+  if(match){
+    const hashPassword = await bcrypt.hash(req.body.confirmPassword, 10);
+    await User.updateOne({ email: email },
+      {
+        $set : {password : hashPassword}
+      });
+    res.redirect('/user-profile')
+  }else{
+    res.redirect("/user-profile")
+  }
+}
+
+
+
+
+
 module.exports = {
   userHome,
   userLogin,
@@ -1921,5 +1950,7 @@ module.exports = {
   checkPayment,
   orderPage,
   orderDetailPage,
-  cancelOrder
+  cancelOrder,
+  checkPassword,
+  passwordChange
 };

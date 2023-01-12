@@ -153,9 +153,8 @@
             <%} else{%>
               <a href="/login">Login</a>
               <%}%>
-                <a href="/wish-list" class="nav-link fa fa-heart mx-2" style="font-size: 25px;">
-                  <%if(wishData!=null){%><span class=" align-text-top bg-danger"
-                      style="font-size: small;">
+                <a href="/wish-list" class="nav-link fa fa-heart mx-2" style="font-size: 25px;position: relative">
+                  <%if(wishData!=null){%><span class=" align-text-top bg-secondary p-1 rounded-5 text-white" style="font-size: small; position: absolute; right:-10px; top: -10px">
                       <%=wishData.products.length%>
                     </span>
                     <%}%>

@@ -56,5 +56,7 @@ router.get('/logout', adminController.adminLogOut)
 
 router.patch('/change-stat', adminController.changeOrder)
 
+router.get('/sales-report',adminController.salesReport)
+
 
 module.exports = router;
