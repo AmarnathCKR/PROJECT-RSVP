@@ -12,7 +12,7 @@
             <% if(details !=null) { %>
                 <table id="datatablesSimple">
                     <thead>
-                        <tr>
+                        <tr class="border">
                             <th> Product Name</th>
                             <th>Image</th>
                             <th>Model</th>
@@ -22,60 +22,49 @@
                             <th>Stock</th>
                             <th>Price</th>
                             <th>Status</th>
-
+                            <th></th>
+                            <th></th>
 
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th> Product Name</th>
-                            <th>Image</th>
-                            <th>Model</th>
-                            <th>Category</th>
-                            <th>Description</th>
-                            <th>Color</th>
-                            <th>Stock</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                        </tr>
-                    </tfoot>
+                    
                     <tbody>
                         <% details.forEach(function(item){ %>
-                            <tr>
-                                <td>
+                            <tr class="border">
+                                <td class="border">
                                     <%= item.name %>
                                 </td>
-                                <td>
+                                <td class="border">
                                     <% for(i=0;i<6; i++) {%>
                                         <img class="img-thumbnail" src="/public/databaseimg/<%= item.image[i]%>" alt=""
                                             srcset="" height="100px" width="75px">
                                         <%}%>
                                 </td>
 
-                                <td>
+                                <td class="border">
                                     <%= item.model%>
                                 </td>
 
-                                <td>
+                                <td class="border">
                                     <%= item.category.name %>
                                 </td>
 
-                                <td>
+                                <td class="border">
                                     <%= item.description %>
                                 </td>
                                 <td>
                                     <%= item.color %>
                                 </td>
 
-                                <td>
+                                <td class="border">
                                     <%= item.stock %>
                                 </td>
 
-                                <td>
+                                <td class="border">
                                     <%= item.price%>
                                 </td>
 
-                                <td>
+                                <td class="border">
                                     <% if (item.status==true) { %>
                                         <%= locals.stat %>
                                             <%} else { %>
@@ -83,7 +72,7 @@
                                                     <% } %>
                                 </td>
 
-                                <td>
+                                <td class="border">
                                     <a href="/admin/<% if (item.status==true) { %><%= locals.blockRef %><%} else { %><%= locals.unblockRef %><% } %>/?id=<%= item._id%>"
                                         onclick="return confirm('Are you sure?')" class="btn btn-dark btn-sm">
                                         <% if (item.status==true) { %>
@@ -93,7 +82,7 @@
                                                         <% } %>
                                     </a>
                                 </td>
-                                <td>
+                                <td class="border">
 
                                     <a class="btn btn-dark btn-sm" href="/admin/edit-product/?id=<%= item._id%>">
                                         Edit
@@ -126,6 +115,6 @@
     <script src="/public/js/scripts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
     <script src="/public/js/datatables-simple-demo.js"></script>
-    </body>
+</body>
 
-    </html>
+</html>

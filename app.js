@@ -4,12 +4,14 @@ const app = express();
 const path=require('path');
 const userRouter = require("./router/user");
 const adminRouter = require("./router/admin");
+require('dotenv').config()
 
 const cookieParser = require('cookie-parser');
 const sessions = require('express-session');
 
 
-const port = 3000;
+// eslint-disable-next-line no-undef
+const port = process.env.PORT;
 
 app.set("view engine", "ejs");
 
@@ -44,7 +46,7 @@ app.all('*', (req,res)=>{
     
     home: "active",
     wishData : null,
-    usersession : null,})
+    usersession : req.session.auth,})
 })
 
 

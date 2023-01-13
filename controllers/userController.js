@@ -4,12 +4,12 @@ const Product = require("../models/productModel");
 const Wishlist = require("../models/wishlistModel");
 const Cart = require("../models/cartModel");
 const nodemailer = require("nodemailer");
-const session = require("express-session");
 const Banner = require("../models/bannerModel");
 const mongoose = require("mongoose");
 const Coupon = require("../models/couponModel");
 const Order = require("../models/orderModel");
 const paypal = require("paypal-rest-sdk");
+require("dotenv").config();
 
 const userHome = async (req, res) => {
   try {
@@ -122,7 +122,7 @@ const checkSignUp = async (req, res) => {
 
       const otp = Math.floor(Math.random() * 1000000 + 1);
       console.log(otp);
-      
+
       req.session.authOTP = otp;
       setTimeout(() => {
         req.session.authOTP = false;
@@ -137,12 +137,11 @@ const checkSignUp = async (req, res) => {
         status: true,
       });
 
- 
       var transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: "amarnathchakkiyar@gmail.com",
-          pass: "icnzdiqbjvqrydak",
+          user: process.env.NODEMAIL,
+          pass: process.env.NODEMAILPASSWORD,
         },
       });
 
@@ -150,7 +149,7 @@ const checkSignUp = async (req, res) => {
         from: "amarnathchakkiyar@gmail.com",
         to: req.body.email,
         subject: "YOUR OTP",
-     
+
         html: `<h3>Your OTP is here<h3> <br> <p>${otp}</p>`,
       };
 
@@ -160,8 +159,6 @@ const checkSignUp = async (req, res) => {
         } else {
           console.log("Email sent: " + info.response);
           res.redirect("/verifyOTP");
-
-         
         }
       });
     }
@@ -223,7 +220,7 @@ const otpVerifyPage = (req, res) => {
 const resendOTP = (req, res) => {
   try {
     const otp = Math.floor(Math.random() * 1000000 + 1);
-    
+
     req.session.authOTP = otp;
 
     setTimeout(() => {
@@ -231,12 +228,11 @@ const resendOTP = (req, res) => {
       console.log("Resend OTP Expired");
     }, 180000);
 
-
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "amarnathchakkiyar@gmail.com",
-        pass: "icnzdiqbjvqrydak",
+        user: process.env.NODEMAIL,
+        pass: process.env.NODEMAILPASSWORD,
       },
     });
 
@@ -244,7 +240,7 @@ const resendOTP = (req, res) => {
       from: "amarnathchakkiyar@gmail.com",
       to: req.session.emailOTP,
       subject: "YOUR OTP",
-      
+
       html: `<h3>Your OTP is here<h3> <br> <p>${otp}</p>`,
     };
 
@@ -298,8 +294,8 @@ const sendEmail = async (req, res) => {
         var transporter = nodemailer.createTransport({
           service: "gmail",
           auth: {
-            user: "amarnathchakkiyar@gmail.com",
-            pass: "icnzdiqbjvqrydak",
+            user: process.env.NODEMAIL,
+            pass: process.env.NODEMAILPASSWORD,
           },
         });
 
@@ -366,12 +362,12 @@ const resendEmail = (req, res) => {
       console.log("Resend OTP Expired");
     }, 180000);
 
-    ``
+    ``;
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "amarnathchakkiyar@gmail.com",
-        pass: "icnzdiqbjvqrydak",
+        user: process.env.NODEMAIL,
+        pass: process.env.NODEMAILPASSWORD,
       },
     });
 
@@ -477,8 +473,6 @@ const submitPassword = async (req, res) => {
   }
 };
 
-
-
 const productPage = async (req, res) => {
   try {
     if (req.query.search != null) {
@@ -492,8 +486,6 @@ const productPage = async (req, res) => {
       const wishData = await Wishlist.findOne({
         customer: userDetails._id,
       }).populate("products");
-
-      
 
       Product.find({
         status: true,
@@ -681,8 +673,6 @@ const cartPage = async (req, res) => {
   }
 };
 
-
-
 const addCart = async (req, res) => {
   try {
     const email = req.session.auth;
@@ -695,8 +685,6 @@ const addCart = async (req, res) => {
     });
 
     if (itemIndex > -1) {
-    
-
       let a = await Cart.updateOne(
         { customer: userDetails._id, "products.productId": req.query.id },
         {
@@ -783,7 +771,6 @@ const incrimentQuantity = async (req, res) => {
       }
     );
 
-    
     res.redirect("/cart");
   } catch (err) {
     console.log(err);
@@ -1065,7 +1052,6 @@ const checkCoupon = async (req, res) => {
       let formatedDate = formatDate(currentDate);
 
       if (couponData.expirationTime > formatedDate) {
-        
         const cartItems = await Cart.aggregate([
           { $match: { customer: userId._id } },
           { $unwind: "$products" },
@@ -1264,11 +1250,9 @@ const checkCoupon = async (req, res) => {
 };
 
 paypal.configure({
-  mode: "sandbox", 
-  client_id:
-    "ASXJezsZfLKkUgsqc4f2V1MoQz98pKz6BikAab5nTXdbayP1c_SgTDdFGKvGiUGjA9tXPhbwOPy7SKFv",
-  client_secret:
-    "EGT_oj-35cm_RRjndBphqfu8aFb6oJ2HGEGuPiljFQPQb02D7QO4TgJMlrvh2GnUvomNdiPYwgBeBcn2",
+  mode: "sandbox",
+  client_id: process.env.CLIENTID,
+  client_secret: process.env.CLIENTSECRET,
 });
 
 var newOrder;
@@ -1276,7 +1260,20 @@ var newOrder;
 const orderCheck = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
-  const cart = await Cart.findOne({ customer: userDetails._id });
+  await User.updateOne(
+    { email: email },
+    {
+      $push: {
+        address: {
+          name: req.body.nameAdd,
+          contact: req.body.contactAdd,
+          fullAddress: req.body.fullAdd,
+          stat: false,
+          pincode: req.body.pinAdd,
+        },
+      },
+    }
+  );
 
   if (req.body.paymentMethod == "COD") {
     const couponData = await Coupon.findOne({ discount: req.body.couponText });
@@ -1380,16 +1377,9 @@ const orderCheck = async (req, res) => {
         orderType: "COD",
       });
 
-      newOrder.save();
       console.log("order saved");
-      await Cart.updateOne(
-        { customer: userDetails._id },
-        {
-          $set: { products: [] },
-        }
-      );
 
-      res.redirect("/order-success");
+      res.redirect("/check-payment");
     } else {
       const cartItems = await Cart.aggregate([
         { $match: { customer: userDetails._id } },
@@ -1476,16 +1466,9 @@ const orderCheck = async (req, res) => {
         orderType: "COD",
       });
 
-      newOrder.save();
       console.log("order saved");
-      await Cart.updateOne(
-        { customer: userDetails._id },
-        {
-          $set: { products: [] },
-        }
-      );
 
-      res.redirect("/order-success");
+      res.redirect("/check-payment");
     }
   } else {
     const couponData = await Coupon.findOne({ discount: req.body.couponText });
@@ -1589,18 +1572,10 @@ const orderCheck = async (req, res) => {
         orderType: "PayPal",
       });
 
-      
       console.log("order saved");
-      await Cart.updateOne(
-        { customer: userDetails._id },
-        {
-          $set: { products: [] },
-        }
-      );
 
-      
-      let lots = discountPrice * 0.012
-      let paytm = parseInt(lots)
+      let lots = discountPrice * 0.012;
+      let paytm = parseInt(lots);
 
       const create_payment_json = {
         intent: "sale",
@@ -1732,19 +1707,8 @@ const orderCheck = async (req, res) => {
         orderType: "PayPal",
       });
 
-      
-      let loter = final * 0.012
-      let paym = parseInt(loter)
-
-      
-
-      console.log("order saved");
-      await Cart.updateOne(
-        { customer: userDetails._id },
-        {
-          $set: { products: [] },
-        }
-      );
+      let loter = final * 0.012;
+      let paym = parseInt(loter);
 
       const create_payment_json = {
         intent: "sale",
@@ -1794,114 +1758,153 @@ const orderCheck = async (req, res) => {
   }
 };
 
-const orderSuccessPage = async (req, res) => {
+const checkPayment = async (req, res) => {
+  newOrder.save();
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
-  const userValid = await Order.findOne({ customer: userDetails._id });
-  if (userValid) {
-    console.log("visit success");
-    res.send("Order Success");
+  const wishData = await Wishlist.findOne({
+    customer: userDetails._id,
+  }).populate("products");
+  await Cart.updateOne(
+    { customer: userDetails._id },
+    {
+      $set: { products: [] },
+    }
+  );
+
+  res.render("user/partials/orderSuccess", {
+    wishData,
+    usersession: req.session.auth,
+    userDetails,
+    newOrder,
+  });
+};
+
+const orderPage = async (req, res) => {
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const wishData = await Wishlist.findOne({
+    customer: userDetails._id,
+  }).populate("products");
+
+  const orderDetails = await Order.find({ customer: userDetails._id }).populate(
+    "product.productId"
+  );
+
+  res.render("user/partials/order", {
+    wishData,
+    usersession: req.session.auth,
+    userDetails,
+    orderDetails,
+  });
+};
+
+const orderDetailPage = async (req, res) => {
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const wishData = await Wishlist.findOne({
+    customer: userDetails._id,
+  }).populate("products");
+
+  const orderDetails = await Order.findOne({ _id: req.query.id }).populate(
+    "product.productId"
+  );
+
+  res.render("user/partials/orderDetail", {
+    wishData,
+    usersession: req.session.auth,
+    userDetails,
+    orderDetails,
+  });
+};
+
+const cancelOrder = async (req, res) => {
+  await Order.updateOne(
+    { _id: req.body.id },
+    {
+      $set: { status: "cancelled" },
+    }
+  );
+  res.json({ data: "cancelled" });
+};
+
+const checkPassword = async (req, res) => {
+  console.log("hereeeee");
+  console.log(req.body.data);
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const match = await bcrypt.compare(req.body.data, userDetails.password);
+  if (match) {
+    res.json({
+      data: '<b class="text-success">Correct password</b>',
+      att: "right",
+    });
+  } else {
+    res.json({
+      data: '<b class="text-danger">Wrong Password</b>',
+      att: "wrong",
+    });
   }
 };
 
-const checkPayment = async (req,res)=>{
-  newOrder.save()
-  res.send("payment Succss")
-}
-
-
-const orderPage = async (req,res)=>{
-  const email = req.session.auth;
-  const userDetails = await User.findOne({ email: email });
-  const wishData = await Wishlist.findOne({
-    customer: userDetails._id,
-  }).populate("products");
-  
-  const orderDetails = await Order.find({customer : userDetails._id}).populate("product.productId")
-
-  res.render("user/partials/order", {
-    
-    wishData,
-    usersession: req.session.auth,
-    userDetails,
-    orderDetails
-  });
-}
-
-
-const orderDetailPage = async (req,res)=>{
-  const email = req.session.auth;
-  const userDetails = await User.findOne({ email: email });
-  const wishData = await Wishlist.findOne({
-    customer: userDetails._id,
-  }).populate("products");
-  
-  const orderDetails = await Order.findOne({_id : req.query.id}).populate("product.productId")
-
-  res.render("user/partials/orderDetail", {
-    
-    wishData,
-    usersession: req.session.auth,
-    userDetails,
-    orderDetails
-  });
-}
-
-const cancelOrder= async (req,res)=>{
-
-  const email = req.session.auth;
-  const userDetails = await User.findOne({ email: email });
-  const wishData = await Wishlist.findOne({
-    customer: userDetails._id,
-  }).populate("products");
-  
-  const orderDetails = await Order.updateOne({_id : req.body.id},{
-    $set : {status : "cancelled" }
-  })
-  res.json({ data: "cancelled" });
-
-
-}
-
-const  checkPassword = async (req,res)=>{
-  console.log('hereeeee')
-  console.log(req.body.data)
-  const email = req.session.auth;
-  const userDetails = await User.findOne({ email: email });
-  const match = await bcrypt.compare(
-    req.body.data,
-    userDetails.password
-  );
-  if(match){
-    res.json({ data: '<b class="text-success">Correct password</b>',att : 'right' });
-  }else{
-    res.json({data : '<b class="text-danger">Wrong Password</b>',att : 'wrong'})
-  }
-}
-
-
-const passwordChange = async (req,res)=>{
+const passwordChange = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
   const match = await bcrypt.compare(
     req.body.currentPassword,
     userDetails.password
   );
-  if(match){
+  if (match) {
     const hashPassword = await bcrypt.hash(req.body.confirmPassword, 10);
-    await User.updateOne({ email: email },
+    await User.updateOne(
+      { email: email },
       {
-        $set : {password : hashPassword}
-      });
-    res.redirect('/user-profile')
-  }else{
-    res.redirect("/user-profile")
+        $set: { password: hashPassword },
+      }
+    );
+    res.redirect("/user-profile");
+  } else {
+    res.redirect("/user-profile");
   }
-}
+};
 
+const orderFailed = async (req, res) => {
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const wishData = await Wishlist.findOne({
+    customer: userDetails._id,
+  }).populate("products");
 
+  const orderDetails = await Order.find({ customer: userDetails._id }).populate(
+    "product.productId"
+  );
 
+  res.render("user/partials/order", {
+    wishData,
+    usersession: req.session.auth,
+    userDetails,
+    orderDetails,
+  });
+};
 
+const test = async (req, res) => {
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const wishData = await Wishlist.findOne({
+    customer: userDetails._id,
+  }).populate("products");
+
+  const orderDetails = await Order.find({ customer: userDetails._id }).populate(
+    "product.productId"
+  );
+
+  res.render("user/layouts/header1", {
+    wishData,
+    usersession: req.session.auth,
+    userDetails,
+    orderDetails,
+  });
+};
 
 module.exports = {
   userHome,
@@ -1946,11 +1949,13 @@ module.exports = {
   checkAddress,
   checkCoupon,
   orderCheck,
-  orderSuccessPage,
+
   checkPayment,
   orderPage,
   orderDetailPage,
   cancelOrder,
   checkPassword,
-  passwordChange
+  passwordChange,
+  orderFailed,
+  test,
 };

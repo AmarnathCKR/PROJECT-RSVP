@@ -58,22 +58,12 @@ const adminDashboard = async (req, res) => {
 };
 
 const adminCustomer = async (req, res) => {
-  if (req.session.adminAuth) {
-    let search = "";
-    if (req.query.search) {
-      search = req.query.search;
-    }
+ 
 
-    await User.find(
-      {
-        $or: [
-          { fname: { $regex: "^" + search + ".*", $options: "i" } },
-          { email: { $regex: "^" + search + ".*", $options: "i" } },
-        ],
-      },
-      (err, Users) => {
+   const userDetails =  await User.find({})
+      
         res.render("admin/layouts/adminCustomers", {
-          details: Users,
+          details: userDetails,
           stat: "Active",
           unStat: "Blocked",
           blocking: "Block",
@@ -81,11 +71,9 @@ const adminCustomer = async (req, res) => {
           blockRef: "block-user",
           unblockRef: "unBlock-user",
         });
-      }
-    ).sort({ datefield: -1 });
-  } else {
-    res.redirect("/admin/");
-  }
+      
+   
+ 
 };
 
 const blockUser = async (req, res) => {
@@ -126,18 +114,10 @@ const adminLogOut = (req, res) => {
 
 const adminCategory =async (req, res) => {
   if (req.session.adminAuth) {
-    let search = "";
-    if (req.query.search) {
-      search = req.query.search;
-    }
-
-    await Category.find(
-      {
-        $or: [{ name: { $regex: "^" + search + ".*", $options: "i" } }],
-      },
-      (err, Category) => {
+    const category  =  await Category.find({})
+      
         res.render("admin/layouts/adminCategory", {
-          details: Category,
+          details: category,
           stat: "On sale",
           unStat: "Not on sale",
           blocking: "Unlist",
@@ -145,8 +125,8 @@ const adminCategory =async (req, res) => {
           blockRef: "block-category",
           unblockRef: "unBlock-category",
         });
-      }
-    ).sort({ datefield: -1 });
+      
+   
   } else {
     res.redirect("/admin/");
   }
@@ -501,18 +481,7 @@ const submitCoupon = async (req, res) => {
 
 const adminOrder = async (req, res) => {
   if (req.session.adminAuth) {
-    let search = "";
-    if (req.query.search) {
-      search = req.query.search;
-    }
-
-    const OrderDetails = await Order.find({
-      $or: [
-        { status: { $regex: "^" + search + ".*", $options: "i" } },
-        { coupon: { $regex: "^" + search + ".*", $options: "i" } },
-        { orderType: { $regex: "^" + search + ".*", $options: "i" } },
-      ],
-    })
+      const OrderDetails = await Order.find({ })
       .populate("product.productId")
       .populate("customer");
     res.render("admin/layouts/adminOrders", {
@@ -668,6 +637,69 @@ const salesReport=async (req,res)=>{
   }
 }
 
+
+const chartReport = async (req,res)=>{
+  const OrderDetails = await Order.find({})
+      
+
+  let cod = 0;
+  let pay = 0;
+  for(let i=0 ; i<OrderDetails.length;i++){
+    if(OrderDetails[i].orderType === 'COD'){
+      cod = cod + 1
+    }
+    
+    if(OrderDetails[i].orderType === 'PayPal'){
+      pay = pay + 1
+    }
+  }
+  console.log(cod+' '+pay)
+  res.json({ cod, pay});
+}
+
+
+const areaChartReport = async (req,res)=>{
+  const OrderDetails = await Order.aggregate([
+    { $project: {  month: { $month: "$date" },price : "$finalPrice"} },
+    
+  ]);
+  let jan = 0; let feb = 0;let march = 0;let april = 0;let may = 0;let june = 0;let july = 0;let aug = 0;
+  let sept = 0; let oct = 0; let nov = 0;let dec = 0;
+  
+  // console.log(OrderDetails)
+  
+    OrderDetails.forEach(function(items){
+    
+      if(items.month == 1){
+    
+      jan = jan + items.price
+    }else if(items.month == 2){
+      feb = feb + items.price
+    }else if(items.month == 3){
+      march = march + items.price
+    }else if(items.month == 4){
+      april = april + items.price
+    }else if(items.month == 5){
+      may = may + items.price
+    }else if(items.month == 6){
+      june = june + items.price
+    }else if(items.month == 7){
+      july = july + items.price
+    }else if(items.month == 8){
+      aug = aug + items.price
+    }else if(items.month == 9){
+      sept = sept + items.price
+    }else if(items.month == 10){
+      oct = oct + items.price
+    }else if(items.month == 11){
+      nov = nov + items.price
+    }else if(items.month == 12){
+      dec = dec + items.price
+    }
+  })
+
+  res.json({ jan, feb,march,april,may,june,july,aug,sept,oct,nov,dec});
+}
 module.exports = {
   adminSignin,
   adminVerification,
@@ -707,4 +739,6 @@ module.exports = {
   unBlockBanner,
   changeOrder,
   salesReport,
+  chartReport,
+  areaChartReport
 };

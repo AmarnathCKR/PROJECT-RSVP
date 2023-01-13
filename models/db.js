@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', true);
+require('dotenv').config()
 
-mongoose.connect('mongodb://127.0.0.1:27017/UserData', 
+mongoose.connect(process.env.MONGOURL, 
     {useNewUrlParser : true},
     (err) => {
         if (!err) {

@@ -1,213 +1,222 @@
 <%- include('../layouts/header') %>
 
     <div class="container-fluid my-4 mx-0">
-        <%if(cartData.products[0] != null){%>
+        <%if(cartData.products[0] !=null){%>
 
-        <div class="col-lg-12 d-flex justify-content-center border-bottom">
-            <div class="row my-3 mx-0 py-0 g-0 ">
-                <div class="col-sm-12 mx-0 d-flex justify-content-center py-0 g-0">
-                    <h5 class="mb-0">Check Out </h5>
+            <div class="col-lg-12 d-flex justify-content-center border-bottom">
+                <div class="row my-3 mx-0 py-0 g-0 ">
+                    <div class="col-sm-12 mx-0 d-flex justify-content-center py-0 g-0">
+                        <h5 class="mb-0">Check Out </h5>
+                    </div>
+
                 </div>
+
 
             </div>
 
+            <form action="/checkout-submit" method="post" onkeydown="return event.key != 'Enter';">
 
-        </div>
-
-        <form action="/checkout-submit" method="post" onkeydown="return event.key != 'Enter';">
-
-            <div class="row my-3 d-flex justify-content-center">
-                <div class="col-lg-7 border-end border-bottom">
-                    <% var subT=0%>
-                        <% cartData.products.forEach(function(items){ %>
-                            <div class="card-body mx-0 py-0 g-0">
-                                <div class="row mx-0 py-0 g-0">
-                                    <div class="col-sm-3 mx-0 py-0 g-0">
-                                        <img src="/public/databaseimg/<%=items.productId.image[0]%>" width="50%"
-                                            height="70%" alt="" id="image">
-                                    </div>
-                                    <div class="col-sm-3 text-secondary">
-                                        <%=items.productId.name%>
-                                    </div>
-                                    <div class="col-sm-2 text-secondary">
-                                        <%=items.productId.price%>
-                                    </div>
-                                    <div class="col-sm-2 text-secondary">
-                                        <%=items.quantity%>
-                                    </div>
-                                    <% var addedNumber=items.productId.price * items.quantity;%>
-                                        <div class="col-sm-2 text-secondary">₹<%=addedNumber%>
+                <div class="row my-3 d-flex justify-content-center">
+                    <div class="col-lg-7 border-end border-bottom">
+                        <% var subT=0%>
+                            <% cartData.products.forEach(function(items){ %>
+                                <div class="card-body mx-0 py-0 g-0">
+                                    <div class="row mx-0 py-0 g-0">
+                                        <div class="col-sm-3 mx-0 py-0 g-0">
+                                            <img src="/public/databaseimg/<%=items.productId.image[0]%>" width="50%"
+                                                height="70%" alt="" id="image">
                                         </div>
-                                        <% subT +=addedNumber%>
+                                        <div class="col-sm-3 text-secondary">
+                                            <%=items.productId.name%>
+                                        </div>
+                                        <div class="col-sm-2 text-secondary">
+                                            <%=items.productId.price%>
+                                        </div>
+                                        <div class="col-sm-2 text-secondary">
+                                            <%=items.quantity%>
+                                        </div>
+                                        <% var addedNumber=items.productId.price * items.quantity;%>
+                                            <div class="col-sm-2 text-secondary">₹<%=addedNumber%>
+                                            </div>
+                                            <% subT +=addedNumber%>
+                                    </div>
+                                    <hr>
+                                </div>
+                                <%})%>
+                                    <div class="card-body mx-0 py-0 g-0">
+                                        <div class="row mx-0 py-0 g-0 justify-content-center">
+                                            <h6 class="text-center">Sub Total = ₹<%=subT%>
+                                            </h6>
+                                        </div>
+                                    </div>
+
+                    </div>
+
+                    <div class="col-lg-5 border-bottom">
+                        <div class="row my-3 mx-0 py-0 g-0">
+                            <h5>Choose Address or Enter New Address</h5>
+                            <select class="py-2" name="address" onchange="displayAddress(this.value)" id="address">
+
+
+                                <% userDetails.address.forEach(function(data,i){%>
+
+                                    <%if(data.stat==true){%>
+                                        <option value="1" selected>Choose</option>
+                                        <option value="<%=data._id%>" >Default - <%=data.fullAddress%>
+                                        </option>
+                                        <%}else{%>
+                                            <option value="<%=data._id%>">
+                                                <%=data.fullAddress%>
+                                            </option>
+                                            <%}%>
+                                                <%})%>
+
+                            </select>
+                        </div>
+
+
+
+                        <% userDetails.address.forEach(function(items,i){%>
+                            <%if(items.stat==true){%>
+                                <div class="row my-3 mx-0 py-0 g-0">
+                                    <div class="col-sm-3 mx-0 py-0 g-0">
+                                        <h6 class="mb-0">Address</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        <input id="fullAdd" name="fullAdd" type="text" value=""
+                                            style="width: 100%;">
+                                    </div>
                                 </div>
                                 <hr>
-                            </div>
-                            <%})%>
-                                <div class="card-body mx-0 py-0 g-0">
-                                    <div class="row mx-0 py-0 g-0 justify-content-center">
-                                        <h6 class="text-center">Sub Total = ₹<%=subT%>
-                                        </h6>
+                                <div class="row mx-0 py-0 g-0">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Contact</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        <input id="contactAdd" name="contactAdd" type="text" value=""
+                                            style="width: 100%;">
                                     </div>
                                 </div>
+                                <hr>
+                                <div class=" row mx-0 py-0 g-0">
+                                    <div class="col-sm-3 mx-0 py-0 g-0">
+                                        <h6 class="mb-0">Name</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        <input type="text" id="nameAdd" name="nameAdd" value="" style="width: 100%;">
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class=" row mx-0 py-0 g-0">
+                                    <div class="col-sm-3 mx-0 py-0 g-0">
+                                        <h6 class="mb-0">Pincode</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        <input type="text" id="pinAdd" name="pinAdd" value="" style="width: 100%;">
+                                    </div>
+                                </div>
+                                <%}%>
+                                    <%})%>
 
-                </div>
-
-                <div class="col-lg-5 border-bottom">
-                    <div class="row my-3 mx-0 py-0 g-0">
-                        <select class="py-2" name="address" onchange="displayAddress(this.value)" id="address">
 
 
-                            <% userDetails.address.forEach(function(data,i){%>
-
-                                <%if(data.stat==true){%>
-                                    <option value="<%=data._id%>" selected>Default - <%=data.fullAddress%>
-                                    </option>
-                                    <%}else{%>
-                                        <option value="<%=data._id%>">
-                                            <%=data.fullAddress%>
-                                        </option>
-                                        <%}%>
-                                            <%})%>
-
-                        </select>
                     </div>
 
-
-
-                    <% userDetails.address.forEach(function(items,i){%>
-                        <%if(items.stat==true){%>
-                            <div class="row my-3 mx-0 py-0 g-0">
-                                <div class="col-sm-3 mx-0 py-0 g-0">
-                                    <h6 class="mb-0">Address</h6>
-                                </div>
-                                <div id="fullAdd" class="col-sm-9 text-secondary">
-                                    <%=items.fullAddress%>
-                                </div>
+                    <div class=" col-lg-7 my-3 border-end">
+                        <div class="row my-3">
+                            <div class="col-md-12 my-3">
+                                <h6>Please Enter Coupon Code</h6>
                             </div>
-                            <hr>
-                            <div class="row mx-0 py-0 g-0">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Contact</h6>
-                                </div>
-                                <div id="contactAdd" class="col-sm-9 text-secondary">
-                                    <%=items.contact%>
-                                </div>
+                        </div>
+
+                        <div class="row my-3">
+                            <div class="col-md-5 my-3">
+                                <input type="text" name="couponText" id="couponText" onkeyup="checkCoupon(this.value)"
+                                    style="width: 100%;">
                             </div>
-                            <hr>
-                            <div class="row mx-0 py-0 g-0">
-                                <div class="col-sm-3 mx-0 py-0 g-0">
-                                    <h6 class="mb-0">Name</h6>
-                                </div>
-                                <div id="nameAdd" class="col-sm-9 text-secondary">
-                                    <%=items.name%>
-                                </div>
+                            <div id="couponAlert" class="col-md-7 my-3">
+                                Enter Code
                             </div>
-                            <hr>
-                            <div class="row mx-0 py-0 g-0">
-                                <div class="col-sm-3 mx-0 py-0 g-0">
-                                    <h6 class="mb-0">Pincode</h6>
-                                </div>
-                                <div id="pinAdd" class="col-sm-9 text-secondary">
-                                    <%=items.pincode%>
-                                </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="row my-3">
+                            <div class="col-md-12 my-3">
+                                <h6>The Price and charges</h6>
                             </div>
-                            <%}%>
-                                <%})%>
-
-
-
-                </div>
-
-                <div class="col-lg-7 my-3 border-end">
-                    <div class="row my-3">
-                        <div class="col-md-12 my-3">
-                            <h6>Please Enter Coupon Code</h6>
                         </div>
-                    </div>
-
-                    <div class="row my-3">
-                        <div class="col-md-5 my-3">
-                            <input type="text" name="couponText" id="couponText" onkeyup="checkCoupon(this.value)"
-                                style="width: 100%;">
+                        <div class="row my-3">
+                            <div id="totalPrice" class="col-md-12 my-3">
+                                Subtotal : ₹<%=subT%>
+                            </div>
                         </div>
-                        <div id="couponAlert" class="col-md-7 my-3">
-                            Enter Code
+
+                        <div class="row my-3">
+                            <div id="discountPrice" class="col-md-12 my-3">
+                                discount : ₹0
+                            </div>
+                        </div>
+
+                        <div class="row my-3">
+                            <div id="finalPriced" class="col-md-12 my-3">
+                                Total Payment : ₹<%=subT%>
+                            </div>
                         </div>
 
                     </div>
 
 
-                </div>
+                    <div class="col-lg-12 d-flex justify-content-between border-top my-2 py-3">
 
-                <div class="col-lg-5">
-                    <div class="row my-3">
-                        <div class="col-md-12 my-3">
-                            <h6>The Price and charges</h6>
-                        </div>
-                    </div>
-                    <div class="row my-3">
-                        <div id="totalPrice" class="col-md-12 my-3">
-                            Subtotal : ₹<%=subT%>
-                        </div>
-                    </div>
+                        <h4>Choose Payment method</h4>
 
-                    <div class="row my-3">
-                        <div id="discountPrice" class="col-md-12 my-3">
-                            discount : ₹0
-                        </div>
-                    </div>
-
-                    <div class="row my-3">
-                        <div id="finalPriced" class="col-md-12 my-3">
-                            Total Payment : ₹<%=subT%>
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <div class="col-lg-12 d-flex justify-content-between border-top my-2 py-3">
-
-                    <h4>Choose Payment method</h4>
-
-                    <div class="d-flex justify-content-center ">
-                        <div class="custom-control custom-radio mx-2">
-                          <input id="credit" name="paymentMethod" value="COD" type="radio" class="custom-control-input" checked required>
-                          <label class="custom-control-label" for="credit">Cash On Delivery</label>
-                        </div>
-                        <!-- <div class="custom-control custom-radio">
+                        <div class="d-flex justify-content-center ">
+                            <div class="custom-control custom-radio mx-2">
+                                <input id="credit" name="paymentMethod" value="COD" type="radio"
+                                    class="custom-control-input" checked required>
+                                <label class="custom-control-label" for="credit">Cash On
+                                    Delivery</label>
+                            </div>
+                            <!-- <div class="custom-control custom-radio">
                           <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
                           <label class="custom-control-label" for="debit">Debit card</label>
                         </div> -->
-                        <div class="custom-control custom-radio">
-                          <input id="paypal" name="paymentMethod" type="radio" value="PayPal"class="custom-control-input" required>
-                          <label class="custom-control-label" for="paypal">PayPal</label>
+                            <div class="custom-control custom-radio">
+                                <input id="paypal" name="paymentMethod" type="radio" value="PayPal"
+                                    class="custom-control-input" required>
+                                <label class="custom-control-label" for="paypal">PayPal</label>
+                            </div>
                         </div>
-                      </div>
 
-                    <button type="submit" class="btn btn-dark py-2 px-3" onclick="return confirm('Proceed to order?')">Proceed to Order</button>
+                        <button type="submit" class="btn btn-dark py-2 px-3"
+                            onclick="return confirm('Proceed to order?')">Proceed to
+                            Order</button>
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
 
                 </div>
+            </form>
 
+            <%}else{%>
 
-                
+                <center>No items in the Cart</center>
 
-                   
-
-               
-
-
-
-
-
-            </div>
-        </form>
-
-        <%}else{%>
-
-            <center>No items in the Cart</center>
-
-        <%}%>
+                <%}%>
 
 
     </div>
@@ -216,7 +225,7 @@
     <script>
 
         function displayAddress(catId) {
-
+            if(catId!=1){
             $.ajax({
                 url: "/check-address",
                 method: "patch",
@@ -225,18 +234,19 @@
                     adds = res.data
 
 
-                    $('#fullAdd').html('');
-                    $('#nameAdd').html('');
-                    $('#contactAdd').html('');
-                    $('#pinAdd').html('');
+                    $('#fullAdd').val('');
+                    $('#nameAdd').val('');
+                    $('#contactAdd').val('');
+                    $('#pinAdd').val('');
 
-                    $('#fullAdd').html(adds[0].address);
-                    $('#nameAdd').html(adds[0].name);
-                    $('#contactAdd').html(adds[0].phone);
-                    $('#pinAdd').html(adds[0].pincode);
+                    $('#fullAdd').val(adds[0].address);
+                    $('#nameAdd').val(adds[0].name);
+                    $('#contactAdd').val(adds[0].phone);
+                    $('#pinAdd').val(adds[0].pincode);
                 }
 
             })
+        }
         }
     </script>
 
@@ -265,7 +275,7 @@
                         $('#discountPrice').html('Coupon Discount : -' + res.discountInit + '  (' + res.finalPrice + '% off)');
                         $('#finalPriced').html('');
                         $('#finalPriced').html('Total Payment : ' + res.discount + '');
-                    }else{
+                    } else {
                         $('#totalPrice').html('');
                         $('#totalPrice').html('SubTotal : ' + res.price + '');
                         $('#discountPrice').html('');

@@ -58,5 +58,9 @@ router.patch('/change-stat', adminController.changeOrder)
 
 router.get('/sales-report',adminController.salesReport)
 
+router.get('/chart-data',adminController.chartReport)
+
+router.get('/area-chart-data',adminController.areaChartReport)
+
 
 module.exports = router;
