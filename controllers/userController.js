@@ -141,7 +141,7 @@ const checkSignUp = async (req, res) => {
         service: "gmail",
         auth: {
           user: process.env.NODEMAIL,
-          pass: process.env.NODEMAILPASSWORD,
+          pass: process.env.NODEMAIL_PASSWORD,
         },
       });
 
@@ -232,7 +232,7 @@ const resendOTP = (req, res) => {
       service: "gmail",
       auth: {
         user: process.env.NODEMAIL,
-        pass: process.env.NODEMAILPASSWORD,
+        pass: process.env.NODEMAIL_PASSWORD,
       },
     });
 
@@ -295,7 +295,7 @@ const sendEmail = async (req, res) => {
           service: "gmail",
           auth: {
             user: process.env.NODEMAIL,
-            pass: process.env.NODEMAILPASSWORD,
+            pass: process.env.NODEMAIL_PASSWORD,
           },
         });
 
@@ -367,7 +367,7 @@ const resendEmail = (req, res) => {
       service: "gmail",
       auth: {
         user: process.env.NODEMAIL,
-        pass: process.env.NODEMAILPASSWORD,
+        pass: process.env.NODEMAIL_PASSWORD,
       },
     });
 
@@ -1251,8 +1251,8 @@ const checkCoupon = async (req, res) => {
 
 paypal.configure({
   mode: "sandbox",
-  client_id: process.env.CLIENTID,
-  client_secret: process.env.CLIENTSECRET,
+  client_id: process.env.CLIENT_ID,
+  client_secret: process.env.CLIENT_SECRET,
 });
 
 var newOrder;

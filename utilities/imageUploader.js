@@ -10,6 +10,6 @@ const storage=multer.diskStorage({
         cb(null,name);
     }
 })
-const upload=multer({storage:storage})
+const upload=multer({storage:multer.memoryStorage()})
 
 module.exports=upload;

@@ -6,6 +6,9 @@ const Order = require("../models/orderModel");
 const Banner = require("../models/bannerModel");
 const mongoose = require("mongoose");
 const excelJS = require('exceljs');
+const cloudinary = require('cloudinary').v2;
+
+
 
 const adminSignin = (req, res) => {
   if (req.session.adminAuth) {
@@ -316,15 +319,61 @@ const editProduct = async (req, res) => {
 };
 
 const submitEditProduct = async (req, res) => {
+
+
+
+
+  // Configuration 
+  cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API,
+    api_secret: process.env.CLOUD_API_SECRET
+  });
+  
+  
+  // Upload
+  
+
+  
+ 
+  
+  
+  // Generate 
+  
+
+  
+  
+  
+  
+
+  // https://res.cloudinary.com/<cloud_name>/image/upload/h_150,w_100/olympic_flag
+
+
+
+
+
+
   if (req.session.adminAuth) {
-    const allImages = [
-      req.files[0].filename,
-      req.files[1].filename,
-      req.files[2].filename,
-      req.files[3].filename,
-      req.files[4].filename,
-      req.files[5].filename,
-    ];
+    let allImages = []
+
+    req.files.forEach(function(items){
+      const resP = cloudinary.uploader.upload(items.originalname,{ transformation: [
+        { width: 1440, height: 1920, gravity: "face", crop: "fill" },
+      ]})
+      resP.then((data) => {
+        console.log(data.secure_url)
+      }).catch((err) => {
+        console.log(err);
+      });
+    
+
+      
+    
+      
+      
+    })
+
+    
    await Product.updateOne(
       { _id: req.query.id },
       {

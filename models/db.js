@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 mongoose.set('strictQuery', true);
 require('dotenv').config()
 
-mongoose.connect(process.env.MONGOURL, 
+mongoose.connect(process.env.MONGO_URL, 
     {useNewUrlParser : true},
     (err) => {
         if (!err) {
