@@ -29,6 +29,7 @@
                     </thead>
                     
                     <tbody>
+                        
                         <% details.forEach(function(item){ %>
                             <tr class="border">
                                 <td class="border">
@@ -36,7 +37,7 @@
                                 </td>
                                 <td class="border">
                                     <% for(i=0;i<6; i++) {%>
-                                        <img class="img-thumbnail" src="/public/databaseimg/<%= item.image[i]%>" alt=""
+                                        <img class="img-thumbnail" src="<%=item.image[i].url%>" alt=""
                                             srcset="" height="100px" width="75px">
                                         <%}%>
                                 </td>

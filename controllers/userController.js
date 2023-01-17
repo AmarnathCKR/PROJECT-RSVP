@@ -476,6 +476,7 @@ const submitPassword = async (req, res) => {
 const productPage = async (req, res) => {
   try {
     if (req.query.search != null) {
+      if(req.query.category){
       let search = req.query.search;
       const categoryData = await Category.find({ status: true });
 
@@ -488,7 +489,7 @@ const productPage = async (req, res) => {
       }).populate("products");
 
       Product.find({
-        status: true,
+        status: true, category : req.query.category,
         $or: [
           { name: { $regex: "." + search + ".*", $options: "i" } },
 
@@ -514,6 +515,128 @@ const productPage = async (req, res) => {
             });
           });
         });
+      }else if(req.query.color){
+        let search = req.query.search;
+      const categoryData = await Category.find({ status: true });
+
+      const colorData = await Product.find({ status: true });
+
+      const email = req.session.auth;
+      const userDetails = await User.findOne({ email: email });
+      const wishData = await Wishlist.findOne({
+        customer: userDetails._id,
+      }).populate("products");
+
+      Product.find({
+        status: true,color : req.query.color,
+        $or: [
+          { name: { $regex: "." + search + ".*", $options: "i" } },
+
+          { model: { $regex: "." + search + ".*", $options: "i" } },
+        ],
+      })
+        .skip(perPage * pages - perPage)
+        .limit(perPage)
+        .exec(function (err, products) {
+          Product.count().exec(function (err, count) {
+            if (err) return next(err);
+
+            res.render("user/partials/product", {
+              product: products,
+              categories: categoryData,
+              category: "",
+              colors: colorData,
+              shop: "active",
+              wishData,
+              current: pages,
+              pages: Math.ceil(count / perPage),
+              usersession: req.session.auth,
+            });
+          });
+        });
+
+      }else if(req.body.stock){
+        if(req.query.stock == 'inStock'){
+          let search = req.query.search;
+          const categoryData = await Category.find({ status: true });
+    
+          const colorData = await Product.find({ status: true });
+    
+          const email = req.session.auth;
+          const userDetails = await User.findOne({ email: email });
+          const wishData = await Wishlist.findOne({
+            customer: userDetails._id,
+          }).populate("products");
+    
+          Product.find({
+            status: true,stock : {$gt : 0},
+            $or: [
+              { name: { $regex: "." + search + ".*", $options: "i" } },
+    
+              { model: { $regex: "." + search + ".*", $options: "i" } },
+            ],
+          })
+            .skip(perPage * pages - perPage)
+            .limit(perPage)
+            .exec(function (err, products) {
+              Product.count().exec(function (err, count) {
+                if (err) return next(err);
+    
+                res.render("user/partials/product", {
+                  product: products,
+                  categories: categoryData,
+                  category: "",
+                  colors: colorData,
+                  shop: "active",
+                  wishData,
+                  current: pages,
+                  pages: Math.ceil(count / perPage),
+                  usersession: req.session.auth,
+                });
+              });
+            }); 
+        }else if(req.query.stock=='outStock'){
+          let search = req.query.search;
+        const categoryData = await Category.find({ status: true });
+  
+        const colorData = await Product.find({ status: true });
+  
+        const email = req.session.auth;
+        const userDetails = await User.findOne({ email: email });
+        const wishData = await Wishlist.findOne({
+          customer: userDetails._id,
+        }).populate("products");
+  
+        Product.find({
+          status: true,stock : 0,
+          $or: [
+            { name: { $regex: "." + search + ".*", $options: "i" } },
+  
+            { model: { $regex: "." + search + ".*", $options: "i" } },
+          ],
+        })
+          .skip(perPage * pages - perPage)
+          .limit(perPage)
+          .exec(function (err, products) {
+            Product.count().exec(function (err, count) {
+              if (err) return next(err);
+  
+              res.render("user/partials/product", {
+                product: products,
+                categories: categoryData,
+                category: "",
+                colors: colorData,
+                shop: "active",
+                wishData,
+                current: pages,
+                pages: Math.ceil(count / perPage),
+                usersession: req.session.auth,
+              });
+            });
+          });
+        }
+        
+      }else{res.redirect('/shop')}
     } else {
       const categoryData = await Category.find({ status: true });
 

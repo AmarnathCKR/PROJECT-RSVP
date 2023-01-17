@@ -6,12 +6,12 @@
     <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active" data-bs-interval="4000">
-          <img src="/public/databaseimg/1672386014107-Screenshot 2022-12-30 123636.png" class="d-block w-100" alt="...">
+          <img src="<%=details[2].image%>" class="d-block w-100" alt="...">
         </div>
         
         <% details.forEach(function(item){ %>
         <div class="carousel-item" data-bs-interval="4000">
-          <img src="/public/databaseimg/1672386003444-Screenshot 2022-12-30 123533.png" class="d-block w-100" alt="...">
+          <img src="<%=item.image%>" class="d-block w-100" alt="...">
         </div>
         <% }) %>
       </div>
@@ -84,7 +84,7 @@
           <div class="col-lg-6 d-flex justify-content-center">
 
             <div class="card" style="width: 100%;">
-              <img loading="lazy" src="/public/databaseimg/<%= data.image %>" class="card-img-top" alt="...">
+              <img loading="lazy" src="<%=data.image%>" class="card-img-top" alt="...">
               <div class="card-body">
                 <center class="card-title" style="font-size: larger; font-weight: bold;"><%=data.name%></center>
                 

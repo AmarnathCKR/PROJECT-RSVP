@@ -27,7 +27,7 @@ router.get('/block-category',adminController.blockCategory)
 
 router.get('/edit-category', adminController.editCategory)
 router.get('/add-category', adminController.addCategory)
-router.post('/add-category',upload.single('image') ,adminController.categorySubmit)
+router.post('/add-category',upload.single('image'),adminController.categorySubmit)
 router.post('/edit-category',upload.single('image') ,adminController.submitEditCategory)
 router.get('/add-product', adminController.addProduct)
 router.post('/add-product', upload.array('image',6), adminController.submitProduct)

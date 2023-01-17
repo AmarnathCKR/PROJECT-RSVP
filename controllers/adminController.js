@@ -5,10 +5,8 @@ const Coupon = require("../models/couponModel");
 const Order = require("../models/orderModel");
 const Banner = require("../models/bannerModel");
 const mongoose = require("mongoose");
-const excelJS = require('exceljs');
-const cloudinary = require('cloudinary').v2;
-
-
+const excelJS = require("exceljs");
+const cloudinary = require("cloudinary").v2;
 
 const adminSignin = (req, res) => {
   if (req.session.adminAuth) {
@@ -50,7 +48,6 @@ const adminVerification = (req, res) => {
   }
 };
 
-
 const adminDashboard = async (req, res) => {
   if (req.session.adminAuth) {
     const OrderDetails = await Order.find({})
@@ -61,27 +58,22 @@ const adminDashboard = async (req, res) => {
 };
 
 const adminCustomer = async (req, res) => {
- 
+  const userDetails = await User.find({});
 
-   const userDetails =  await User.find({})
-      
-        res.render("admin/layouts/adminCustomers", {
-          details: userDetails,
-          stat: "Active",
-          unStat: "Blocked",
-          blocking: "Block",
-          unBlock: "Unblock",
-          blockRef: "block-user",
-          unblockRef: "unBlock-user",
-        });
-      
-   
- 
+  res.render("admin/layouts/adminCustomers", {
+    details: userDetails,
+    stat: "Active",
+    unStat: "Blocked",
+    blocking: "Block",
+    unBlock: "Unblock",
+    blockRef: "block-user",
+    unblockRef: "unBlock-user",
+  });
 };
 
 const blockUser = async (req, res) => {
   if (req.session.adminAuth) {
-     await User.updateOne(
+    await User.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -115,21 +107,19 @@ const adminLogOut = (req, res) => {
   res.end();
 };
 
-const adminCategory =async (req, res) => {
+const adminCategory = async (req, res) => {
   if (req.session.adminAuth) {
-    const category  =  await Category.find({})
-      
-        res.render("admin/layouts/adminCategory", {
-          details: category,
-          stat: "On sale",
-          unStat: "Not on sale",
-          blocking: "Unlist",
-          unBlock: "List",
-          blockRef: "block-category",
-          unblockRef: "unBlock-category",
-        });
-      
-   
+    const category = await Category.find({});
+
+    res.render("admin/layouts/adminCategory", {
+      details: category,
+      stat: "On sale",
+      unStat: "Not on sale",
+      blocking: "Unlist",
+      unBlock: "List",
+      blockRef: "block-category",
+      unblockRef: "unBlock-category",
+    });
   } else {
     res.redirect("/admin/");
   }
@@ -153,13 +143,11 @@ const deleteCategory = async (req, res) => {
 const editCategory = async (req, res) => {
   if (req.session.adminAuth) {
     try {
-      await Category.findById({ _id: req.query.id }).then(
-        (result) => {
-          res.render("admin/layouts/editCategory", {
-            details: result,
-          });
-        }
-      );
+      await Category.findById({ _id: req.query.id }).then((result) => {
+        res.render("admin/layouts/editCategory", {
+          details: result,
+        });
+      });
     } catch (error) {
       console.log("Edit user error: " + error.message);
     }
@@ -170,17 +158,41 @@ const editCategory = async (req, res) => {
 
 const submitEditCategory = async (req, res) => {
   if (req.session.adminAuth) {
-    await Category.updateOne(
-      { _id: req.query.id },
-      {
-        $set: {
-          name: req.body.name,
-          image: req.file.filename,
-          status: true,
-        },
-      }
-    );
-    res.redirect("/admin/category");
+    cloudinary.config({
+      cloud_name: process.env.CLOUD_NAME,
+      api_key: process.env.CLOUD_API,
+      api_secret: process.env.CLOUD_API_SECRET,
+    });
+
+    // Upload
+    let fileName = req.file;
+
+    const resp = cloudinary.uploader.upload(fileName.path, {
+      transformation: [
+        { width: 1440, height: 1920, gravity: "face", crop: "fill" },
+      ],
+    });
+  
+
+    resp
+      .then((data) => {
+        console.log(data.secure_url);
+        Category.updateOne(
+          { _id: req.query.id },
+          {
+            $set: {
+              name: req.body.name,
+              image: data.secure_url,
+              status: true,
+            },
+          }
+        );
+        res.redirect("/admin/category");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
   }
 };
 
@@ -212,7 +224,6 @@ const unblockCategory = async (req, res) => {
   }
 };
 
-
 const addCategory = (req, res) => {
   if (req.session.adminAuth) {
     res.render("admin/layouts/addCategory");
@@ -221,18 +232,45 @@ const addCategory = (req, res) => {
   }
 };
 
-
 const categorySubmit = (req, res) => {
   try {
-    let newCategory = new Category({
-      name: req.body.name,
 
-      image: req.file.filename,
+
+    cloudinary.config({
+      cloud_name: process.env.CLOUD_NAME,
+      api_key: process.env.CLOUD_API,
+      api_secret: process.env.CLOUD_API_SECRET,
     });
-    newCategory.save();
-    res.redirect("/admin/category");
-    res.send("ok");
-    console.log(Product);
+
+    // Upload
+    let fileName = req.file;
+    console.log(fileName)
+    const resp = cloudinary.uploader.upload(fileName.path, {
+      transformation: [
+        { width: 1440, height: 1920, gravity: "face", crop: "fill" },
+      ],
+    });
+    // const resp = cloudinary.url(filenamesss,{ transformation: [
+    //   { width: 485, height: 485, gravity: "face", crop: "fill" },
+    // ]})
+
+    resp
+      .then((data) => {
+        console.log(data.secure_url);
+        let newCategory = new Category({
+          name: req.body.name,
+    
+          image: data.secure_url,
+        });
+        newCategory.save();
+        res.redirect("/admin/category");
+        
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    
   } catch (error) {
     console.log(error.message);
   }
@@ -268,29 +306,56 @@ const addProduct = async (req, res) => {
 
 const submitProduct = async (req, res) => {
   try {
-    
-
-    const allImages = [
-      req.files[0].filename,
-      req.files[1].filename,
-      req.files[2].filename,
-      req.files[3].filename,
-      req.files[4].filename,
-      req.files[5].filename,
-    ];
-    let newProduct = new Product({
-      name: req.body.name,
-      model: req.body.model,
-      category: mongoose.Types.ObjectId(req.body.category),
-      description: req.body.description,
-      status: true,
-      stock: req.body.stock,
-      color: req.body.color,
-      price: req.body.price,
-      image: allImages,
+    cloudinary.config({
+      cloud_name: process.env.CLOUD_NAME,
+      api_key: process.env.CLOUD_API,
+      api_secret: process.env.CLOUD_API_SECRET,
     });
-    newProduct.save();
-    res.redirect("/admin/products");
+
+    let allImages = [];
+
+    console.log(allImages);
+
+    const files = req.files;
+    const promises = await files.map((file) => {
+      return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(
+          file.path,
+          {
+            transformation: [
+              { width: 1440, height: 1920, gravity: "face", crop: "fill" },
+            ],
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+    });
+
+    Promise.all(promises).then(async (results) => {
+      console.log("All files uploaded successfully", results);
+      let newProduct = new Product({
+        name: req.body.name,
+        model: req.body.model,
+        category: mongoose.Types.ObjectId(req.body.category),
+        description: req.body.description,
+        status: true,
+        stock: req.body.stock,
+        color: req.body.color,
+        price: req.body.price,
+        image: results,
+      });
+      // newProduct.save();
+
+      newProduct.save();
+
+      res.redirect("/admin/products");
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -301,15 +366,13 @@ const editProduct = async (req, res) => {
     try {
       const categoryDetails = await Category.find({});
 
-      await Product.findById({ _id: req.query.id }).then(
-        (result) => {
-          res.render("admin/layouts/editProduct", {
-            details: result,
+      await Product.findById({ _id: req.query.id }).then((result) => {
+        res.render("admin/layouts/editProduct", {
+          details: result,
 
-            categories: categoryDetails,
-          });
-        }
-      );
+          categories: categoryDetails,
+        });
+      });
     } catch (error) {
       console.log("Edit Product error: " + error.message);
     }
@@ -319,62 +382,39 @@ const editProduct = async (req, res) => {
 };
 
 const submitEditProduct = async (req, res) => {
-
-
-
-
-  // Configuration 
+  // Configuration
   cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.CLOUD_API,
-    api_secret: process.env.CLOUD_API_SECRET
+    api_secret: process.env.CLOUD_API_SECRET,
   });
-  
-  
-  // Upload
-  
 
-  
- 
-  
-  
-  // Generate 
-  
+  const allImages = [];
 
-  
-  
-  
-  
+  const files = req.files;
+  const promises = await files.map((file) => {
+    return new Promise((resolve, reject) => {
+      cloudinary.uploader.upload(
+        file.path,
+        {
+          transformation: [
+            { width: 1440, height: 1920, gravity: "face", crop: "fill" },
+          ],
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  });
 
-  // https://res.cloudinary.com/<cloud_name>/image/upload/h_150,w_100/olympic_flag
-
-
-
-
-
-
-  if (req.session.adminAuth) {
-    let allImages = []
-
-    req.files.forEach(function(items){
-      const resP = cloudinary.uploader.upload(items.originalname,{ transformation: [
-        { width: 1440, height: 1920, gravity: "face", crop: "fill" },
-      ]})
-      resP.then((data) => {
-        console.log(data.secure_url)
-      }).catch((err) => {
-        console.log(err);
-      });
-    
-
-      
-    
-      
-      
-    })
-
-    
-   await Product.updateOne(
+  Promise.all(promises).then(async (results) => {
+    console.log("All files uploaded successfully", results);
+    await Product.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -386,12 +426,13 @@ const submitEditProduct = async (req, res) => {
           stock: req.body.stock,
           color: req.body.color,
           price: req.body.price,
-          image: allImages,
+          image: results,
         },
       }
     );
+
     res.redirect("/admin/products");
-  }
+  });
 };
 
 const deleteProduct = async (req, res) => {
@@ -459,7 +500,7 @@ const couponPage = async (req, res) => {
 const deleteCoupon = async (req, res) => {
   if (req.session.adminAuth) {
     try {
-       await Coupon.findByIdAndDelete({
+      await Coupon.findByIdAndDelete({
         _id: req.query.id,
       });
       res.redirect("/admin/coupon");
@@ -530,7 +571,7 @@ const submitCoupon = async (req, res) => {
 
 const adminOrder = async (req, res) => {
   if (req.session.adminAuth) {
-      const OrderDetails = await Order.find({ })
+    const OrderDetails = await Order.find({})
       .populate("product.productId")
       .populate("customer");
     res.render("admin/layouts/adminOrders", {
@@ -576,12 +617,42 @@ const addBanner = async (req, res) => {
 
 const submitBanner = async (req, res) => {
   try {
-    let newBanner = new Banner({
-      status: true,
-      image: req.file.filename,
+
+    cloudinary.config({
+      cloud_name: process.env.CLOUD_NAME,
+      api_key: process.env.CLOUD_API,
+      api_secret: process.env.CLOUD_API_SECRET,
     });
-    newBanner.save();
-    res.redirect("/admin/banner");
+
+    // Upload
+    let fileName = req.file;
+    console.log(fileName)
+
+    const resp = cloudinary.uploader.upload(fileName.path, {
+      transformation: [
+        { width: 1341, height: 213, gravity: "face", crop: "fill" },
+      ],
+    });
+  
+
+    resp
+      .then((data) => {
+        console.log(data.secure_url);
+        let newBanner = new Banner({
+          status: true,
+          image:data.secure_url,
+        });
+        newBanner.save();
+        res.redirect("/admin/banner");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+
+
+
+    
   } catch (error) {
     console.log(error.message);
   }
@@ -589,7 +660,7 @@ const submitBanner = async (req, res) => {
 
 const blockBanner = async (req, res) => {
   if (req.session.adminAuth) {
-     await Banner.updateOne(
+    await Banner.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -603,7 +674,7 @@ const blockBanner = async (req, res) => {
 
 const unBlockBanner = async (req, res) => {
   if (req.session.adminAuth) {
-     await Banner.updateOne(
+    await Banner.updateOne(
       { _id: req.query.id },
       {
         $set: {
@@ -617,9 +688,8 @@ const unBlockBanner = async (req, res) => {
 
 const changeOrder = async (req, res) => {
   console.log("been here");
-  
 
- await Order.updateOne(
+  await Order.updateOne(
     { _id: req.body.id },
     {
       $set: { status: req.body.stu },
@@ -628,127 +698,142 @@ const changeOrder = async (req, res) => {
   res.json({ data: req.body.stu });
 };
 
-const salesReport=async (req,res)=>{
-  if(req.session.adminAuth){
+const salesReport = async (req, res) => {
+  if (req.session.adminAuth) {
     const OrderDetails = await Order.find({})
       .populate("product.productId")
       .populate("customer");
-      try{
-        const workbook = new excelJS.Workbook();
-        const  worksheet = workbook.addWorksheet("Sales Roport")
-        worksheet.columns=[
-          {header:"s no.", key:"s_no"},
-          {header:"Date", key:"data"},
-          {header:"User", key:"user"},
-          {header:"Payment", key:"payment"},
-          {header:"Status", key:"status"},
-          {header:"Items", key:"item"},
-          {header:"total", key:"total"},
-        ];
-        let counter =1;
-        
-        
-        OrderDetails.forEach((sale)=>{
-          const date = sale.date;
-          const isoString = date.toISOString();
-          const newDate = isoString.split('T')[0];
-          sale.data=newDate
+    try {
+      const workbook = new excelJS.Workbook();
+      const worksheet = workbook.addWorksheet("Sales Roport");
+      worksheet.columns = [
+        { header: "s no.", key: "s_no" },
+        { header: "Date", key: "data" },
+        { header: "User", key: "user" },
+        { header: "Payment", key: "payment" },
+        { header: "Status", key: "status" },
+        { header: "Items", key: "item" },
+        { header: "total", key: "total" },
+      ];
+      let counter = 1;
+
+      OrderDetails.forEach((sale) => {
+        const date = sale.date;
+        const isoString = date.toISOString();
+        const newDate = isoString.split("T")[0];
+        sale.data = newDate;
         sale.s_no = counter;
-        sale.user=sale.address[0].name
-        sale.payment = sale.orderType
-        sale.total = sale.finalPrice
-        sale.item=sale.product.length
+        sale.user = sale.address[0].name;
+        sale.payment = sale.orderType;
+        sale.total = sale.finalPrice;
+        sale.item = sale.product.length;
         worksheet.addRow(sale);
         counter++;
-        });
-        
-        
-        worksheet.getRow(1).eachCell((cell)=>{
-          cell.font={bold:true};
-        });
-        
-        res.setHeader(
-          'Content-Type',
-          'application/vnd.openxmlformats-officedocument.spreadsheatml.sheet'
-        );
-        
-        res.setHeader('Content-Disposition',`attachment; filename=sales_Report.xlsx`);
-        
-        return workbook.xlsx.write(res).then(()=>{
-          res.status(200);
-        });
-        
-          }
-          catch(error){
-        console.log(error.message)
-          }
-        
+      });
+
+      worksheet.getRow(1).eachCell((cell) => {
+        cell.font = { bold: true };
+      });
+
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheatml.sheet"
+      );
+
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=sales_Report.xlsx`
+      );
+
+      return workbook.xlsx.write(res).then(() => {
+        res.status(200);
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   }
-}
+};
 
-
-const chartReport = async (req,res)=>{
-  const OrderDetails = await Order.find({})
-      
+const chartReport = async (req, res) => {
+  const OrderDetails = await Order.find({});
 
   let cod = 0;
   let pay = 0;
-  for(let i=0 ; i<OrderDetails.length;i++){
-    if(OrderDetails[i].orderType === 'COD'){
-      cod = cod + 1
+  for (let i = 0; i < OrderDetails.length; i++) {
+    if (OrderDetails[i].orderType === "COD") {
+      cod = cod + 1;
     }
-    
-    if(OrderDetails[i].orderType === 'PayPal'){
-      pay = pay + 1
+
+    if (OrderDetails[i].orderType === "PayPal") {
+      pay = pay + 1;
     }
   }
-  console.log(cod+' '+pay)
-  res.json({ cod, pay});
-}
+  console.log(cod + " " + pay);
+  res.json({ cod, pay });
+};
 
-
-const areaChartReport = async (req,res)=>{
+const areaChartReport = async (req, res) => {
   const OrderDetails = await Order.aggregate([
-    { $project: {  month: { $month: "$date" },price : "$finalPrice"} },
-    
+    { $project: { month: { $month: "$date" }, price: "$finalPrice" } },
   ]);
-  let jan = 0; let feb = 0;let march = 0;let april = 0;let may = 0;let june = 0;let july = 0;let aug = 0;
-  let sept = 0; let oct = 0; let nov = 0;let dec = 0;
-  
-  // console.log(OrderDetails)
-  
-    OrderDetails.forEach(function(items){
-    
-      if(items.month == 1){
-    
-      jan = jan + items.price
-    }else if(items.month == 2){
-      feb = feb + items.price
-    }else if(items.month == 3){
-      march = march + items.price
-    }else if(items.month == 4){
-      april = april + items.price
-    }else if(items.month == 5){
-      may = may + items.price
-    }else if(items.month == 6){
-      june = june + items.price
-    }else if(items.month == 7){
-      july = july + items.price
-    }else if(items.month == 8){
-      aug = aug + items.price
-    }else if(items.month == 9){
-      sept = sept + items.price
-    }else if(items.month == 10){
-      oct = oct + items.price
-    }else if(items.month == 11){
-      nov = nov + items.price
-    }else if(items.month == 12){
-      dec = dec + items.price
-    }
-  })
+  let jan = 0;
+  let feb = 0;
+  let march = 0;
+  let april = 0;
+  let may = 0;
+  let june = 0;
+  let july = 0;
+  let aug = 0;
+  let sept = 0;
+  let oct = 0;
+  let nov = 0;
+  let dec = 0;
 
-  res.json({ jan, feb,march,april,may,june,july,aug,sept,oct,nov,dec});
-}
+  // console.log(OrderDetails)
+
+  OrderDetails.forEach(function (items) {
+    if (items.month == 1) {
+      jan = jan + items.price;
+    } else if (items.month == 2) {
+      feb = feb + items.price;
+    } else if (items.month == 3) {
+      march = march + items.price;
+    } else if (items.month == 4) {
+      april = april + items.price;
+    } else if (items.month == 5) {
+      may = may + items.price;
+    } else if (items.month == 6) {
+      june = june + items.price;
+    } else if (items.month == 7) {
+      july = july + items.price;
+    } else if (items.month == 8) {
+      aug = aug + items.price;
+    } else if (items.month == 9) {
+      sept = sept + items.price;
+    } else if (items.month == 10) {
+      oct = oct + items.price;
+    } else if (items.month == 11) {
+      nov = nov + items.price;
+    } else if (items.month == 12) {
+      dec = dec + items.price;
+    }
+  });
+
+  res.json({
+    jan,
+    feb,
+    march,
+    april,
+    may,
+    june,
+    july,
+    aug,
+    sept,
+    oct,
+    nov,
+    dec,
+  });
+};
 module.exports = {
   adminSignin,
   adminVerification,
@@ -789,5 +874,5 @@ module.exports = {
   changeOrder,
   salesReport,
   chartReport,
-  areaChartReport
+  areaChartReport,
 };

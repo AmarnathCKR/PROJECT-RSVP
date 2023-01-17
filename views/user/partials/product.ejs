@@ -22,7 +22,7 @@
       <div class="row">
         <dic class="col-md-12">
           <form class="text-center">
-
+            <input type="text" hidden id="searchFilter" name="searchFilter">
             <input type="text" name="search" id="" class="form-control my-2"
               placeholder="Enter Product Name or Model or category name">
 
@@ -238,12 +238,16 @@
               success: (res) => {
                 products = res.data
                 $('#product333').html('');
-
+                $('#pageloader').html('');
+                $('#searchFilter').attr('value', catId)
+                                  .attr('name','category' )
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="'+ items.image[0].url + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
 
                   );
+
+
 
                 });
               }
@@ -263,11 +267,13 @@
               data: { cat: catId },
               success: (res) => {
                 products = res.data
+                $('#pageloader').html('');
                 $('#product333').html('');
-
+                $('#searchFilter').attr('value', catId)
+                                  .attr('name','color' )
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="'+ items.image[0].url + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
 
                   );
 
@@ -291,11 +297,13 @@
               data: { cat: catId },
               success: (res) => {
                 products = res.data
+                $('#pageloader').html('');
                 $('#product333').html('');
-
+                $('#searchFilter').attr('value', catId)
+                                  .attr('name','stock' )
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="'+ items.image[0].url + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
 
                   );
 
@@ -319,10 +327,13 @@
               success: (res) => {
                 products = res.data
                 $('#product333').html('');
-
+                $('#searchFilter').attr('value', catId)
+                                  .attr('name','sort' );
+                $('#pageloader').html('');
+                  
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="'+ items.image[0].url + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
 
                   );
 
@@ -344,7 +355,7 @@
               <div class="col-lg-4 d-flex justify-content-center p-4">
 
                 <div class="card" style="width: 100%;">
-                  <a href="/product-page/?id=<%= blah._id%>" class=""><img src="/public/databaseimg/<%= blah.image[0] %>" class="card-img-top" alt="..."></a>
+                  <a href="/product-page/?id=<%= blah._id%>" class=""><img src="<%= blah.image[0].url %>" class="card-img-top" alt="..."></a>
                   <div class="card-body">
                     <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">
                       <%=blah.name%>
@@ -376,7 +387,7 @@
         </div>
 
 
-        <div class="col-md-9 d-flex justify-content-end">
+        <div class="col-md-9 d-flex justify-content-end" id="pageloader">
 
           <nav id="thePageChanger" aria-label="Page navigation example "
             class="border-dark d-flex justify-content-center">
@@ -459,7 +470,7 @@
 
           products.forEach(function (items) {
             $('#product333').append(
-              '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="/public/databaseimg/' + items.image[0] + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+              '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
             );
 
 
