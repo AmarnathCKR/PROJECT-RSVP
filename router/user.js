@@ -20,7 +20,7 @@ router.post('/verifyEmail',userController.verifyEmailOTP)
 router.get('/resendEmail',userController.resendEmail)
 router.get('/new-password',userController.newPassword)
 router.post('/new-password',userController.submitPassword)
-
+router.post('/add-address',userController.addNewAddress)
 
 
 //User Side Homepage

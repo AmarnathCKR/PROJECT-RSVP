@@ -22,21 +22,21 @@
                             <% cartData.products.forEach(function(items){ %>
                                 <div class="card-body mx-0 py-0 g-0">
                                     <div class="row mx-0 py-0 g-0">
-                                        <div class="col-sm-3 mx-0 py-0 g-0">
-                                            <img src="<%=items.productId.image[0].url%>" width="50%"
-                                                height="70%" alt="" id="image">
+                                        <div class="col-sm-3 mx-0 d-flex justify-content-center py-0 g-0">
+                                            <img src="<%=items.productId.image[0].url%>" width="50%" height="70%" alt=""
+                                                id="image">
                                         </div>
-                                        <div class="col-sm-3 text-secondary">
+                                        <div class="col-sm-3 d-flex justify-content-center text-secondary">
                                             <%=items.productId.name%>
                                         </div>
-                                        <div class="col-sm-2 text-secondary">
+                                        <div class="col-sm-2 d-flex justify-content-center text-secondary">
                                             <%=items.productId.price%>
                                         </div>
-                                        <div class="col-sm-2 text-secondary">
+                                        <div class="col-sm-2 d-flex justify-content-center text-secondary">
                                             <%=items.quantity%>
                                         </div>
                                         <% var addedNumber=items.productId.price * items.quantity;%>
-                                            <div class="col-sm-2 text-secondary">₹<%=addedNumber%>
+                                            <div class="col-sm-2 d-flex justify-content-center text-secondary">₹<%=addedNumber%>
                                             </div>
                                             <% subT +=addedNumber%>
                                     </div>
@@ -44,7 +44,7 @@
                                 </div>
                                 <%})%>
                                     <div class="card-body mx-0 py-0 g-0">
-                                        <div class="row mx-0 py-0 g-0 justify-content-center">
+                                        <div class="row mx-0 py-0 g-0 justify-content-center ">
                                             <h6 class="text-center">Sub Total = ₹<%=subT%>
                                             </h6>
                                         </div>
@@ -62,7 +62,7 @@
 
                                     <%if(data.stat==true){%>
                                         <option value="1" selected>Choose</option>
-                                        <option value="<%=data._id%>" >Default - <%=data.fullAddress%>
+                                        <option value="<%=data._id%>">Default - <%=data.fullAddress%>
                                         </option>
                                         <%}else{%>
                                             <option value="<%=data._id%>">
@@ -72,51 +72,82 @@
                                                 <%})%>
 
                             </select>
+
+
                         </div>
 
 
 
-                        <% userDetails.address.forEach(function(items,i){%>
-                            <%if(items.stat==true){%>
-                                <div class="row my-3 mx-0 py-0 g-0">
-                                    <div class="col-sm-3 mx-0 py-0 g-0">
-                                        <h6 class="mb-0">Address</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input id="fullAdd" name="fullAdd" type="text" value=""
-                                            style="width: 100%;">
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row mx-0 py-0 g-0">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Contact</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input id="contactAdd" name="contactAdd" type="text" value=""
-                                            style="width: 100%;">
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class=" row mx-0 py-0 g-0">
-                                    <div class="col-sm-3 mx-0 py-0 g-0">
-                                        <h6 class="mb-0">Name</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="text" id="nameAdd" name="nameAdd" value="" style="width: 100%;">
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class=" row mx-0 py-0 g-0">
-                                    <div class="col-sm-3 mx-0 py-0 g-0">
-                                        <h6 class="mb-0">Pincode</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="text" id="pinAdd" name="pinAdd" value="" style="width: 100%;">
-                                    </div>
-                                </div>
-                                <%}%>
-                                    <%})%>
+
+
+
+
+                        <script>
+                            function checkFields() {
+                                var inputAddress = $('#fullAdd').val()
+                                var inputContact = $('#contactAdd').val()
+                                var inputName = $('#nameAdd').val()
+                                var inputPin = $('#pinAdd').val()
+                                console.log('nsfksdfns')
+                                if (inputAddress == "" || inputContact == "" || inputName == "" || inputPin == "") {
+                                    $('#submit-checkout').css('pointer-events', 'none')
+                                }else if(inputAddress != "" && inputContact != "" && inputName != "" && inputPin != ""){
+                                    $('#submit-checkout').css('pointer-events', '')
+                                }
+                                
+                            }
+
+                            
+                           
+                                
+                         
+                            
+                            window.onload= ()=>{setInterval(() => {
+                                    checkFields()
+                                }, 1000);}
+                            
+
+                            
+
+                        </script>
+
+                        <div class="row my-3 mx-0 py-0 g-0">
+                            <div class="col-sm-3 mx-0 py-0 g-0">
+                                <h6 class="mb-0">Address</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input id="fullAdd" name="fullAdd" type="text" value="" style="width: 100%;">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mx-0 py-0 g-0">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Contact</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input id="contactAdd" name="contactAdd" type="text" value="" style="width: 100%;">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class=" row mx-0 py-0 g-0">
+                            <div class="col-sm-3 mx-0 py-0 g-0">
+                                <h6 class="mb-0">Name</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" id="nameAdd" name="nameAdd" value="" style="width: 100%;">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class=" row mx-0 py-0 g-0">
+                            <div class="col-sm-3 mx-0 py-0 g-0">
+                                <h6 class="mb-0">Pincode</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" id="pinAdd" name="pinAdd" value="" style="width: 100%;">
+                            </div>
+                        </div>
+
+
 
 
 
@@ -134,7 +165,7 @@
                                 <input type="text" name="couponText" id="couponText" onkeyup="checkCoupon(this.value)"
                                     style="width: 100%;">
                             </div>
-                            <div id="couponAlert" class="col-md-7 my-3">
+                            <div id="couponAlert" class="col-md-7 d-flex justify-content-center my-3">
                                 Enter Code
                             </div>
 
@@ -145,24 +176,24 @@
 
                     <div class="col-lg-5">
                         <div class="row my-3">
-                            <div class="col-md-12 my-3">
-                                <h6>The Price and charges</h6>
+                            <div class="col-md-12 d-flex justify-content-center my-3">
+                                <h5>The Price and charges</h5>
                             </div>
                         </div>
                         <div class="row my-3">
-                            <div id="totalPrice" class="col-md-12 my-3">
+                            <div id="totalPrice" class="col-md-12 d-flex justify-content-center my-3">
                                 Subtotal : ₹<%=subT%>
                             </div>
                         </div>
 
                         <div class="row my-3">
-                            <div id="discountPrice" class="col-md-12 my-3">
+                            <div id="discountPrice" class="col-md-12 d-flex justify-content-center my-3">
                                 discount : ₹0
                             </div>
                         </div>
 
                         <div class="row my-3">
-                            <div id="finalPriced" class="col-md-12 my-3">
+                            <div id="finalPriced" class="col-md-12 d-flex justify-content-center my-3">
                                 Total Payment : ₹<%=subT%>
                             </div>
                         </div>
@@ -170,11 +201,11 @@
                     </div>
 
 
-                    <div class="col-lg-12 d-flex justify-content-between border-top my-2 py-3">
+                    <div class="col-lg-12 d-flex justify-content-between flex-column border-top my-2 py-3">
 
-                        <h4>Choose Payment method</h4>
+                        <center class="mb-2" style="font-size: x-large;">Choose Payment method</center>
 
-                        <div class="d-flex justify-content-center ">
+                        <div class="d-flex justify-content-center mb-3 ">
                             <div class="custom-control custom-radio mx-2">
                                 <input id="credit" name="paymentMethod" value="COD" type="radio"
                                     class="custom-control-input" checked required>
@@ -192,9 +223,11 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-dark py-2 px-3"
-                            onclick="return confirm('Proceed to order?')">Proceed to
-                            Order</button>
+                       <span class="text-center">
+                        <button id="submit-checkout" type="submit" class="mx-auto btn btn-dark w-50 py-2 px-3 my-3"
+                        onclick="return confirm('Proceed to order?')">Proceed to
+                        Order</button>
+                       </span>
 
                     </div>
 
@@ -225,28 +258,28 @@
     <script>
 
         function displayAddress(catId) {
-            if(catId!=1){
-            $.ajax({
-                url: "/check-address",
-                method: "patch",
-                data: { cat: catId },
-                success: (res) => {
-                    adds = res.data
+            if (catId != 1) {
+                $.ajax({
+                    url: "/check-address",
+                    method: "patch",
+                    data: { cat: catId },
+                    success: (res) => {
+                        adds = res.data
 
 
-                    $('#fullAdd').val('');
-                    $('#nameAdd').val('');
-                    $('#contactAdd').val('');
-                    $('#pinAdd').val('');
+                        $('#fullAdd').val('');
+                        $('#nameAdd').val('');
+                        $('#contactAdd').val('');
+                        $('#pinAdd').val('');
 
-                    $('#fullAdd').val(adds[0].address);
-                    $('#nameAdd').val(adds[0].name);
-                    $('#contactAdd').val(adds[0].phone);
-                    $('#pinAdd').val(adds[0].pincode);
-                }
+                        $('#fullAdd').val(adds[0].address);
+                        $('#nameAdd').val(adds[0].name);
+                        $('#contactAdd').val(adds[0].phone);
+                        $('#pinAdd').val(adds[0].pincode);
+                    }
 
-            })
-        }
+                })
+            }
         }
     </script>
 

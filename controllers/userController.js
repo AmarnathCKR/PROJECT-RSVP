@@ -2029,6 +2029,25 @@ const test = async (req, res) => {
   });
 };
 
+const addNewAddress = async (req,res)=>{
+  const email = req.session.auth;
+  await User.updateOne(
+    { email: email },
+    {
+      $push: {
+        address: {
+          name: req.body.inputName,
+          contact: req.body.inputContact,
+          fullAddress: req.body.inputAdddd,
+          stat: false,
+          pincode: req.body.inputPin,
+        },
+      },
+    }
+  );
+  res.json({data :'success'})
+}
+
 module.exports = {
   userHome,
   userLogin,
@@ -2081,4 +2100,5 @@ module.exports = {
   passwordChange,
   orderFailed,
   test,
+  addNewAddress
 };

@@ -240,10 +240,10 @@
                 $('#product333').html('');
                 $('#pageloader').html('');
                 $('#searchFilter').attr('value', catId)
-                                  .attr('name','category' )
+                  .attr('name', 'category')
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="'+ items.image[0].url + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="'+items.image[0].url+'" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id='+items._id+'" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> '+items.name+' </center> <center>Stock : '+items.stock+' </center> <center>Price : '+items.price+' </center> </a> </div> </div> </div>'
 
                   );
 
@@ -270,10 +270,10 @@
                 $('#pageloader').html('');
                 $('#product333').html('');
                 $('#searchFilter').attr('value', catId)
-                                  .attr('name','color' )
+                  .attr('name', 'color')
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="'+ items.image[0].url + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="'+items.image[0].url+'" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id='+items._id+'" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> '+items.name+' </center> <center>Stock : '+items.stock+' </center> <center>Price : '+items.price+' </center> </a> </div> </div> </div>'
 
                   );
 
@@ -300,10 +300,10 @@
                 $('#pageloader').html('');
                 $('#product333').html('');
                 $('#searchFilter').attr('value', catId)
-                                  .attr('name','stock' )
+                  .attr('name', 'stock')
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="'+ items.image[0].url + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="'+items.image[0].url+'" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id='+items._id+'" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> '+items.name+' </center> <center>Stock : '+items.stock+' </center> <center>Price : '+items.price+' </center> </a> </div> </div> </div>'
 
                   );
 
@@ -328,12 +328,12 @@
                 products = res.data
                 $('#product333').html('');
                 $('#searchFilter').attr('value', catId)
-                                  .attr('name','sort' );
+                  .attr('name', 'sort');
                 $('#pageloader').html('');
-                  
+
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="'+ items.image[0].url + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="'+items.image[0].url+'" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id='+items._id+'" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> '+items.name+' </center> <center>Stock : '+items.stock+' </center> <center>Price : '+items.price+' </center> </a> </div> </div> </div>'
 
                   );
 
@@ -354,18 +354,24 @@
 
               <div class="col-lg-4 d-flex justify-content-center p-4">
 
-                <div class="card" style="width: 100%;">
-                  <a href="/product-page/?id=<%= blah._id%>" class=""><img src="<%= blah.image[0].url %>" class="card-img-top" alt="..."></a>
+                <div class="card justify-content-center" style="width: 100%;">
+                  
+                  
+                  <a href="/product-page/?id=<%= blah._id%>" class=""><img src="<%= blah.image[0].url %>"
+                      class="card-img-top" alt="..."></a>
                   <div class="card-body">
+                    <a href="/product-page/?id=<%= blah._id%>" >
                     <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">
                       <%=blah.name%>
                     </center>
-                    <p>Stock : <%=blah.stock%>
-                    </p>
+                    <center>Stock : <%=blah.stock%>
+                    </center>
 
-                    <p>Price : <%=blah.price%>
-                    </p>
-                    <a href="/product-page/?id=<%= blah._id%>" class="btn btn-dark my-2">View Product</a>
+                    <center>Price : <%=blah.price%>
+                    </center>
+                   </a>
+
+                
 
                   </div>
                 </div>
@@ -387,7 +393,7 @@
         </div>
 
 
-        <div class="col-md-9 d-flex justify-content-end" id="pageloader">
+        <div class="col-md-12 d-flex justify-content-around" id="pageloader">
 
           <nav id="thePageChanger" aria-label="Page navigation example "
             class="border-dark d-flex justify-content-center">
@@ -396,8 +402,7 @@
                 <% if (current==1) { %>
                   <li id="2200" class="disabled p-3 btn-dark rounded"><a style="color: black;">First</a></li>
                   <% } else { %>
-                    <li id="3300" class="p-3 btn-dark"><a style="color: black;"
-                        onclick="pageButton(1)">First</a>
+                    <li id="3300" class="p-3 btn-dark"><a style="color: black;" onclick="pageButton(1)">First</a>
                     </li>
                     <% } %>
                       <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
@@ -407,16 +412,16 @@
                             <% for (; i <=(Number(current) + 4) && i <=pages; i++) { %>
                               <% if (i==current) { %>
                                 <li id="5500" class="active p-3 btn-dark"><a style="color: black;">
-                                  <%= i %>
-                                </a></li>
-                                <% } else { %>
-                                  
-
-                                  <li id="6600" class="p-3 btn-dark"><a style="color: black;"
-                                    onclick="pageButton('<%= i %>')">
                                     <%= i %>
                                   </a></li>
-                                  
+                                <% } else { %>
+
+
+                                  <li id="6600" class="p-3 btn-dark"><a style="color: black;"
+                                      onclick="pageButton('<%= i %>')">
+                                      <%= i %>
+                                    </a></li>
+
                                   <% } %>
                                     <% if (i==Number(current) + 4 && i < pages) { %>
                                       <li id="7700" class="disabled p-3 btn-dark"><a>...</a></li>
@@ -464,13 +469,13 @@
           $('#7700').html('')
           $('#8800').html('')
           $('#9900').html('')
-          
+
 
 
 
           products.forEach(function (items) {
             $('#product333').append(
-              '<div class="col-lg-4 d-flex justify-content-center p-4"><div class= "card" style = "width: 100%;"><a href="/product-page/?id=' + items._id + '" ><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a><div class="card-body"><center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">' + items.name + '</center><p>Stock : ' + items.stock + '</p><p>Price : ' + items.price + '</p><a href="/product-page/?id=' + items._id + '" class="btn btn-dark my-2">View Product</a></div></div></div>'
+              '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="'+items.image[0].url+'" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id='+items._id+'" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> '+items.name+' </center> <center>Stock : '+items.stock+' </center> <center>Price : '+items.price+' </center> </a> </div> </div> </div>'
             );
 
 
@@ -480,9 +485,9 @@
 
           if (page > 0) {
 
-            
+
             if (currents == 1) {
-              $('#2200').html('<a style="color: black;">First</a>') 
+              $('#2200').html('<a style="color: black;">First</a>')
             } else {
               $('#2200').html('<a style="color: black;" onclick="pageButton(1)">First</a>')
             }
@@ -490,13 +495,13 @@
             if (i !== 1) {
               $('#4400').html('<a>...</a>')
             }
-            for (i=1; i <= (Number(currents) + 4) && i <= page; i++) {
+            for (i = 1; i <= (Number(currents) + 4) && i <= page; i++) {
 
               if (i == currents) {
-                $('#5500').html('<a style="color: black;"> '+ i+' </a>')
+                $('#5500').html('<a style="color: black;"> ' + i + ' </a>')
               } else {
 
-                $('#6600').html('<a style="color: black;" onclick="pageButton('+i+')"> '+ i+' </a>')
+                $('#6600').html('<a style="color: black;" onclick="pageButton(' + i + ')"> ' + i + ' </a>')
               }
               if (i == Number(currents) + 4 && i < page) {
                 $('#7700').html('<a>...</a>')
@@ -507,7 +512,7 @@
 
 
             } else {
-              $('#9900').html('<a style="color: black;" onclick="pageButton('+page+')">Last</a>')
+              $('#9900').html('<a style="color: black;" onclick="pageButton(' + page + ')">Last</a>')
             }
 
 
