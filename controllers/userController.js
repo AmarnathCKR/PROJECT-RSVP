@@ -948,12 +948,12 @@ const colorFiltering = async (req, res) => {
 
 const stockStatus = async (req, res) => {
   if (req.body.cat == "inStock") {
-    const stockData = await Product.find({ stock: { $gt: 0 } });
+    const stockData = await Product.find({ status : true, stock: { $gt: 0 } });
     res.json({
       data: stockData,
     });
   } else if (req.body.cat == "outStock") {
-    const stockData = await Product.find({ stock: 0 });
+    const stockData = await Product.find({ status : true, stock: 0 });
     res.json({
       data: stockData,
     });
