@@ -2,8 +2,8 @@
 
     <div class="row mx-0 py-0 g-0">
 
-        <div class="col-lg-4 mx-0 py-0 g-0">
-            <div class="d-flex flex-column flex-shrink-0 p-3 border-right" style="width: 280px;">
+        <div class="col-lg-4 mx-0 py-0 g-0 d-flex justify-content-center">
+            <div class="d-flex flex-column flex-shrink-0 p-3 justify-content-center border rounded" style="width: 280px;">
                 <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                     <svg class="bi pe-none me-2" width="40" height="32">
                         <use xlink:href="#bootstrap"></use>
@@ -21,7 +21,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/user-address" class="nav-link link-dark">
+                        <a href="/user-address" class="nav-link link-dark ">
                             <svg class="bi pe-none me-2" width="16" height="16">
                                 <use xlink:href="#speedometer2"></use>
                             </svg>
@@ -55,7 +55,7 @@
 
 
         <div class="col-lg-8 mx-0 py-0 g-0">
-            <div class="card mb-3 mx-0 py-0 g-0">
+            <div class="card text-center mb-3 mx-0 py-0 g-0">
                 <div class="card-body mx-0 py-0 g-0">
                     <div class="row mx-0 py-0 g-0 my-3">
                         <div class="col-sm-3 mx-0 py-0 g-0">
@@ -133,8 +133,10 @@
                     </div>
                 </div>
 
-                <div class="row mx-0 my-3 py-0 g-0">
+                
                     <form action="/profile-passowrd" method="post"  onkeydown="return event.key != 'Enter';">
+                        <div class="row mx-0 my-3 py-0 g-0 d-flex">
+                            <div class="col-md-12 my-4"><h5>Change Password</h5></div>
                         <div class="col-md-3 mx-0 py-0 g-0">
                             <label for="" >Current Password</label>
                             <input type="text" onkeyup="checkPassword(this.value)" name="currentPassword">
@@ -162,9 +164,13 @@
                                 }
                             }
                         </script>
-                        <button class="btn btn-dark px-4 py-1 my-3" type="submit" id="changeButton">Change Password</button>
+                        <div class="col-md-3">
+                            <button class="btn btn-dark px-4 py-1 my-3" type="submit" id="changeButton">Change Password</button>
+                        </div>
+                    </div>
+                        
                     </form>
-                </div>
+                
                 <hr>
             </div>
         </div>

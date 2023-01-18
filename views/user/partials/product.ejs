@@ -20,17 +20,6 @@
     <% if(product.status !=false) { %>
 
       <div class="row">
-        <dic class="col-md-12">
-          <form class="text-center">
-            <input type="text" hidden id="searchFilter" name="searchFilter">
-            <input type="text" name="search" id="" class="form-control my-2"
-              placeholder="Enter Product Name or Model or category name">
-
-            <button class="btn btn-dark" value="search">Search</button>
-            <a href="/shop"><button class="btn btn-grey">Show All</button></a>
-          </form>
-        </dic>
-
         <!-- Filter sort grid -->
         <div class="col-md-3">
           <section class="py-4">
@@ -243,7 +232,7 @@
                   .attr('name', 'category')
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="'+items.image[0].url+'" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id='+items._id+'" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> '+items.name+' </center> <center>Stock : '+items.stock+' </center> <center>Price : '+items.price+' </center> </a> </div> </div> </div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
 
                   );
 
@@ -273,7 +262,7 @@
                   .attr('name', 'color')
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="'+items.image[0].url+'" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id='+items._id+'" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> '+items.name+' </center> <center>Stock : '+items.stock+' </center> <center>Price : '+items.price+' </center> </a> </div> </div> </div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
 
                   );
 
@@ -303,7 +292,7 @@
                   .attr('name', 'stock')
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="'+items.image[0].url+'" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id='+items._id+'" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> '+items.name+' </center> <center>Stock : '+items.stock+' </center> <center>Price : '+items.price+' </center> </a> </div> </div> </div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
 
                   );
 
@@ -333,7 +322,7 @@
 
                 products.forEach(function (items) {
                   $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="'+items.image[0].url+'" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id='+items._id+'" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> '+items.name+' </center> <center>Stock : '+items.stock+' </center> <center>Price : '+items.price+' </center> </a> </div> </div> </div>'
+                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
 
                   );
 
@@ -349,29 +338,55 @@
 
 
         <div class="col-md-9">
+          <div class="row ">
+
+            <form class="text-center d-flex justify-content-center">
+              
+              <div class="col-md-6">
+                <input type="text" hidden id="searchFilter" name="searchFilter">
+                <input type="text" name="search" id="" class="form-control my-2"
+                  placeholder="Enter Product Name or Model or category name">
+
+
+              </div>
+              <div class="col-md-3 d-flex justify-content-center align-items-center">
+
+
+                <button class="btn btn-dark py-1" style="width: 80%; height:75%;" value="search">Search</button>
+
+              </div>
+              <div class="col-md-3 d-flex justify-content-center align-items-center">
+
+                <a href="/shop"><button class="btn btn-grey">Show All</button></a>
+              </div>
+            </form>
+          </div>
+
+
+
           <div class="row" id="product333">
             <%product.forEach(function(blah){ %>
 
               <div class="col-lg-4 d-flex justify-content-center p-4">
 
                 <div class="card justify-content-center" style="width: 100%;">
-                  
-                  
+
+
                   <a href="/product-page/?id=<%= blah._id%>" class=""><img src="<%= blah.image[0].url %>"
                       class="card-img-top" alt="..."></a>
                   <div class="card-body">
-                    <a href="/product-page/?id=<%= blah._id%>" >
-                    <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">
-                      <%=blah.name%>
-                    </center>
-                    <center>Stock : <%=blah.stock%>
-                    </center>
+                    <a href="/product-page/?id=<%= blah._id%>">
+                      <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">
+                        <%=blah.name%>
+                      </center>
+                      <center>Stock : <%=blah.stock%>
+                      </center>
 
-                    <center>Price : <%=blah.price%>
-                    </center>
-                   </a>
+                      <center>Price : <%=blah.price%>
+                      </center>
+                    </a>
 
-                
+
 
                   </div>
                 </div>
@@ -390,144 +405,144 @@
 
 
           </div>
-        </div>
 
 
-        <div class="col-md-12 d-flex justify-content-around" id="pageloader">
 
-          <nav id="thePageChanger" aria-label="Page navigation example "
-            class="border-dark d-flex justify-content-center">
-            <% if (pages> 0) { %>
-              <ul id="1100" class="pagination text-center rounded ">
-                <% if (current==1) { %>
-                  <li id="2200" class="disabled p-3 btn-dark rounded"><a style="color: black;">First</a></li>
-                  <% } else { %>
-                    <li id="3300" class="p-3 btn-dark"><a style="color: black;" onclick="pageButton(1)">First</a>
-                    </li>
-                    <% } %>
-                      <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
-                        <% if (i !==1) { %>
-                          <li id="4400" class="disabled p-3 btn-dark"><a style="color: black;">...</a></li>
-                          <% } %>
-                            <% for (; i <=(Number(current) + 4) && i <=pages; i++) { %>
-                              <% if (i==current) { %>
-                                <li id="5500" class="active p-3 btn-dark"><a style="color: black;">
-                                    <%= i %>
-                                  </a></li>
-                                <% } else { %>
+          <div class="col-md-12 d-flex justify-content-around" id="pageloader">
 
-
-                                  <li id="6600" class="p-3 btn-dark"><a style="color: black;"
-                                      onclick="pageButton('<%= i %>')">
+            <nav id="thePageChanger" aria-label="Page navigation example "
+              class="border-dark d-flex justify-content-center">
+              <% if (pages> 0) { %>
+                <ul id="1100" class="pagination text-center rounded ">
+                  <% if (current==1) { %>
+                    <li id="2200" class="disabled p-3 btn-dark rounded"><a style="color: black;">First</a></li>
+                    <% } else { %>
+                      <li id="3300" class="p-3 btn-dark"><a style="color: black;" onclick="pageButton(1)">First</a>
+                      </li>
+                      <% } %>
+                        <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
+                          <% if (i !==1) { %>
+                            <li id="4400" class="disabled p-3 btn-dark"><a style="color: black;">...</a></li>
+                            <% } %>
+                              <% for (; i <=(Number(current) + 4) && i <=pages; i++) { %>
+                                <% if (i==current) { %>
+                                  <li id="5500" class="active p-3 btn-dark"><a style="color: black;">
                                       <%= i %>
                                     </a></li>
+                                  <% } else { %>
 
-                                  <% } %>
-                                    <% if (i==Number(current) + 4 && i < pages) { %>
-                                      <li id="7700" class="disabled p-3 btn-dark"><a>...</a></li>
-                                      <% } %>
+
+                                    <li id="6600" class="p-3 btn-dark"><a style="color: black;"
+                                        onclick="pageButton('<%= i %>')">
+                                        <%= i %>
+                                      </a></li>
+
+                                    <% } %>
+                                      <% if (i==Number(current) + 4 && i < pages) { %>
+                                        <li id="7700" class="disabled p-3 btn-dark"><a>...</a></li>
                                         <% } %>
-                                          <% if (current==pages) { %>
-                                            <li id="8800" class="disabled p-3 btn-dark"><a>Last</a></li>
-                                            <% } else { %>
-                                              <li id="9900" class="p-3 btn-dark"><a style="color: black;"
-                                                  onclick="pageButton('<%= pages %>')">Last</a></li>
-                                              <% } %>
-              </ul>
-              <% } %>
+                                          <% } %>
+                                            <% if (current==pages) { %>
+                                              <li id="8800" class="disabled p-3 btn-dark"><a>Last</a></li>
+                                              <% } else { %>
+                                                <li id="9900" class="p-3 btn-dark"><a style="color: black;"
+                                                    onclick="pageButton('<%= pages %>')">Last</a></li>
+                                                <% } %>
+                </ul>
+                <% } %>
 
 
-          </nav>
+            </nav>
+          </div>
+
+
         </div>
-
-
       </div>
-  </div>
 
 
-  <script>
-    var product
-    console.log(product)
-    function pageButton(catId) {
+      <script>
+        var product
+        console.log(product)
+        function pageButton(catId) {
 
-      $.ajax({
-        url: "/check-page",
-        method: "patch",
-        data: { cat: catId },
-        success: (res) => {
-          products = res.data
-          currents = res.current
-          page = res.pages
+          $.ajax({
+            url: "/check-page",
+            method: "patch",
+            data: { cat: catId },
+            success: (res) => {
+              products = res.data
+              currents = res.current
+              page = res.pages
 
-          $('#product333').html('')
-          // $('#1100').html('')
-          $('#2200').html('')
-          $('#3300').html('')
-          $('#4400').html('')
-          $('#5500').html('')
-          $('#6600').html('')
-          $('#7700').html('')
-          $('#8800').html('')
-          $('#9900').html('')
-
-
+              $('#product333').html('')
+              // $('#1100').html('')
+              $('#2200').html('')
+              $('#3300').html('')
+              $('#4400').html('')
+              $('#5500').html('')
+              $('#6600').html('')
+              $('#7700').html('')
+              $('#8800').html('')
+              $('#9900').html('')
 
 
-          products.forEach(function (items) {
-            $('#product333').append(
-              '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="'+items.image[0].url+'" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id='+items._id+'" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> '+items.name+' </center> <center>Stock : '+items.stock+' </center> <center>Price : '+items.price+' </center> </a> </div> </div> </div>'
-            );
+
+
+              products.forEach(function (items) {
+                $('#product333').append(
+                  '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
+                );
+
+
+
+              })
+
+
+              if (page > 0) {
+
+
+                if (currents == 1) {
+                  $('#2200').html('<a style="color: black;">First</a>')
+                } else {
+                  $('#2200').html('<a style="color: black;" onclick="pageButton(1)">First</a>')
+                }
+                var i = (Number(currents) > 5 ? Number(currents) - 4 : 1)
+                if (i !== 1) {
+                  $('#4400').html('<a>...</a>')
+                }
+                for (i = 1; i <= (Number(currents) + 4) && i <= page; i++) {
+
+                  if (i == currents) {
+                    $('#5500').html('<a style="color: black;"> ' + i + ' </a>')
+                  } else {
+
+                    $('#6600').html('<a style="color: black;" onclick="pageButton(' + i + ')"> ' + i + ' </a>')
+                  }
+                  if (i == Number(currents) + 4 && i < page) {
+                    $('#7700').html('<a>...</a>')
+                  }
+                }
+                if (currents == page) {
+                  $('#9900').html('<a>Last</a>')
+
+
+                } else {
+                  $('#9900').html('<a style="color: black;" onclick="pageButton(' + page + ')">Last</a>')
+                }
+
+
+              }
+
+
+
+
+
+            }
 
 
 
           })
-
-
-          if (page > 0) {
-
-
-            if (currents == 1) {
-              $('#2200').html('<a style="color: black;">First</a>')
-            } else {
-              $('#2200').html('<a style="color: black;" onclick="pageButton(1)">First</a>')
-            }
-            var i = (Number(currents) > 5 ? Number(currents) - 4 : 1)
-            if (i !== 1) {
-              $('#4400').html('<a>...</a>')
-            }
-            for (i = 1; i <= (Number(currents) + 4) && i <= page; i++) {
-
-              if (i == currents) {
-                $('#5500').html('<a style="color: black;"> ' + i + ' </a>')
-              } else {
-
-                $('#6600').html('<a style="color: black;" onclick="pageButton(' + i + ')"> ' + i + ' </a>')
-              }
-              if (i == Number(currents) + 4 && i < page) {
-                $('#7700').html('<a>...</a>')
-              }
-            }
-            if (currents == page) {
-              $('#9900').html('<a>Last</a>')
-
-
-            } else {
-              $('#9900').html('<a style="color: black;" onclick="pageButton(' + page + ')">Last</a>')
-            }
-
-
-          }
-
-
-
-
-
         }
+      </script>
 
-
-
-      })
-    }
-  </script>
-
-  <%- include('../layouts/footer') %>
+      <%- include('../layouts/footer') %>

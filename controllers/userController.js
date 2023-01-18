@@ -9,7 +9,9 @@ const mongoose = require("mongoose");
 const Coupon = require("../models/couponModel");
 const Order = require("../models/orderModel");
 const paypal = require("paypal-rest-sdk");
+const instance=require("../middleware/razorpay")
 require("dotenv").config();
+const crypto=require("crypto");
 
 const userHome = async (req, res) => {
   try {
@@ -1492,7 +1494,7 @@ const orderCheck = async (req, res) => {
         orderType: "COD",
       });
 
-      console.log("order saved");
+      
 
       res.redirect("/check-payment");
     } else {
@@ -2070,6 +2072,248 @@ const addNewAddress = async (req, res) => {
   res.json({ data: "success" });
 };
 
+
+const initRazor= async (req,res)=>{
+  
+  const email = req.session.auth;
+  const userDetails = await User.findOne({ email: email });
+  const couponData = await Coupon.findOne({discount : req.body.couponText})
+  console.log(couponData)
+  if (couponData !==null) {
+    console.log('Entering Coupon Mode')
+    await User.updateOne(
+      { email: email },
+      {
+        $push: { coupons: [couponData._id] },
+      }
+    );
+    const cartItems = await Cart.aggregate([
+      { $match: { customer: userDetails._id } },
+      { $unwind: "$products" },
+      {
+        $project: {
+          productId: "$products.productId",
+          qty: "$products.quantity",
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "productId",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      { $unwind: "$productDetails" },
+      {
+        $project: {
+          price: "$productDetails.price",
+          qty: "$qty",
+        },
+      },
+    ]);
+    var final = 0;
+    const Total = cartItems.forEach(function (items) {
+      let costValue = parseInt(items.price);
+      addValue = costValue * items.qty;
+
+      final = final + addValue;
+    });
+
+    const finalPrice = parseInt(couponData.finalPrice);
+
+    let discountInit = Math.round((final * finalPrice) / 100);
+
+    const discountPrice = final - discountInit;
+    console.log(discountPrice);
+
+    const orderItems = await Cart.aggregate([
+      {
+        $match: { customer: userDetails._id },
+      },
+      {
+        $unwind: "$products",
+      },
+      {
+        $project: {
+          productId: "$products.productId",
+          qtyItems: "$products.quantity",
+        },
+      },
+    ]);
+
+    const address = await User.aggregate([
+      { $match: { email: email } },
+      { $unwind: "$address" },
+      {
+        $project: {
+          address: "$address.fullAddress",
+          phone: "$address.contact",
+          name: "$address.name",
+          pincode: "$address.pincode",
+          id: "$address._id",
+        },
+      },
+
+      { $match: { id: new mongoose.Types.ObjectId(req.body.address) } },
+    ]);
+    let nowDate = Date.now();
+
+    newOrder = new Order({
+      customer: userDetails._id,
+      status: "placed",
+      date: nowDate,
+      coupon: req.body.couponText,
+      Totalprice: final,
+      finalPrice: discountPrice,
+      discount: discountInit,
+      address: [
+        {
+          name: req.body.inputName,
+          contact: req.body.inputContact,
+          fullAddress: req.body.inputAddress,
+          stat: true,
+          pincode: req.body.inputPin,
+        },
+      ],
+      product: orderItems,
+      orderType: "RazorPay",
+    });
+
+    console.log("order saved");
+
+    var options = {
+      amount: final*100,  // amount in the smallest currency unit
+      currency: "INR",
+      receipt: "order_rcptid_11"
+    };
+     instance.orders.create(options, function(err, order) {
+      if(err){
+      console.log(err);
+      console.log('online payment error');
+      res.json({fail:true})
+      }else{
+        res.json({order,newOrder})
+      }
+    });
+  } else {
+    console.log('Entering no Coupon Mode')
+    const cartItems = await Cart.aggregate([
+      { $match: { customer: userDetails._id } },
+      { $unwind: "$products" },
+      {
+        $project: {
+          productId: "$products.productId",
+          qty: "$products.quantity",
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "productId",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      { $unwind: "$productDetails" },
+      {
+        $project: {
+          price: "$productDetails.price",
+          qty: "$qty",
+        },
+      },
+    ]);
+    var final = 0;
+    const Total = cartItems.forEach(function (items) {
+      let costValue = parseInt(items.price);
+      addValue = costValue * items.qty;
+
+      final = final + addValue;
+    });
+
+    const orderItems = await Cart.aggregate([
+      {
+        $match: { customer: userDetails._id },
+      },
+      {
+        $unwind: "$products",
+      },
+      {
+        $project: {
+          productId: "$products.productId",
+          qtyItems: "$products.quantity",
+        },
+      },
+    ]);
+
+    const address = await User.aggregate([
+      { $match: { email: email } },
+      { $unwind: "$address" },
+      {
+        $project: {
+          address: "$address.fullAddress",
+          phone: "$address.contact",
+          name: "$address.name",
+          pincode: "$address.pincode",
+          id: "$address._id",
+        },
+      },
+
+      { $match: { id: new mongoose.Types.ObjectId(req.body.address) } },
+    ]);
+    let nowDate = Date.now();
+    console.log(nowDate);
+    newOrder = new Order({
+      customer: userDetails._id,
+      status: "placed",
+      date: nowDate,
+      coupon: "Nil",
+      Totalprice: final,
+      finalPrice: final,
+      discount: 0,
+      address: [
+        {
+          name: req.body.inputName,
+          contact: req.body.inputContact,
+          fullAddress: req.body.inputAddress,
+          stat: true,
+          pincode: req.body.inputPin,
+        },
+      ],
+      product: orderItems,
+      orderType: "RazorPay",
+    });
+
+    var options = {
+      amount: final*100,  // amount in the smallest currency unit
+      currency: "INR",
+      receipt: "order_rcptid_11"
+    };
+     instance.orders.create(options, function(err, order) {
+      if(err){
+      console.log(err);
+      console.log('online payment error');
+      res.json({fail:true})
+      }else{
+        res.json({order,newOrder})
+      }
+    });
+  }
+}
+
+const verifyRazor = async (req,res)=>{
+  const details = req.body;
+  
+  let hmac = crypto.createHmac("sha256", 'v4yYwIjiXpfWB484WE2Vff4i');
+  hmac.update(details.payment.razorpay_order_id + "|" + details.payment.razorpay_payment_id);
+  hmac = hmac.digest("hex");
+  if (hmac == details.payment.razorpay_signature) {
+    res.json({success:true})
+  }else{
+    res.json({ failed:true});
+  }
+}
+
 module.exports = {
   userHome,
   userLogin,
@@ -2123,4 +2367,6 @@ module.exports = {
   orderFailed,
   test,
   addNewAddress,
+  initRazor,
+  verifyRazor
 };

@@ -49,6 +49,13 @@ router.get('/delete-address',userSession.isLogin,userController.deleteAddress)
 
 router.post('/user-profile',userSession.isLogin,userController.editUserSubmit)
 router.post('/checkout-submit',userSession.isLogin,userController.orderCheck)
+router.post('/razor_pay',userSession.isLogin,userController.initRazor)
+router.post('/verify_Payment',userSession.isLogin,userController.verifyRazor)
+
+
+
+
+
 router.get('/check-payment',userSession.isLogin,userController.checkPayment)
 
 router.get('/orders',userSession.isLogin,userController.orderPage)

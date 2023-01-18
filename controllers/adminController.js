@@ -7,6 +7,7 @@ const Banner = require("../models/bannerModel");
 const mongoose = require("mongoose");
 const excelJS = require("exceljs");
 const cloudinary = require("cloudinary").v2;
+require("dotenv").config();
 
 const adminSignin = (req, res) => {
   if (req.session.adminAuth) {
@@ -17,8 +18,8 @@ const adminSignin = (req, res) => {
 };
 
 const adminDetails = {
-  email: "adminMail@gmail.com",
-  password: "adminPassword",
+  email: process.env.ADMIN_AUTH,
+  password: process.env.ADMIN_PASSWORD,
 };
 
 const adminVerification = (req, res) => {

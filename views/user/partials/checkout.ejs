@@ -36,7 +36,8 @@
                                             <%=items.quantity%>
                                         </div>
                                         <% var addedNumber=items.productId.price * items.quantity;%>
-                                            <div class="col-sm-2 d-flex justify-content-center text-secondary">₹<%=addedNumber%>
+                                            <div class="col-sm-2 d-flex justify-content-center text-secondary">₹
+                                                <%=addedNumber%>
                                             </div>
                                             <% subT +=addedNumber%>
                                     </div>
@@ -56,16 +57,16 @@
                         <div class="row my-3 mx-0 py-0 g-0">
                             <h5>Choose Address or Enter New Address</h5>
                             <select class="py-2" name="address" onchange="displayAddress(this.value)" id="address">
-
+                                <option value="1" selected>Choose</option>
 
                                 <% userDetails.address.forEach(function(data,i){%>
 
                                     <%if(data.stat==true){%>
-                                        <option value="1" selected>Choose</option>
+
                                         <option value="<%=data._id%>">Default - <%=data.fullAddress%>
                                         </option>
                                         <%}else{%>
-                                            
+
                                             <option value="<%=data._id%>">
                                                 <%=data.fullAddress%>
                                             </option>
@@ -92,23 +93,25 @@
                                 console.log('nsfksdfns')
                                 if (inputAddress == "" || inputContact == "" || inputName == "" || inputPin == "") {
                                     $('#submit-checkout').css('pointer-events', 'none')
-                                }else if(inputAddress != "" && inputContact != "" && inputName != "" && inputPin != ""){
+                                } else if (inputAddress != "" && inputContact != "" && inputName != "" && inputPin != "") {
                                     $('#submit-checkout').css('pointer-events', '')
                                 }
-                                
+
                             }
 
-                            
-                           
-                                
-                         
-                            
-                            window.onload= ()=>{setInterval(() => {
-                                    checkFields()
-                                }, 1000);}
-                            
 
-                            
+
+
+
+
+                            window.onload = () => {
+                                setInterval(() => {
+                                    checkFields()
+                                }, 1000);
+                            }
+
+
+
 
                         </script>
 
@@ -224,11 +227,11 @@
                             </div>
                         </div>
 
-                       <span class="text-center">
-                        <button id="submit-checkout" type="submit" class="mx-auto btn btn-dark w-50 py-2 px-3 my-3"
-                        onclick="return confirm('Proceed to order?')">Proceed to
-                        Order</button>
-                       </span>
+                        <span class="text-center">
+                            <button id="submit-checkout" type="submit" class="mx-auto btn btn-dark w-50 py-2 px-3 my-3"
+                                onclick="return confirm('Proceed to order?')">Proceed to
+                                Order</button>
+                        </span>
 
                     </div>
 
@@ -239,12 +242,96 @@
 
 
 
-
-
-
-
                 </div>
             </form>
+            
+            <div class="col-lg-12">
+                <center style="font-size: x-large;">Or</center>
+                <center style="font-size: large;">Pay Using RazorPay</center>
+                <button onclick="initPayment()" class="btn btn-dark my-2">Razorpay</button>
+            </div>
+
+
+            <script>
+                function initPayment() {
+                    var couponText= $('#couponText').val()
+                    var inputAddress = $('#fullAdd').val()
+                    var inputContact = $('#contactAdd').val()
+                    var inputName = $('#nameAdd').val()
+                    var inputPin = $('#pinAdd').val()
+                   
+                        $.ajax({
+                            type: 'POST',
+                            url: '/razor_pay',
+                            data: {couponText,inputAddress,inputContact,inputName,inputPin},
+                            success: (response) => {
+                                if (response.fail) {
+                                    location.href = "/checkout";
+                                } else {
+                                    let order = response.order
+                                    let orderDetails = response.newOrder
+                                    razorPay(order, orderDetails);
+                                }
+                            }
+                        });
+                   
+                }
+
+                function razorPay(order, orderDetails) {
+                    var options = {
+                        "key": "rzp_test_sUDKggaDF9cOmw", // Enter the Key ID generated from the Dashboard
+                        "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        "currency": "INR",
+                        "name": "RSVP FASHION",
+                        "description": "Test Transaction",
+                        "image": "https://example.com/your_logo",
+                        "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                        "handler": function (response) {
+                            verifyPayment(response, order, orderDetails)
+                        },
+                        "prefill": {
+                            "name": "Abdulla",
+                            "email": "sapabdu@gmail.com",
+                            "contact": "9999999999"
+                        },
+                        "notes": {
+                            "address": "Razorpay Corporate Office"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    };
+                    var rzp1 = new Razorpay(options);
+                    rzp1.on('payment.failed', function (response) {
+                        location.href = "/checkout";
+                    });
+                    rzp1.open()
+
+                }
+
+
+                function verifyPayment(payment, order, orderDetails) {
+
+                    $.ajax({
+                        url: "/verify_Payment",
+                        data: {
+                            payment,
+                            order,
+                            orderDetails
+                        },
+                        method: "post",
+                        success: (response) => {
+                            if (response.success) {
+                                location.href = "/check-payment";
+                            } else {
+                                location.href = "/checkout";
+                            }
+                        },
+                    });
+                }
+                
+            </script>
+
 
             <%}else{%>
 

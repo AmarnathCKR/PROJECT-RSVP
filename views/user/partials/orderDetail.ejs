@@ -4,10 +4,9 @@
     <div class="container-fluid">
         <div class="row mx-0 py-0 g-0">
 
-            <div class="col-lg-3 mx-0 py-0 g-0">
-                <div class="d-flex flex-column flex-shrink-0 p-3 border-right" style="width: 280px;">
-                    <a href="/"
-                        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+            <div class="col-lg-4 mx-0 py-0 g-0 d-flex justify-content-center">
+                <div class="d-flex flex-column flex-shrink-0 p-3 justify-content-center border rounded" style="width: 280px;">
+                    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                         <svg class="bi pe-none me-2" width="40" height="32">
                             <use xlink:href="#bootstrap"></use>
                         </svg>
@@ -24,7 +23,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/user-address" class="nav-link link-dark">
+                            <a href="/user-address" class="nav-link  link-dark ">
                                 <svg class="bi pe-none me-2" width="16" height="16">
                                     <use xlink:href="#speedometer2"></use>
                                 </svg>
@@ -39,7 +38,7 @@
                                 Orders
                             </a>
                         </li>
-
+    
                         <li>
                             <a href="/logout" class="nav-link link-danger">
                                 <svg class="bi pe-none me-2" width="16" height="16">
@@ -50,18 +49,17 @@
                         </li>
                     </ul>
                     <hr>
-
-
-
+    
+    
+    
                 </div>
             </div>
-
-
-            <div class="col-lg-9 mx-0 px-0 g-0">
+    
+            <div class="col-lg-8 mx-0 px-0 g-0 justify-content-center">
 
 
                 <%if(orderDetails!=null){%>
-                    <div class="row" id="printData">
+                    <div class="row text-center" id="printData">
                         <div class="row py-4 mx-0 py-0 g-0">
                             <h4>Order Details</h4>
                         </div>
@@ -240,7 +238,7 @@
                     </div>
 
                     <div class="col-lg-12 my-4">
-                        <div class="row">
+                        <div class="row justify-content-between">
 
                             <%let date=orderDetails.date %>
                                 <%let isoString=date.toISOString()%>
@@ -256,20 +254,20 @@
                                                         <%=console.log(expirationDate)%>
 
 
-                                                            <div class="col-lg-3">
+                                                            <div class="col-lg-3 d-flex justify-content-center">
                                                                 <li id="cbutton">
                                                                     <%if(orderDetails.status=='cancelled' ||
                                                                         orderDetails.date> expirationDate){%>
                                                                         <button class="btn btn-dark py-2 px-3"
-                                                                            disabled>Cancel</button>
+                                                                            disabled>Cancelled</button>
                                                                         <%} else {%>
 
                                                                             <button class="btn btn-dark py-2 px-3"
-                                                                                onclick="removeStat('<%= orderDetails._id %>')">Cancel</button>
+                                                                                onclick="removeStat('<%= orderDetails._id %>')">Cancel Order</button>
                                                                             <%}%>
                                                                 </li>
                                                             </div>
-                                                            <div class="col-lg-3">
+                                                            <div class="col-lg-3 d-flex justify-content-center">
                                                                 <li>
                                                                     <button class="btn btn-dark py-2 px-3"
                                                                         onclick="printOrder('printData')">Print
@@ -296,7 +294,7 @@
                             $('#cbutton').html('');
                             if(adds== 'cancelled'){
                             $('#stat').html('Cancelled');
-                            $('#cbutton').html('<button class="btn btn-dark py-2 px-3" disabled>Cancel</button>');
+                            $('#cbutton').html('<button class="btn btn-dark py-2 px-3" disabled>Cancelled</button>');
                             }
                         }
 

@@ -30,6 +30,7 @@
 
 
   <link rel="stylesheet" href="/public/css/cartPage.css" type="text/css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   <style>
     @font-face {
@@ -114,9 +115,9 @@
   <nav class="navbar navbar-expand-lg my-3 mx-0 px-0 g-0">
     <div class="container-fluid mx-0 px-0 g-0">
 
-      <span class="navbar-brand d-flex justify-content-between mx-0 px-0 g-0">
+      <span class="navbar-brand d-flex justify-content-between ms-4 mx-0 px-0 g-0">
         <a href="/">
-          <img src="/public/img/logo.png" alt="" height="50%" width="50%">
+          <img src="/public/img/logo.png" alt="" height="50%" width="40%">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
           aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -141,9 +142,9 @@
         
           <span class="d-flex align-items-center ms-auto justify-content-center dropstart">
             <%if(usersession){%>
-            <a class="nav-link dropdown-toggle " href="/profile-page" role="button" data-bs-toggle="dropdown"
+            <a class="nav-link dropdown-toggle " href="/user-profile" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
-              <i class="bi bi-person" style="font-size: 25px;"></i>
+              <a href="/user-profile"><i class="bi bi-person" style="font-size: 25px;"></i></a>
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="/user-profile">Profile</a></li>
@@ -154,8 +155,8 @@
             <%} else{%>
               <a href="/login">Login</a>
               <%}%>
-                <a href="/wish-list" class="nav-link fa fa-heart mx-2" style="font-size: 25px;position: relative">
-                  <%if(wishData!=null){%><span class=" align-text-top bg-secondary p-1 rounded-5 text-white" style="font-size: small; position: absolute; right:-10px; top: -10px">
+                <a href="/wish-list" class="nav-link mx-2" style="font-size: 25px;position: relative"><i class="bi bi-heart"></i>
+                  <%if(wishData!=null){%><span class=" align-text-top bg-secondary p-1 rounded-5 text-white text-center" style="width: 20px; font-size: small; position: absolute; right:-10px; top: -10px">
                       <%=wishData.products.length%>
                     </span>
                     <%}%>
