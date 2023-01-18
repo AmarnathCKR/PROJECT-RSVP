@@ -719,7 +719,7 @@ const wishListPage = async (req, res) => {
       customer: userDetails._id,
     }).populate("products");
 
-    res.render("/user/partials/wishlist", {
+    res.render("../user/partials/wishlist", {
       wishData,
       usersession: req.session.auth,
     });
