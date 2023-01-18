@@ -43,25 +43,24 @@
 							<%= others.description %>
 						</center>
 
-						<h6>Stock :<%= others.stock %>
-						</h6>
+						<center><h6>Stock :<%= others.stock %>
+						</h6></center>
 
 						<% if (others.stock >0) { %>
-						<a href="/add-cart/?id=<%= others._id%>" class="btn"> Add To Cart </a>
-						<a href="/check-out/?id=<%= others._id%>" class="btn"> Check Out </a>
+						<center><a href="/add-cart/?id=<%= others._id%>" class="btn"> Add To Cart </a></center>
+						
 						<%}else{%>
-						<a href="/add-cart/?id=<%= others._id%>" class="btn disabled"> Add To Cart </a>
-						<a href="/check-out/?id=<%= others._id%>" class="btn disabled"> Check Out </a>
+						<center><a href="/add-cart/?id=<%= others._id%>" class="btn disabled"> Add To Cart </a></center>
 						<% } %>
 						
 						<% if (wishDetails==null) { %>
-							<a class="text-dark" href="/add-wish-list/?id=<%= others._id%>"><i
+						<center><a class="text-dark" href="/add-wish-list/?id=<%= others._id%>"><i
 									class="fa fa-heart text-grey" aria-hidden="true">
-									Wishlist</i></a>
+									Wishlist</i></a></center>
 							<%}else{%>
-								<a class="text-dark" href="/remove-wish-list/?id=<%= others._id%>"><i
+							<center><a class="text-dark" href="/remove-wish-list/?id=<%= others._id%>"><i
 										class="fa fa-heart text-danger" aria-hidden="true">
-										Wishlist</i></a>
+										Wishlist</i></a></center>
 								<% } %>
 
 					</div>
