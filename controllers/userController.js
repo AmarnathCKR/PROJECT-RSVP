@@ -285,6 +285,7 @@ const sendEmail = async (req, res) => {
     if (user) {
       if (user.status == true) {
         const otp = Math.floor(Math.random() * 1000000 + 1);
+
         req.session.emailOtp = otp;
         setTimeout(() => {
           req.session.emailOtp = false;
@@ -315,6 +316,9 @@ const sendEmail = async (req, res) => {
             console.log("Email sent: " + info.response);
             res.redirect("/verifyEmail");
 
+            // req.session.email = req.body.email;
+            // req.session.fname = req.body.fname;
+            // req.session.password = hashPassword;
           }
         });
       } else {
@@ -352,6 +356,7 @@ const verifyEmailPage = (req, res) => {
 const resendEmail = (req, res) => {
   try {
     const otp = Math.floor(Math.random() * 1000000 + 1);
+    // const authPassword = "icnzdiqbjvqrydak";
     req.session.resendEmailOtp = otp;
 
     setTimeout(() => {
@@ -489,9 +494,9 @@ const productPage = async (req, res) => {
           status: true,
           category: req.query.category,
           $or: [
-            { name: { $regex: "." + search + ".*", $options: "i" } },
+            { name: { $regex: ".*" + search + "*.", $options: "i" } },
 
-            { model: { $regex: "." + search + ".*", $options: "i" } },
+            { model: { $regex: ".*" + search + "*.", $options: "i" } },
           ],
         })
           .skip(perPage * pages - perPage)
@@ -529,9 +534,9 @@ const productPage = async (req, res) => {
           status: true,
           color: req.query.color,
           $or: [
-            { name: { $regex: "." + search + ".*", $options: "i" } },
+            { name: { $regex: ".*" + search + "*.", $options: "i" } },
 
-            { model: { $regex: "." + search + ".*", $options: "i" } },
+            { model: { $regex: ".*" + search + "*.", $options: "i" } },
           ],
         })
           .skip(perPage * pages - perPage)
@@ -570,9 +575,9 @@ const productPage = async (req, res) => {
             status: true,
             stock: { $gt: 0 },
             $or: [
-              { name: { $regex: "." + search + ".*", $options: "i" } },
+              { name: { $regex: ".*" + search + "*.", $options: "i" } },
 
-              { model: { $regex: "." + search + ".*", $options: "i" } },
+              { model: { $regex: ".*" + search + "*.", $options: "i" } },
             ],
           })
             .skip(perPage * pages - perPage)
@@ -610,9 +615,9 @@ const productPage = async (req, res) => {
             status: true,
             stock: 0,
             $or: [
-              { name: { $regex: "." + search + ".*", $options: "i" } },
+              { name: { $regex: ".*" + search + "*.", $options: "i" } },
 
-              { model: { $regex: "." + search + ".*", $options: "i" } },
+              { model: { $regex: ".*" + search + "*.", $options: "i" } },
             ],
           })
             .skip(perPage * pages - perPage)
@@ -636,7 +641,46 @@ const productPage = async (req, res) => {
             });
         }
       } else {
-        res.redirect("/shop");
+        let search = req.query.search;
+          const categoryData = await Category.find({ status: true });
+
+          const colorData = await Product.find({ status: true });
+
+          const email = req.session.auth;
+          const userDetails = await User.findOne({ email: email });
+          const wishData = await Wishlist.findOne({
+            customer: userDetails._id,
+          }).populate("products");
+
+          Product.find({
+            status: true,
+            
+            $or: [
+              { name: { $regex: ".*" + search + "*.", $options: "i" } },
+
+              { model: { $regex: ".*" + search + "*.", $options: "i" } },
+            ],
+          })
+            .skip(perPage * pages - perPage)
+            .limit(perPage)
+            .exec(function (err, products) {
+              Product.count().exec(function (err, count) {
+                if (err) return next(err);
+
+                res.render("user/partials/product", {
+                  product: products,
+                  categories: categoryData,
+                  category: "",
+                  colors: colorData,
+                  shop: "active",
+                  wishData,
+                  current: pages,
+                  pages: Math.ceil(count / perPage),
+                  usersession: req.session.auth,
+                });
+              });
+            });
+        
       }
     } else {
       const categoryData = await Category.find({ status: true });
@@ -649,8 +693,8 @@ const productPage = async (req, res) => {
         customer: userDetails._id,
       }).populate("products");
 
-      let perPage = 6;
-      let pages = req.query.page || 1;
+      var perPage = 6;
+      var pages = req.query.page || 1;
 
       Product.find({
         status: true,
@@ -974,8 +1018,8 @@ const pageStatus = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
 
-  let perPage = 6;
-  let page = req.body.cat || 1;
+  var perPage = 6;
+  var page = req.body.cat || 1;
 
   Product.find({
     status: true,
@@ -1162,7 +1206,7 @@ const checkCoupon = async (req, res) => {
       let currentDate = Date.now();
 
       function formatDate(date) {
-        let d = new Date(date),
+        var d = new Date(date),
           month = "" + (d.getMonth() + 1),
           day = "" + d.getDate(),
           year = d.getFullYear();
@@ -1201,7 +1245,7 @@ const checkCoupon = async (req, res) => {
             },
           },
         ]);
-        let final = 0;
+        var final = 0;
         const Total = cartItems.forEach(function (items) {
           let costValue = parseInt(items.price);
           addValue = costValue * items.qty;
@@ -1250,7 +1294,7 @@ const checkCoupon = async (req, res) => {
               },
             },
           ]);
-          let final = 0;
+          var final = 0;
           const Total = cartItems.forEach(function (items) {
             let costValue = parseInt(items.price);
             addValue = costValue * items.qty;
@@ -1289,7 +1333,7 @@ const checkCoupon = async (req, res) => {
             },
           },
         ]);
-        let final = 0;
+        var final = 0;
         const Total = cartItems.forEach(function (items) {
           let costValue = parseInt(items.price);
           addValue = costValue * items.qty;
@@ -1325,7 +1369,7 @@ const checkCoupon = async (req, res) => {
           },
         },
       ]);
-      let final = 0;
+      var final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -1361,7 +1405,7 @@ const checkCoupon = async (req, res) => {
         },
       },
     ]);
-    let final = 0;
+    var final = 0;
     const Total = cartItems.forEach(function (items) {
       let costValue = parseInt(items.price);
       addValue = costValue * items.qty;
@@ -1379,7 +1423,7 @@ paypal.configure({
   client_secret: process.env.CLIENT_SECRET,
 });
 
-let newOrder;
+var newOrder;
 
 const orderCheck = async (req, res) => {
   const email = req.session.auth;
@@ -1421,7 +1465,7 @@ const orderCheck = async (req, res) => {
           },
         },
       ]);
-      let final = 0;
+      var final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -1518,7 +1562,7 @@ const orderCheck = async (req, res) => {
           },
         },
       ]);
-      let final = 0;
+      var final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -1618,7 +1662,7 @@ const orderCheck = async (req, res) => {
           },
         },
       ]);
-      let final = 0;
+      var final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -1761,7 +1805,7 @@ const orderCheck = async (req, res) => {
           },
         },
       ]);
-      let final = 0;
+      var final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -2107,7 +2151,7 @@ const initRazor= async (req,res)=>{
         },
       },
     ]);
-    let final = 0;
+    var final = 0;
     const Total = cartItems.forEach(function (items) {
       let costValue = parseInt(items.price);
       addValue = costValue * items.qty;
@@ -2218,7 +2262,7 @@ const initRazor= async (req,res)=>{
         },
       },
     ]);
-    let final = 0;
+    var final = 0;
     const Total = cartItems.forEach(function (items) {
       let costValue = parseInt(items.price);
       addValue = costValue * items.qty;
