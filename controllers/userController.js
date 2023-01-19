@@ -843,10 +843,14 @@ const cartPage = async (req, res) => {
 
 const addCart = async (req, res) => {
   try {
+    
     const email = req.session.auth;
     const userDetails = await User.findOne({ email: email });
 
     let userCart = await Cart.findOne({ customer: userDetails._id });
+    await Wishlist.updateOne({customer : userDetails._id},
+      {$pull : { products:  req.query.id  }}
+    )
 
     let itemIndex = userCart.products.findIndex((products) => {
       return products.productId == req.query.id;
@@ -860,6 +864,7 @@ const addCart = async (req, res) => {
         }
       );
     } else {
+
       await Cart.updateOne(
         { customer: userDetails._id },
         {
