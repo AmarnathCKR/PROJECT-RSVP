@@ -2314,6 +2314,26 @@ const verifyRazor = async (req,res)=>{
   }
 }
 
+const contactPage = async (req,res)=>{
+  const categoryData = await Category.find({ status: true });
+    const banners = await Banner.find({ status: true });
+    let usersession = req.session.auth;
+
+    
+      let userDat = await User.findOne({ email: usersession });
+      const wishData = await Wishlist.findOne({ customer: userDat._id });
+
+      res.render("user/partials/contact", {
+        details: banners,
+        categories: categoryData,
+        home: "active",
+        wishData,
+        usersession,
+      });
+    
+    
+}
+
 module.exports = {
   userHome,
   userLogin,
@@ -2368,5 +2388,6 @@ module.exports = {
   test,
   addNewAddress,
   initRazor,
-  verifyRazor
+  verifyRazor,
+  contactPage
 };

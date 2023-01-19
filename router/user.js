@@ -25,7 +25,7 @@ router.post('/add-address',userController.addNewAddress)
 
 
 //User Side Homepage
-
+router.get('/contact', userSession.isLogin,userController.contactPage)
 router.get('/shop', userSession.isLogin,userController.productPage)
 router.get('/product-page', userSession.isLogin, userController.productDetails)
 router.get('/wish-list', userSession.isLogin,userController.wishListPage)
