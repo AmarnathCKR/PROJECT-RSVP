@@ -285,7 +285,6 @@ const sendEmail = async (req, res) => {
     if (user) {
       if (user.status == true) {
         const otp = Math.floor(Math.random() * 1000000 + 1);
-        // const authPassword = "icnzdiqbjvqrydak";
         req.session.emailOtp = otp;
         setTimeout(() => {
           req.session.emailOtp = false;
@@ -316,9 +315,6 @@ const sendEmail = async (req, res) => {
             console.log("Email sent: " + info.response);
             res.redirect("/verifyEmail");
 
-            // req.session.email = req.body.email;
-            // req.session.fname = req.body.fname;
-            // req.session.password = hashPassword;
           }
         });
       } else {
@@ -356,7 +352,6 @@ const verifyEmailPage = (req, res) => {
 const resendEmail = (req, res) => {
   try {
     const otp = Math.floor(Math.random() * 1000000 + 1);
-    // const authPassword = "icnzdiqbjvqrydak";
     req.session.resendEmailOtp = otp;
 
     setTimeout(() => {
@@ -654,8 +649,8 @@ const productPage = async (req, res) => {
         customer: userDetails._id,
       }).populate("products");
 
-      var perPage = 6;
-      var pages = req.query.page || 1;
+      let perPage = 6;
+      let pages = req.query.page || 1;
 
       Product.find({
         status: true,
@@ -979,8 +974,8 @@ const pageStatus = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
 
-  var perPage = 6;
-  var page = req.body.cat || 1;
+  let perPage = 6;
+  let page = req.body.cat || 1;
 
   Product.find({
     status: true,
@@ -1167,7 +1162,7 @@ const checkCoupon = async (req, res) => {
       let currentDate = Date.now();
 
       function formatDate(date) {
-        var d = new Date(date),
+        let d = new Date(date),
           month = "" + (d.getMonth() + 1),
           day = "" + d.getDate(),
           year = d.getFullYear();
@@ -1206,7 +1201,7 @@ const checkCoupon = async (req, res) => {
             },
           },
         ]);
-        var final = 0;
+        let final = 0;
         const Total = cartItems.forEach(function (items) {
           let costValue = parseInt(items.price);
           addValue = costValue * items.qty;
@@ -1255,7 +1250,7 @@ const checkCoupon = async (req, res) => {
               },
             },
           ]);
-          var final = 0;
+          let final = 0;
           const Total = cartItems.forEach(function (items) {
             let costValue = parseInt(items.price);
             addValue = costValue * items.qty;
@@ -1294,7 +1289,7 @@ const checkCoupon = async (req, res) => {
             },
           },
         ]);
-        var final = 0;
+        let final = 0;
         const Total = cartItems.forEach(function (items) {
           let costValue = parseInt(items.price);
           addValue = costValue * items.qty;
@@ -1330,7 +1325,7 @@ const checkCoupon = async (req, res) => {
           },
         },
       ]);
-      var final = 0;
+      let final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -1366,7 +1361,7 @@ const checkCoupon = async (req, res) => {
         },
       },
     ]);
-    var final = 0;
+    let final = 0;
     const Total = cartItems.forEach(function (items) {
       let costValue = parseInt(items.price);
       addValue = costValue * items.qty;
@@ -1384,7 +1379,7 @@ paypal.configure({
   client_secret: process.env.CLIENT_SECRET,
 });
 
-var newOrder;
+let newOrder;
 
 const orderCheck = async (req, res) => {
   const email = req.session.auth;
@@ -1426,7 +1421,7 @@ const orderCheck = async (req, res) => {
           },
         },
       ]);
-      var final = 0;
+      let final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -1523,7 +1518,7 @@ const orderCheck = async (req, res) => {
           },
         },
       ]);
-      var final = 0;
+      let final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -1623,7 +1618,7 @@ const orderCheck = async (req, res) => {
           },
         },
       ]);
-      var final = 0;
+      let final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -1766,7 +1761,7 @@ const orderCheck = async (req, res) => {
           },
         },
       ]);
-      var final = 0;
+      let final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -2112,7 +2107,7 @@ const initRazor= async (req,res)=>{
         },
       },
     ]);
-    var final = 0;
+    let final = 0;
     const Total = cartItems.forEach(function (items) {
       let costValue = parseInt(items.price);
       addValue = costValue * items.qty;
@@ -2223,7 +2218,7 @@ const initRazor= async (req,res)=>{
         },
       },
     ]);
-    var final = 0;
+    let final = 0;
     const Total = cartItems.forEach(function (items) {
       let costValue = parseInt(items.price);
       addValue = costValue * items.qty;
