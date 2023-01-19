@@ -1946,6 +1946,23 @@ const checkPayment = async (req, res) => {
 
   
   newOrder.save();
+  console.log(newOrder)
+
+  for(let i=0;i<newOrder.product.length;i++){
+    console.log(newOrder.product[i].productId)
+    console.log(newOrder.product[i].qtyItems)
+    
+    await Product.updateOne({
+      _id: newOrder.product[i].productId ,
+      stock: { $gt: 0 },
+    },
+    
+      {$inc : {
+        stock : -newOrder.product[i].qtyItems
+      }}
+      )
+    }
+
   
   const userDetails = await User.findOne({ email: email });
   const wishData = await Wishlist.findOne({
