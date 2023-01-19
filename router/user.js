@@ -2,23 +2,24 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const userSession=require('../middleware/user/usersession')
+const loginCheck=require('../middleware/user/loginCheck')
 const Product = require('../models/productModel')
 
 router.get("/",userController.userHome);
-router.get("/login", userController.userLogin);
+router.get("/login",loginCheck.loged ,userController.userLogin);
 router.post("/login", userController.userVerification);
-router.get("/signUp",userController.userSignUp);
+router.get("/signUp",loginCheck.loged,userController.userSignUp);
 router.post("/signUp",userController.checkSignUp);
 router.post("/verifyOTP",userController.otpVerify)
 router.get("/logout", userController.userLogout);
-router.get("/verifyOTP",userController.otpVerifyPage)
-router.get('/resend',userController.resendOTP)
-router.get('/forgot-password',userController.forgotPassword)
+router.get("/verifyOTP", loginCheck.loged,userController.otpVerifyPage)
+router.get('/resend', loginCheck.loged,userController.resendOTP)
+router.get('/forgot-password',loginCheck.loged,userController.forgotPassword)
 router.post('/forgot-password',userController.sendEmail)
-router.get('/verifyEmail',userController.verifyEmailPage)
+router.get('/verifyEmail',loginCheck.loged,userController.verifyEmailPage)
 router.post('/verifyEmail',userController.verifyEmailOTP)
-router.get('/resendEmail',userController.resendEmail)
-router.get('/new-password',userController.newPassword)
+router.get('/resendEmail',loginCheck.loged,userController.resendEmail)
+router.get('/new-password',loginCheck.loged,userController.newPassword)
 router.post('/new-password',userController.submitPassword)
 router.post('/add-address',userController.addNewAddress)
 
