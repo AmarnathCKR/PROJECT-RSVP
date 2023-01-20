@@ -1,117 +1,167 @@
 <%- include('../layouts/header') %>
-  <div class="container">
-    <div class="row my-4">
-      <div class="col-12 d-flex flex-column">
-        <a style="text-decoration: underline;font-size: x-large;">Shop Page</a>
+  <div class="container" id="pwoli">
 
-        <a class="py-3 " style="text-decoration: underline; font-size: medium;">
-          <%=locals.category%>
-        </a>
+
+    <div class="container">
+      <div class="row my-4">
+        <div class="col-12 d-flex flex-column">
+          <a style="text-decoration: underline;font-size: x-large;">Shop Page</a>
+
+          <a class="py-3 " style="text-decoration: underline; font-size: medium;">
+            <%=locals.category%>
+          </a>
+
+
+        </div>
 
 
       </div>
-
 
     </div>
 
-  </div>
+    <div class="container">
+      <% if(product.status !=false) { %>
 
-  <div class="container">
-    <% if(product.status !=false) { %>
+        <div class="row">
+          <!-- Filter sort grid -->
+          <div class="col-md-3">
+            <section class="py-4">
+              <span class="h4">Filter</span>
+            </section>
+            <section>
+              <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button text-dark" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      Category
+                    </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body ">
+                      <div class="row">
 
-      <div class="row">
-        <!-- Filter sort grid -->
-        <div class="col-md-3">
-          <section class="py-4">
-            <span class="h4">Filter</span>
-          </section>
-          <section>
-            <div class="accordion" id="accordionExample">
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="headingOne">
-                  <button class="accordion-button text-dark" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Category
-                  </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                  data-bs-parent="#accordionExample">
-                  <div class="accordion-body ">
-                    <div class="row">
+                        <!-- choices category -->
 
-                      <!-- choices category -->
+                        <% if(categories !=null) { %>
+                          <% categories.forEach(function(stuff,i){ %>
+                            <div class="col-12">
+                              <button class="text-dark bg-white border-0" onclick="getCategory('<%= stuff._id %>')">
+                                <span id="categoryCount<%=i%>"><i class="bi bi-arrow-right"></i>
+                                  <%= stuff.name %>
+                                </span>
 
-                      <% if(categories !=null) { %>
-                        <% categories.forEach(function(stuff,i){ %>
+                              </button>
+
+                            </div>
+                            <% }) %>
+                              <% } %>
+
+                      </div>
+
+
+
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Color
+                      </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+
+                        <div class="row">
+
+                          <!-- choices category -->
+
                           <div class="col-12">
-                            <button class="text-dark bg-white border-0" onclick="getCategory('<%= stuff._id %>')">
-                              <span id="categoryCount<%=i%>"><i class="bi bi-arrow-right"></i>
-                                <%= stuff.name %>
-                              </span>
-
+                            <button class="text-dark bg-white border-0" onclick="getColor('Black')">
+                              <span><i class="bi bi-arrow-right"></i></span>
+                              Black
                             </button>
-
                           </div>
-                          <% }) %>
-                            <% } %>
+                          <div class="col-12">
+                            <button class="text-dark bg-white border-0" onclick="getColor('Khakhi')">
+                              <span><i class="bi bi-arrow-right"></i></span>
+                              Khakhi
+                            </button>
+                          </div>
 
+                          <div class="col-12">
+                            <button class="text-dark bg-white border-0" onclick="getColor('Croco-Navy')">
+                              <span><i class="bi bi-arrow-right"></i></span>
+                              Croco-Navy
+                            </button>
+                          </div>
+                          <div class="col-12">
+                            <button class="text-dark bg-white border-0" onclick="getColor('COGNAC')">
+                              <span><i class="bi bi-arrow-right"></i></span>
+                              COGNAC
+                            </button>
+                          </div>
+                          <div class="col-12">
+                            <button class="text-dark bg-white border-0" onclick="getColor('Brown')">
+                              <span><i class="bi bi-arrow-right"></i></span>
+                              Brown
+                            </button>
+                          </div>
+                          <div class="col-12">
+                            <button class="text-dark bg-white border-0" onclick="getColor('LEAT')">
+                              <span><i class="bi bi-arrow-right"></i></span>
+                              LEAT
+                            </button>
+                          </div>
+
+
+
+
+
+                        </div>
+
+
+                      </div>
                     </div>
-
-
-
                   </div>
-                </div>
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      Color
-                    </button>
-                  </h2>
-                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Avilability
+                      </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
 
-                      <div class="row">
 
-                        <!-- choices category -->
+                        <div class="row">
 
-                        <div class="col-12">
-                          <button class="text-dark bg-white border-0" onclick="getColor('Black')">
-                            <span><i class="bi bi-arrow-right"></i></span>
-                            Black
-                          </button>
-                        </div>
-                        <div class="col-12">
-                          <button class="text-dark bg-white border-0" onclick="getColor('Khakhi')">
-                            <span><i class="bi bi-arrow-right"></i></span>
-                            Khakhi
-                          </button>
-                        </div>
+                          <!-- choices category -->
 
-                        <div class="col-12">
-                          <button class="text-dark bg-white border-0" onclick="getColor('Croco-Navy')">
-                            <span><i class="bi bi-arrow-right"></i></span>
-                            Croco-Navy
-                          </button>
-                        </div>
-                        <div class="col-12">
-                          <button class="text-dark bg-white border-0" onclick="getColor('COGNAC')">
-                            <span><i class="bi bi-arrow-right"></i></span>
-                            COGNAC
-                          </button>
-                        </div>
-                        <div class="col-12">
-                          <button class="text-dark bg-white border-0" onclick="getColor('Brown')">
-                            <span><i class="bi bi-arrow-right"></i></span>
-                            Brown
-                          </button>
-                        </div>
-                        <div class="col-12">
-                          <button class="text-dark bg-white border-0" onclick="getColor('LEAT')">
-                            <span><i class="bi bi-arrow-right"></i></span>
-                            LEAT
-                          </button>
+
+
+                          <div class="col-12">
+                            <button class="text-dark bg-white border-0" onclick="getStock('inStock')">
+                              <span><i class="bi bi-arrow-right"></i></span>
+                              In stock
+                            </button>
+                          </div>
+
+
+
+                          <div class="col-12">
+                            <button class="text-dark bg-white border-0" onclick="getStock('outStock')">
+                              <span><i class="bi bi-arrow-right"></i></span>
+                              Out of stock
+                            </button>
+                          </div>
+
+
                         </div>
 
 
@@ -119,430 +169,291 @@
 
 
                       </div>
-
-
                     </div>
+
                   </div>
-                </div>
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                      Avilability
-                    </button>
-                  </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
 
 
-                      <div class="row">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingFour">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        Sort
+                      </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
 
-                        <!-- choices category -->
+                        <div class="row">
+
+                          <!-- choices category -->
 
 
+                          <div class="col-12">
+                            <button class="text-dark bg-white border-0" onclick="getSort('low')">
+                              <span><i class="bi bi-arrow-right"></i></span>
+                              Price Low to High
+                              </a>
+                          </div>
 
-                        <div class="col-12">
-                          <button class="text-dark bg-white border-0" onclick="getStock('inStock')">
-                            <span><i class="bi bi-arrow-right"></i></span>
-                            In stock
-                          </button>
-                        </div>
+                          <div class="col-12">
+                            <button class="text-dark bg-white border-0" onclick="getSort('high')">
+                              <span><i class="bi bi-arrow-right"></i></span>
+                              Price High to Low
+                              </a>
+                          </div>
 
 
-
-                        <div class="col-12">
-                          <button class="text-dark bg-white border-0" onclick="getStock('outStock')">
-                            <span><i class="bi bi-arrow-right"></i></span>
-                            Out of stock
-                          </button>
                         </div>
 
 
                       </div>
-
-
-
-
-
                     </div>
                   </div>
 
+
                 </div>
-
-
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingFour">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                      Sort
-                    </button>
-                  </h2>
-                  <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
-                    data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-
-                      <div class="row">
-
-                        <!-- choices category -->
-
-
-                        <div class="col-12">
-                          <button class="text-dark bg-white border-0" onclick="getSort('low')">
-                            <span><i class="bi bi-arrow-right"></i></span>
-                            Price Low to High
-                            </a>
-                        </div>
-
-                        <div class="col-12">
-                          <button class="text-dark bg-white border-0" onclick="getSort('high')">
-                            <span><i class="bi bi-arrow-right"></i></span>
-                            Price High to Low
-                            </a>
-                        </div>
-
-
-                      </div>
-
-
-                    </div>
-                  </div>
-                </div>
-
-
-              </div>
-          </section>
-
-
-        </div>
-        <script>
-          var product
-          console.log(product)
-          function getCategory(catId) {
-
-            $.ajax({
-              url: "/catFilter",
-              method: "patch",
-              data: { cat: catId },
-              success: (res) => {
-                products = res.data
-                $('#product333').html('');
-                $('#pageloader').html('');
-                $('#searchFilter').attr('value', catId)
-                  .attr('name', 'category')
-                products.forEach(function (items) {
-                  $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
-
-                  );
-
-
-
-                });
-              }
-
-            })
-          }
-        </script>
-
-        <script>
-
-
-          function getColor(catId) {
-
-            $.ajax({
-              url: "/colorFilter",
-              method: "patch",
-              data: { cat: catId },
-              success: (res) => {
-                products = res.data
-                $('#pageloader').html('');
-                $('#product333').html('');
-                $('#searchFilter').attr('value', catId)
-                  .attr('name', 'color')
-                products.forEach(function (items) {
-                  $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
-
-                  );
-
-                });
-              }
-
-            })
-          }
-        </script>
-
-
-
-        <script>
-          var product
-          console.log(product)
-          function getStock(catId) {
-
-            $.ajax({
-              url: "/stockCheck",
-              method: "patch",
-              data: { cat: catId },
-              success: (res) => {
-                products = res.data
-                $('#pageloader').html('');
-                $('#product333').html('');
-                $('#searchFilter').attr('value', catId)
-                  .attr('name', 'stock')
-                products.forEach(function (items) {
-                  $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
-
-                  );
-
-                });
-              }
-
-            })
-          }
-        </script>
-
-
-        <script>
-          var product
-          console.log(product)
-          function getSort(catId) {
-
-            $.ajax({
-              url: "/sort-check",
-              method: "patch",
-              data: { cat: catId },
-              success: (res) => {
-                products = res.data
-                $('#product333').html('');
-                $('#searchFilter').attr('value', catId)
-                  .attr('name', 'sort');
-                $('#pageloader').html('');
-
-                products.forEach(function (items) {
-                  $('#product333').append(
-                    '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
-
-                  );
-
-                });
-              }
-
-            })
-          }
-        </script>
-
-
-
-
-
-        <div class="col-md-9">
-          <div class="row ">
-
-            <form class="text-center d-flex justify-content-center">
-              
-              <div class="col-md-6">
-                <input type="text" hidden id="searchFilter" name="searchFilter">
-                <input type="text" name="search" id="" class="form-control my-2"
-                  placeholder="Enter Product Name or Model or category name">
-
-
-              </div>
-              <div class="col-md-3 d-flex justify-content-center align-items-center">
-
-
-                <button class="btn btn-dark py-1" style="width: 80%; height:75%;" value="search">Search</button>
-
-              </div>
-              <div class="col-md-3 d-flex justify-content-center align-items-center">
-
-                <a href="/shop"><button class="btn btn-grey">Show All</button></a>
-              </div>
-            </form>
-          </div>
-
-
-
-          <div class="row" id="product333">
-            <%product.forEach(function(blah){ %>
-
-              <div class="col-lg-4 d-flex justify-content-center p-4">
-
-                <div class="card justify-content-center" style="width: 100%;">
-
-
-                  <a href="/product-page/?id=<%= blah._id%>" class=""><img src="<%= blah.image[0].url %>"
-                      class="card-img-top" alt="..."></a>
-                  <div class="card-body">
-                    <a href="/product-page/?id=<%= blah._id%>">
-                      <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">
-                        <%=blah.name%>
-                      </center>
-                      <center>Stock : <%=blah.stock%>
-                      </center>
-
-                      <center>Price : <%=blah.price%>
-                      </center>
-                    </a>
-
-
-
-                  </div>
-                </div>
-              </div>
-
-              <% }) %>
-                <% } %>
-
-
-
-
-
-
-
-
+            </section>
 
 
           </div>
+          <script>
+            var product
+
+            function getCategory(catId) {
+
+              $.ajax({
+                url: "/catFilter",
+                method: "patch",
+                data: { cat: catId },
+                success: (res) => {
+                  products = res.data
+                  $('#product333').html('');
+                  $('#pageloader').html('');
+                  $('#searchFilter').attr('value', catId)
+                    .attr('name', 'category')
+                  products.forEach(function (items) {
+                    $('#product333').append(
+                      '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
+
+                    );
 
 
 
-          <div class="col-md-12 d-flex justify-content-around" id="pageloader">
-
-            <nav id="thePageChanger" aria-label="Page navigation example "
-              class="border-dark d-flex justify-content-center">
-              <% if (pages> 0) { %>
-                <ul id="1100" class="pagination text-center rounded ">
-                  <% if (current==1) { %>
-                    <li id="2200" class="disabled p-3 btn-dark rounded"><a style="color: black;">First</a></li>
-                    <% } else { %>
-                      <li id="3300" class="p-3 btn-dark"><a style="color: black;" onclick="pageButton(1)">First</a>
-                      </li>
-                      <% } %>
-                        <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
-                          <% if (i !==1) { %>
-                            <li id="4400" class="disabled p-3 btn-dark"><a style="color: black;">...</a></li>
-                            <% } %>
-                              <% for (; i <=(Number(current) + 4) && i <=pages; i++) { %>
-                                <% if (i==current) { %>
-                                  <li id="5500" class="active p-3 btn-dark"><a style="color: black;">
-                                      <%= i %>
-                                    </a></li>
-                                  <% } else { %>
-
-
-                                    <li id="6600" class="p-3 btn-dark"><a style="color: black;"
-                                        onclick="pageButton('<%= i %>')">
-                                        <%= i %>
-                                      </a></li>
-
-                                    <% } %>
-                                      <% if (i==Number(current) + 4 && i < pages) { %>
-                                        <li id="7700" class="disabled p-3 btn-dark"><a>...</a></li>
-                                        <% } %>
-                                          <% } %>
-                                            <% if (current==pages) { %>
-                                              <li id="8800" class="disabled p-3 btn-dark"><a>Last</a></li>
-                                              <% } else { %>
-                                                <li id="9900" class="p-3 btn-dark"><a style="color: black;"
-                                                    onclick="pageButton('<%= pages %>')">Last</a></li>
-                                                <% } %>
-                </ul>
-                <% } %>
-
-
-            </nav>
-          </div>
-
-
-        </div>
-      </div>
-
-
-      <script>
-        var product
-        console.log(product)
-        function pageButton(catId) {
-
-          $.ajax({
-            url: "/check-page",
-            method: "patch",
-            data: { cat: catId },
-            success: (res) => {
-              products = res.data
-              currents = res.current
-              page = res.pages
-
-              $('#product333').html('')
-              // $('#1100').html('')
-              $('#2200').html('')
-              $('#3300').html('')
-              $('#4400').html('')
-              $('#5500').html('')
-              $('#6600').html('')
-              $('#7700').html('')
-              $('#8800').html('')
-              $('#9900').html('')
-
-
-
-
-              products.forEach(function (items) {
-                $('#product333').append(
-                  '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
-                );
-
-
+                  });
+                }
 
               })
+            }
+          </script>
+
+          <script>
 
 
-              if (page > 0) {
+            function getColor(catId) {
 
+              $.ajax({
+                url: "/colorFilter",
+                method: "patch",
+                data: { cat: catId },
+                success: (res) => {
+                  products = res.data
+                  $('#pageloader').html('');
+                  $('#product333').html('');
+                  $('#searchFilter').attr('value', catId)
+                    .attr('name', 'color')
+                  products.forEach(function (items) {
+                    $('#product333').append(
+                      '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
 
-                if (currents == 1) {
-                  $('#2200').html('<a style="color: black;">First</a>')
-                } else {
-                  $('#2200').html('<a style="color: black;" onclick="pageButton(1)">First</a>')
-                }
-                var i = (Number(currents) > 5 ? Number(currents) - 4 : 1)
-                if (i !== 1) {
-                  $('#4400').html('<a>...</a>')
-                }
-                for (i = 1; i <= (Number(currents) + 4) && i <= page; i++) {
+                    );
 
-                  if (i == currents) {
-                    $('#5500').html('<a style="color: black;"> ' + i + ' </a>')
-                  } else {
-
-                    $('#6600').html('<a style="color: black;" onclick="pageButton(' + i + ')"> ' + i + ' </a>')
-                  }
-                  if (i == Number(currents) + 4 && i < page) {
-                    $('#7700').html('<a>...</a>')
-                  }
-                }
-                if (currents == page) {
-                  $('#9900').html('<a>Last</a>')
-
-
-                } else {
-                  $('#9900').html('<a style="color: black;" onclick="pageButton(' + page + ')">Last</a>')
+                  });
                 }
 
+              })
+            }
+          </script>
 
+
+
+          <script>
+            var product
+
+            function getStock(catId) {
+
+              $.ajax({
+                url: "/stockCheck",
+                method: "patch",
+                data: { cat: catId },
+                success: (res) => {
+                  $('#product333').load(location.href + ' #product333')
+                  $('#pageloader').load(location.href + ' #pageloader')
+                }
+
+              })
+            }
+          </script>
+
+
+          <script>
+
+
+            function getSort(catId) {
+
+              $.ajax({
+                url: "/sort-check",
+                method: "patch",
+                data: { cat: catId },
+                success: (res) => {
+                  products = res.data
+                  $('#product333').load(location.href + ' #product333')
+                  $('#pageloader').load(location.href + ' #pageloader')
+
+
+                }
+
+              })
+            }
+          </script>
+
+
+
+
+
+          <div class="col-md-9">
+            <div class="row ">
+
+              <form class="text-center d-flex justify-content-center">
+
+                <div class="col-md-6">
+                  <input type="text" hidden id="searchFilter" name="searchFilter">
+                  <input type="text" name="search" id="" class="form-control my-2"
+                    placeholder="Enter Product Name or Model or category name">
+
+
+                </div>
+                <div class="col-md-3 d-flex justify-content-center align-items-center">
+
+
+                  <button class="btn btn-dark py-1" style="width: 80%; height:75%;" value="search">Search</button>
+
+                </div>
+                <div class="col-md-3 d-flex justify-content-center align-items-center">
+
+                  <a href="/shop"><button class="btn btn-grey">Show All</button></a>
+                </div>
+              </form>
+            </div>
+
+
+
+            <div class="row" id="product333">
+              <%product.forEach(function(blah){ %>
+
+                <div class="col-lg-4 d-flex justify-content-center p-4">
+
+                  <div class="card justify-content-center" style="width: 100%;">
+
+
+                    <a href="/product-page/?id=<%= blah._id%>" class=""><img src="<%= blah.image[0].url %>"
+                        class="card-img-top" alt="..."></a>
+                    <div class="card-body">
+                      <a href="/product-page/?id=<%= blah._id%>">
+                        <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;">
+                          <%=blah.name%>
+                        </center>
+                        <center>Stock : <%=blah.stock%>
+                        </center>
+
+                        <center>Price : <%=blah.price%>
+                        </center>
+                      </a>
+
+
+
+                    </div>
+                  </div>
+                </div>
+
+                <% }) %>
+                  <% } %>
+
+            </div>
+
+
+
+            <div class="col-md-12 d-flex justify-content-around" id="pageloader">
+
+              <nav id="thePageChanger" aria-label="Page navigation example "
+                class="border-dark d-flex justify-content-center">
+                <% if (pages> 0) { %>
+                  <ul id="1100" class="pagination text-center rounded ">
+                    <% if (current==1) { %>
+                      <li id="2200" class="disabled p-3 btn-dark rounded"><a style="color: black;">First</a></li>
+                      <% } else { %>
+                        <li id="3300" class="p-3 btn-dark"><a style="color: black;" onclick="pageButton(1)">First</a>
+                        </li>
+                        <% } %>
+                          <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
+                            <% if (i !==1) { %>
+                              <li id="4400" class="disabled p-3 btn-dark"><a style="color: black;">...</a></li>
+                              <% } %>
+                                <% for (; i <=(Number(current) + 4) && i <=pages; i++) { %>
+                                  <% if (i==current) { %>
+                                    <li id="5500" class="active p-3 btn-dark"><a style="color: black;">
+                                        <%= i %>
+                                      </a></li>
+                                    <% } else { %>
+
+
+                                      <li id="6600" class="p-3 btn-dark"><a style="color: black;"
+                                          onclick="pageButton('<%= i %>')">
+                                          <%= i %>
+                                        </a></li>
+
+                                      <% } %>
+                                        <% if (i==Number(current) + 4 && i < pages) { %>
+                                          <li id="7700" class="disabled p-3 btn-dark"><a>...</a></li>
+                                          <% } %>
+                                            <% } %>
+                                              <% if (current==pages) { %>
+                                                <li id="8800" class="disabled p-3 btn-dark"><a>Last</a></li>
+                                                <% } else { %>
+                                                  <li id="9900" class="p-3 btn-dark"><a style="color: black;"
+                                                      onclick="pageButton('<%= pages %>')">Last</a></li>
+                                                  <% } %>
+                  </ul>
+                  <% } %>
+
+
+              </nav>
+            </div>
+
+
+          </div>
+        </div>
+
+
+        <script>
+          var product
+
+          function pageButton(catId) {
+
+            $.ajax({
+              url: "/check-page",
+              method: "patch",
+              data: { cat: catId },
+              success: (res) => {
+                console.log(res)
+
+                $('#product333').load(location.href + ' #product333')
+                $('#pageloader').load(location.href + ' #pageloader')
               }
 
-
-
-
-
-            }
-
-
-
-          })
-        }
-      </script>
-
-      <%- include('../layouts/footer') %>
+            })
+          }
+        </script>
+    </div>
+    <%- include('../layouts/footer') %>
