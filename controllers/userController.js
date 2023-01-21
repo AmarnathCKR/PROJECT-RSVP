@@ -783,7 +783,7 @@ const searchProduct = async (req, res) => {
     }
 
     res.json({
-      success: true,
+      menu : req.body.cat,
     });
   } else if (colorFilter) {
     let dummy = colorFilter;
@@ -807,7 +807,7 @@ const searchProduct = async (req, res) => {
     }
 
     res.json({
-      success: true,
+      menu : req.body.cat,
     });
   } else if (stocked) {
     let dummy = stocked;
@@ -831,7 +831,7 @@ const searchProduct = async (req, res) => {
     }
 
     res.json({
-      success: true,
+      menu : req.body.cat,
     });
   } else {
     let dummy = productEmers;
@@ -858,13 +858,14 @@ const searchProduct = async (req, res) => {
     }
 
     res.json({
-      success: true,
+      menu : req.body.cat,
     });
   }
 };
 
 let categoryFilter;
 const catFiltering = async (req, res) => {
+  const proData= await Category.findOne({_id : req.body.cat})
   if (searchFilter) {
     let dummy = searchFilter;
 
@@ -886,7 +887,7 @@ const catFiltering = async (req, res) => {
     }
 
     res.json({
-      success: true,
+      menu : proData.name,
     });
   } else if (colorFilter) {
     let dummy = colorFilter;
@@ -909,7 +910,7 @@ const catFiltering = async (req, res) => {
     }
 
     res.json({
-      success: true,
+      menu : proData.name,
     });
   } else if (stocked) {
     let dummy = stocked;
@@ -932,7 +933,7 @@ const catFiltering = async (req, res) => {
     }
 
     res.json({
-      success: true,
+      menu : proData.name,
     });
   } else {
     let dummy = productEmers;
@@ -955,7 +956,7 @@ const catFiltering = async (req, res) => {
     }
 
     res.json({
-      success: true,
+      menu : proData.name,
     });
   }
 };
@@ -982,7 +983,7 @@ const colorFiltering = async (req, res) => {
     }
 
     res.json({
-      success: true,
+      menu : req.body.cat,
     });
   } else if (categoryFilter) {
     let dummy = categoryFilter;
@@ -1005,7 +1006,7 @@ const colorFiltering = async (req, res) => {
     }
 
     res.json({
-      success: true,
+      menu : req.body.cat,
     });
   } else if (stocked) {
     let dummy = stocked;
@@ -1028,7 +1029,7 @@ const colorFiltering = async (req, res) => {
     }
 
     res.json({
-      success: true,
+      menu : req.body.cat,
     });
   } else {
     let dummy = productEmers;
@@ -1051,7 +1052,7 @@ const colorFiltering = async (req, res) => {
     }
 
     res.json({
-      success: true,
+      menu : req.body.cat,
     });
   }
 };
@@ -1792,13 +1793,7 @@ const orderCheck = async (req, res) => {
   if (req.body.paymentMethod == "COD") {
     const couponData = await Coupon.findOne({ discount: req.body.couponText });
 
-    if (couponData) {
-      await User.updateOne(
-        { email: email },
-        {
-          $push: { coupons: [couponData._id] },
-        }
-      );
+    if(couponData){
       const cartItems = await Cart.aggregate([
         { $match: { customer: userDetails._id } },
         { $unwind: "$products" },
@@ -1984,13 +1979,7 @@ const orderCheck = async (req, res) => {
   } else {
     const couponData = await Coupon.findOne({ discount: req.body.couponText });
 
-    if (couponData) {
-      await User.updateOne(
-        { email: email },
-        {
-          $push: { coupons: [couponData._id] },
-        }
-      );
+    if(couponData){
       const cartItems = await Cart.aggregate([
         { $match: { customer: userDetails._id } },
         { $unwind: "$products" },
@@ -2270,6 +2259,16 @@ const orderCheck = async (req, res) => {
 
 const checkPayment = async (req, res) => {
   const email = req.session.auth;
+  
+    const couponData = await Coupon.findOne({discount : newOrder.coupon})
+    if(couponData)
+    await User.updateOne(
+      { email: email },
+      {
+        $push: { coupons: [couponData._id] },
+      }
+    );
+
 
   const addressExist = await User.findOne({
     email: email,
@@ -2485,12 +2484,7 @@ const initRazor = async (req, res) => {
   const couponData = await Coupon.findOne({ discount: req.body.couponText });
 
   if (couponData !== null) {
-    await User.updateOne(
-      { email: email },
-      {
-        $push: { coupons: [couponData._id] },
-      }
-    );
+    
     const cartItems = await Cart.aggregate([
       { $match: { customer: userDetails._id } },
       { $unwind: "$products" },

@@ -165,9 +165,6 @@
                         </div>
 
 
-
-
-
                       </div>
                     </div>
 
@@ -230,6 +227,8 @@
                 success: (res) => {
                   $('#product333').load(location.href + ' #product333')
                   $('#pageloader').load(location.href + ' #pageloader')
+                  $('#displayMenu').html('')
+                  $('#displayMenu').html('Category : ' + res.menu)
                 }
 
               })
@@ -248,6 +247,8 @@
                 success: (res) => {
                   $('#product333').load(location.href + ' #product333')
                   $('#pageloader').load(location.href + ' #pageloader')
+                  $('#displayMenu').html('')
+                  $('#displayMenu').html('Color : ' + res.menu)
                 }
 
               })
@@ -301,6 +302,10 @@
 
 
           <div class="col-md-9">
+            <div class="row">
+              <center id="displayMenu">All products</center>
+            </div>
+
             <div class="row ">
 
               <form id="searchForm" onclick="preventSubmit()" class="text-center d-flex justify-content-center">
@@ -316,7 +321,7 @@
 
 
                   function searchProduct(catId) {
-      
+
                     $.ajax({
                       url: "/search",
                       method: "patch",
@@ -324,13 +329,16 @@
                       success: (res) => {
                         $('#product333').load(location.href + ' #product333')
                         $('#pageloader').load(location.href + ' #pageloader')
+                        $('#displayMenu').html('')
+                        $('#displayMenu').html('search Result for : ' + res.menu)
+
                       }
-      
+
                     })
                   }
                 </script>
-      
-                
+
+
                 <div class="col-md-6 d-flex justify-content-center align-items-center">
 
                   <a><button onclick="clearFilter()" class="btn btn-grey">Show All</button></a>
@@ -338,27 +346,28 @@
               </form>
             </div>
             <script>
-              function preventSubmit(){
-                $('#searchForm').submit(function(e){
+              function preventSubmit() {
+                $('#searchForm').submit(function (e) {
                   e.preventDefault();
                 })
               }
             </script>
             <script>
-              function clearFilter(){
+              function clearFilter() {
                 $.ajax({
-                url: "/clear-filter",
-                method: "patch",
-                data: { cat: 'clear' },
-                success: (res) => {
-                  products = res.data
-                  $('#product333').load(location.href + ' #product333')
-                  $('#pageloader').load(location.href + ' #pageloader')
+                  url: "/clear-filter",
+                  method: "patch",
+                  data: { cat: 'clear' },
+                  success: (res) => {
+                    products = res.data
+                    $('#product333').load(location.href + ' #product333')
+                    $('#pageloader').load(location.href + ' #pageloader')
+                    $('#displayMenu').html('All products')
 
 
-                }
+                  }
 
-              })
+                })
               }
             </script>
 
