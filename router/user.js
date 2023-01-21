@@ -65,6 +65,7 @@ router.get('/order-failed',userSession.isLogin,userController.orderFailed)
 
 //patch
 
+router.patch("/clear-filter",userController.clearFilter)
 router.patch("/catFilter",userController.catFiltering)
 router.patch("/colorFilter",userController.colorFiltering)
 router.patch('/stockCheck',userController.stockStatus)
@@ -75,6 +76,7 @@ router.patch('/check-coupon',userController.checkCoupon)
 router.patch('/cancel-order',userController.cancelOrder)
 router.patch('/check-password',userController.checkPassword)
 router.post('/profile-passowrd',userSession.isLogin, userController.passwordChange)
+router.patch('/search',userController.searchProduct)
 
 
 

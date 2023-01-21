@@ -123,12 +123,10 @@ const checkSignUp = async (req, res) => {
       const hashPassword = await bcrypt.hash(req.body.password, 10);
 
       const otp = Math.floor(Math.random() * 1000000 + 1);
-      console.log(otp);
 
       req.session.authOTP = otp;
       setTimeout(() => {
         req.session.authOTP = false;
-        console.log("OTP Expired");
       }, 180000);
 
       userData = new User({
@@ -159,7 +157,6 @@ const checkSignUp = async (req, res) => {
         if (error) {
           console.log(error);
         } else {
-          console.log("Email sent: " + info.response);
           res.redirect("/verifyOTP");
         }
       });
@@ -181,8 +178,6 @@ const otpVerify = async (req, res) => {
       req.session.authOTP = false;
       req.session.emailOTP = false;
       res.redirect("/login");
-
-      console.log(req.session.authOTP);
     } else {
       res.render("user/partials/verifyOTP", {
         error: "Incorrect OTP",
@@ -227,7 +222,6 @@ const resendOTP = (req, res) => {
 
     setTimeout(() => {
       req.session.authOTP = false;
-      console.log("Resend OTP Expired");
     }, 180000);
 
     var transporter = nodemailer.createTransport({
@@ -250,8 +244,6 @@ const resendOTP = (req, res) => {
       if (error) {
         console.log(error);
       } else {
-        console.log("Email sent: " + info.response);
-        console.log("Nre OTP : " + otp);
         res.redirect("/verifyOTP");
       }
     });
@@ -289,7 +281,6 @@ const sendEmail = async (req, res) => {
         req.session.emailOtp = otp;
         setTimeout(() => {
           req.session.emailOtp = false;
-          console.log("OTP Expired");
         }, 180000);
 
         // email
@@ -313,7 +304,6 @@ const sendEmail = async (req, res) => {
           if (error) {
             console.log(error);
           } else {
-            console.log("Email sent: " + info.response);
             res.redirect("/verifyEmail");
 
             // req.session.email = req.body.email;
@@ -361,7 +351,6 @@ const resendEmail = (req, res) => {
 
     setTimeout(() => {
       req.session.resendEmailOtp = false;
-      console.log("Resend OTP Expired");
     }, 180000);
 
     ``;
@@ -384,8 +373,6 @@ const resendEmail = (req, res) => {
       if (error) {
         console.log(error);
       } else {
-        console.log("Email sent: " + info.response);
-        console.log("New OTP : " + otp);
         res.redirect("/verifyEmail");
       }
     });
@@ -396,16 +383,11 @@ const resendEmail = (req, res) => {
 
 const verifyEmailOTP = (req, res) => {
   try {
-    console.log(req.session.emailOtp);
-    console.log(req.session.resendEmailOtp);
     if (
       req.session.emailOtp == req.body.otp ||
       req.session.resendEmailOtp == req.body.otp
     ) {
       res.redirect("/new-password");
-
-      console.log(req.session.emailOtp);
-      console.log(req.session.resendEmailOtp);
     } else {
       res.render("user/partials/verifyEmailOTP", {
         error: "Incorrect OTP",
@@ -506,7 +488,6 @@ const productPage = async (req, res) => {
       for (let i = 0; i < productCount.length; i++) {
         count = count + 1;
       }
-      console.log(count);
 
       productEmers = productCount;
       current = page;
@@ -522,7 +503,6 @@ const productPage = async (req, res) => {
         pages,
       });
     } else {
-
       res.render("user/partials/product", {
         product,
         wishData,
@@ -780,76 +760,574 @@ const checkoutPage = async (req, res) => {
     userDetails,
   });
 };
-
-const catFiltering = async (req, res) => {
-  console.log(req.body.cat);
-
-  const products = await Product.find({ category: req.body.cat, status: true });
-
-  res.json({
-    data: products,
-  });
-};
-
-const colorFiltering = async (req, res) => {
-  const colorData = await Product.find({ color: req.body.cat, status: true });
-
-  res.json({
-    data: colorData,
-  });
-};
-let stocked;
-const stockStatus = async (req, res) => {
-  if (req.body.cat == "inStock") {
-    let dummy = productEmers;
-
-    stocked = [];
-    dummy.forEach(function (item, i) {
-      if (item.stock > 0) {
-        stocked.push(item);
+let searchFilter;
+const searchProduct = async (req, res) => {
+  if (categoryFilter) {
+    let dummy = categoryFilter;
+    searchFilter = [];
+    const regex = new RegExp(req.body.cat,'i');
+    dummy.forEach(function (item) {
+      if (regex.exec(item.name) || regex.exec(item.model)) {
+        searchFilter.push(item);
       }
     });
-    product = stocked.slice(0, 6);
-    pages = 2;
-    current = 1;
+
+    if (searchFilter.length > 6) {
+      product = searchFilter.slice(0, 6);
+      pages = 2;
+      current = 1;
+    } else {
+      product = searchFilter;
+      pages = 1;
+      current = 1;
+    }
+
     res.json({
       success: true,
     });
-  } else if (req.body.cat == "outStock") {
-    let dummy = productEmers;
-    product = [];
+  } else if (colorFilter) {
+    let dummy = colorFilter;
+
+    searchFilter = [];
+    const regex = new RegExp(req.body.cat,'i');
     dummy.forEach(function (item) {
-      if (item.stock == 0) {
-        product.push(item);
+      if (regex.exec(item.name) || regex.exec(item.model)) {
+        searchFilter.push(item);
       }
     });
-    product = product.slice(0, 6);
-    pages = 0;
-    current = 1;
+
+    if (searchFilter.length > 6) {
+      product = searchFilter.slice(0, 6);
+      pages = 2;
+      current = 1;
+    } else {
+      product = searchFilter;
+      pages = 1;
+      current = 1;
+    }
+
+    res.json({
+      success: true,
+    });
+  } else if (stocked) {
+    let dummy = stocked;
+
+    searchFilter = [];
+    const regex = new RegExp(req.body.cat,'i');
+    dummy.forEach(function (item) {
+      if (regex.exec(item.name) || regex.exec(item.model)) {
+        searchFilter.push(item);
+      }
+    });
+
+    if (searchFilter.length > 6) {
+      product = searchFilter.slice(0, 6);
+      pages = 2;
+      current = 1;
+    } else {
+      product = searchFilter;
+      pages = 1;
+      current = 1;
+    }
+
+    res.json({
+      success: true,
+    });
+  } else {
+    let dummy = productEmers;
+
+    searchFilter = [];
+   
+
+    const regex = new RegExp(req.body.cat,'i');
+    dummy.forEach(function (item) {
+      if (regex.exec(item.name) || regex.exec(item.model)) {
+        searchFilter.push(item);
+      }
+    });
+      
+
+    if (searchFilter.length > 6) {
+      product = searchFilter.slice(0, 6);
+      pages = 2;
+      current = 1;
+    } else {
+      product = searchFilter;
+      pages = 1;
+      current = 1;
+    }
+
     res.json({
       success: true,
     });
   }
 };
 
-const sortStatus = async (req, res) => {
-  if (req.body.cat == "high") {
-    product = productEmers.sort((a, b) => b.price - a.price);
-    product = product.slice(0, 6);
-    pages = 2;
-    current = 1;
+let categoryFilter;
+const catFiltering = async (req, res) => {
+  if (searchFilter) {
+    let dummy = searchFilter;
+
+    categoryFilter = [];
+    dummy.forEach(function (item) {
+      if (item.category == req.body.cat) {
+        categoryFilter.push(item);
+      }
+    });
+
+    if (categoryFilter.length > 6) {
+      product = categoryFilter.slice(0, 6);
+      pages = 2;
+      current = 1;
+    } else {
+      product = categoryFilter;
+      pages = 1;
+      current = 1;
+    }
 
     res.json({
       success: true,
     });
-  } else if (req.body.cat == "low") {
-    product = productEmers.sort((a, b) => a.price - b.price);
-    product = product.slice(0, 6);
-    pages = 2;
-    current = 1;
-    res.json({
-      succes: true,
+  } else if (colorFilter) {
+    let dummy = colorFilter;
+
+    categoryFilter = [];
+    dummy.forEach(function (item) {
+      if (item.category == req.body.cat) {
+        categoryFilter.push(item);
+      }
     });
+
+    if (categoryFilter.length > 6) {
+      product = categoryFilter.slice(0, 6);
+      pages = 2;
+      current = 1;
+    } else {
+      product = categoryFilter;
+      pages = 1;
+      current = 1;
+    }
+
+    res.json({
+      success: true,
+    });
+  } else if (stocked) {
+    let dummy = stocked;
+
+    categoryFilter = [];
+    dummy.forEach(function (item) {
+      if (item.category == req.body.cat) {
+        categoryFilter.push(item);
+      }
+    });
+
+    if (categoryFilter.length > 6) {
+      product = categoryFilter.slice(0, 6);
+      pages = 2;
+      current = 1;
+    } else {
+      product = categoryFilter;
+      pages = 1;
+      current = 1;
+    }
+
+    res.json({
+      success: true,
+    });
+  } else {
+    let dummy = productEmers;
+
+    categoryFilter = [];
+    dummy.forEach(function (item) {
+      if (item.category == req.body.cat) {
+        categoryFilter.push(item);
+      }
+    });
+
+    if (categoryFilter.length > 6) {
+      product = categoryFilter.slice(0, 6);
+      pages = 2;
+      current = 1;
+    } else {
+      product = categoryFilter;
+      pages = 1;
+      current = 1;
+    }
+
+    res.json({
+      success: true,
+    });
+  }
+};
+let colorFilter;
+const colorFiltering = async (req, res) => {
+  if (searchFilter) {
+    let dummy = searchFilter;
+
+    searchFilter = [];
+    dummy.forEach(function (item) {
+      if (item.color == req.body.cat) {
+        searchFilter.push(item);
+      }
+    });
+
+    if (searchFilter.length > 6) {
+      product = searchFilter.slice(0, 6);
+      pages = 2;
+      current = 1;
+    } else {
+      product = searchFilter;
+      pages = 1;
+      current = 1;
+    }
+
+    res.json({
+      success: true,
+    });
+  } else if (categoryFilter) {
+    let dummy = categoryFilter;
+
+    categoryFilter = [];
+    dummy.forEach(function (item) {
+      if (item.color == req.body.cat) {
+        categoryFilter.push(item);
+      }
+    });
+
+    if (categoryFilter.length > 6) {
+      product = categoryFilter.slice(0, 6);
+      pages = 2;
+      current = 1;
+    } else {
+      product = categoryFilter;
+      pages = 1;
+      current = 1;
+    }
+
+    res.json({
+      success: true,
+    });
+  } else if (stocked) {
+    let dummy = stocked;
+
+    colorFilter = [];
+    dummy.forEach(function (item) {
+      if (item.color == req.body.cat) {
+        colorFilter.push(item);
+      }
+    });
+
+    if (colorFilter.length > 6) {
+      product = colorFilter.slice(0, 6);
+      pages = 2;
+      current = 1;
+    } else {
+      product = colorFilter;
+      pages = 1;
+      current = 1;
+    }
+
+    res.json({
+      success: true,
+    });
+  } else {
+    let dummy = productEmers;
+
+    colorFilter = [];
+    dummy.forEach(function (item) {
+      if (item.color == req.body.cat) {
+        colorFilter.push(item);
+      }
+    });
+
+    if (colorFilter.length > 6) {
+      product = colorFilter.slice(0, 6);
+      pages = 2;
+      current = 1;
+    } else {
+      product = colorFilter;
+      pages = 1;
+      current = 1;
+    }
+
+    res.json({
+      success: true,
+    });
+  }
+};
+
+let stocked;
+const stockStatus = async (req, res) => {
+  if (searchFilter) {
+    if (req.body.cat == "inStock") {
+      let dummy = searchFilter;
+
+      let blank = [];
+      dummy.forEach(function (item, i) {
+        if (item.stock > 0) {
+          blank.push(item);
+        }
+      });
+
+      product = blank;
+      pages = 1;
+      current = 1;
+      res.json({
+        success: true,
+      });
+    } else if (req.body.cat == "outStock") {
+      let dummy = searchFilter;
+
+      let blank = [];
+      dummy.forEach(function (item) {
+        if (item.stock == 0) {
+          blank.push(item);
+        }
+      });
+      product = blank;
+      pages = 1;
+      current = 1;
+      res.json({
+        success: true,
+      });
+    }
+  } else if (categoryFilter) {
+    if (req.body.cat == "inStock") {
+      let dummy = categoryFilter;
+
+      let blank = [];
+      dummy.forEach(function (item, i) {
+        if (item.stock > 0) {
+          blank.push(item);
+        }
+      });
+
+      product = blank;
+      pages = 1;
+      current = 1;
+      res.json({
+        success: true,
+      });
+    } else if (req.body.cat == "outStock") {
+      let dummy = categoryFilter;
+
+      let blank = [];
+      dummy.forEach(function (item) {
+        if (item.stock == 0) {
+          blank.push(item);
+        }
+      });
+      product = blank;
+      pages = 1;
+      current = 1;
+      res.json({
+        success: true,
+      });
+    }
+  } else if (colorFilter) {
+    if (req.body.cat == "inStock") {
+      let dummy = colorFilter;
+
+      let blank = [];
+      dummy.forEach(function (item, i) {
+        if (item.stock > 0) {
+          blank.push(item);
+        }
+      });
+
+      product = blank;
+      pages = 1;
+      current = 1;
+      res.json({
+        success: true,
+      });
+    } else if (req.body.cat == "outStock") {
+      let dummy = colorFilter;
+
+      let blank = [];
+      dummy.forEach(function (item) {
+        if (item.stock == 0) {
+          blank.push(item);
+        }
+      });
+      product = blank;
+      pages = 1;
+      current = 1;
+      res.json({
+        success: true,
+      });
+    }
+  } else {
+    if (req.body.cat == "inStock") {
+      let dummy = productEmers;
+
+      stocked = [];
+      dummy.forEach(function (item, i) {
+        if (item.stock > 0) {
+          stocked.push(item);
+        }
+      });
+      product = stocked.slice(0, 6);
+      pages = 2;
+      current = 1;
+      res.json({
+        success: true,
+      });
+    } else if (req.body.cat == "outStock") {
+      let dummy = productEmers;
+
+      stocked = [];
+      dummy.forEach(function (item) {
+        if (item.stock == 0) {
+          stocked.push(item);
+        }
+      });
+      product = stocked.slice(0, 6);
+      pages = 1;
+      current = 1;
+      res.json({
+        success: true,
+      });
+    }
+  }
+};
+
+const sortStatus = async (req, res) => {
+  if (searchFilter) {
+    if (req.body.cat == "high") {
+      product = searchFilter.sort((a, b) => b.price - a.price);
+      if (product.length <= 6) {
+        pages = 1;
+      } else {
+        product = product.slice(0, 6);
+        pages = 2;
+      }
+
+      current = 1;
+
+      res.json({
+        success: true,
+      });
+    } else if (req.body.cat == "low") {
+      product = searchFilter.sort((a, b) => a.price - b.price);
+      if (product.length <= 6) {
+        pages = 1;
+      } else {
+        product = product.slice(0, 6);
+        pages = 2;
+      }
+
+      current = 1;
+      res.json({
+        succes: true,
+      });
+    }
+  } else if (categoryFilter) {
+    if (req.body.cat == "high") {
+      product = categoryFilter.sort((a, b) => b.price - a.price);
+      if (product.length <= 6) {
+        pages = 1;
+      } else {
+        product = product.slice(0, 6);
+        pages = 2;
+      }
+
+      current = 1;
+
+      res.json({
+        success: true,
+      });
+    } else if (req.body.cat == "low") {
+      product = categoryFilter.sort((a, b) => a.price - b.price);
+      if (product.length <= 6) {
+        pages = 1;
+      } else {
+        product = product.slice(0, 6);
+        pages = 2;
+      }
+
+      current = 1;
+      res.json({
+        succes: true,
+      });
+    }
+  } else if (stocked) {
+    if (req.body.cat == "high") {
+      product = stocked.sort((a, b) => b.price - a.price);
+      if (product.length <= 6) {
+        pages = 1;
+      } else {
+        product = product.slice(0, 6);
+        pages = 2;
+      }
+
+      current = 1;
+
+      res.json({
+        success: true,
+      });
+    } else if (req.body.cat == "low") {
+      product = stocked.sort((a, b) => a.price - b.price);
+      if (product.length <= 6) {
+        pages = 1;
+      } else {
+        product = product.slice(0, 6);
+        pages = 2;
+      }
+
+      current = 1;
+      res.json({
+        succes: true,
+      });
+    }
+  } else if (colorFilter) {
+    if (req.body.cat == "high") {
+      product = colorFilter.sort((a, b) => b.price - a.price);
+      if (product.length <= 6) {
+        pages = 1;
+      } else {
+        product = product.slice(0, 6);
+        pages = 2;
+      }
+
+      current = 1;
+
+      res.json({
+        success: true,
+      });
+    } else if (req.body.cat == "low") {
+      product = colorFilter.sort((a, b) => a.price - b.price);
+      if (product.length <= 6) {
+        pages = 1;
+      } else {
+        product = product.slice(0, 6);
+        pages = 2;
+      }
+
+      current = 1;
+      res.json({
+        succes: true,
+      });
+    }
+  } else {
+    if (req.body.cat == "high") {
+      product = productEmers.sort((a, b) => b.price - a.price);
+      product = product.slice(0, 6);
+      pages = 2;
+      current = 1;
+
+      res.json({
+        success: true,
+      });
+    } else if (req.body.cat == "low") {
+      product = productEmers.sort((a, b) => a.price - b.price);
+      product = product.slice(0, 6);
+      pages = 2;
+      current = 1;
+      res.json({
+        succes: true,
+      });
+    }
   }
 };
 
@@ -858,23 +1336,67 @@ const pageStatus = async (req, res) => {
   const userDetails = await User.findOne({ email: email });
   var perPage = 6;
   var page = req.body.cat || 1;
-  if (!stocked) {
-    let count = productEmers.length;
+  if(searchFilter){
+    let count = searchFilter.length;
     let dummy = [];
-    dummy = productEmers;
+    dummy = searchFilter;
     product = dummy.slice(perPage * page - perPage, perPage * page);
-    console.log("new Pagination :" + product.length);
+
+    current = page;
+    pages = Math.ceil(count / perPage);
+    res.json({
+      success: true,
+    });
+  } else if (stocked) {
+    let count = stocked.length;
+    let dummy = [];
+    dummy = stocked;
+    product = dummy.slice(perPage * page - perPage, perPage * page);
+
+    current = page;
+    pages = Math.ceil(count / perPage);
+    res.json({
+      success: true,
+    });
+  } else if (categoryFilter) {
+    let count = categoryFilter.length;
+    let dummy = [];
+    dummy = categoryFilter;
+    product = dummy.slice(perPage * page - perPage, perPage * page);
+
+    current = page;
+    pages = Math.ceil(count / perPage);
+    res.json({
+      success: true,
+    });
+  } else if (stocked) {
+    let count = stocked.length;
+    let dummy = [];
+    dummy = stocked;
+    product = dummy.slice(perPage * page - perPage, perPage * page);
+
+    current = page;
+    pages = Math.ceil(count / perPage);
+    res.json({
+      success: true,
+    });
+  } else if (colorFilter) {
+    let count = colorFilter.length;
+    let dummy = [];
+    dummy = colorFilter;
+    product = dummy.slice(perPage * page - perPage, perPage * page);
+
     current = page;
     pages = Math.ceil(count / perPage);
     res.json({
       success: true,
     });
   } else {
-    let count = stocked.length;
+    let count = productEmers.length;
     let dummy = [];
-    dummy = stocked;
+    dummy = productEmers;
     product = dummy.slice(perPage * page - perPage, perPage * page);
-    console.log("new Pagination :" + product.length);
+
     current = page;
     pages = Math.ceil(count / perPage);
     res.json({
@@ -940,7 +1462,6 @@ const addAddress = async (req, res) => {
     }
   );
 
-  console.log("New address Added");
   res.redirect("/user-address");
 };
 
@@ -960,7 +1481,6 @@ const editAddress = async (req, res) => {
     }
   );
 
-  console.log("address edited");
   res.redirect("/user-address");
 };
 
@@ -976,7 +1496,6 @@ const deleteAddress = async (req, res) => {
     }
   );
 
-  console.log("delete address");
   res.redirect("/user-address");
 };
 
@@ -1003,7 +1522,6 @@ const setDefault = async (req, res) => {
     }
   );
 
-  console.log("address defaulted");
   res.redirect("/user-address");
 };
 
@@ -1102,7 +1620,6 @@ const checkCoupon = async (req, res) => {
           let discountInit = Math.round((final * finalPrice) / 100);
 
           const discountPrice = final - discountInit;
-          console.log(discountPrice);
 
           res.json({
             data: 'Coupon Applied Succesfully <i class="fa fa-check text-success"></i>',
@@ -1271,7 +1788,6 @@ var newOrder;
 const orderCheck = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
-  console.log(req.body);
 
   if (req.body.paymentMethod == "COD") {
     const couponData = await Coupon.findOne({ discount: req.body.couponText });
@@ -1321,7 +1837,6 @@ const orderCheck = async (req, res) => {
       let discountInit = Math.round((final * finalPrice) / 100);
 
       const discountPrice = final - discountInit;
-      console.log(discountPrice);
 
       const orderItems = await Cart.aggregate([
         {
@@ -1442,7 +1957,7 @@ const orderCheck = async (req, res) => {
         { $match: { id: new mongoose.Types.ObjectId(req.body.address) } },
       ]);
       let nowDate = Date.now();
-      console.log(nowDate);
+
       newOrder = new Order({
         customer: userDetails._id,
         status: "placed",
@@ -1463,8 +1978,6 @@ const orderCheck = async (req, res) => {
         product: orderItems,
         orderType: "COD",
       });
-
-      console.log("order saved");
 
       res.redirect("/check-payment");
     }
@@ -1516,7 +2029,6 @@ const orderCheck = async (req, res) => {
       let discountInit = Math.round((final * finalPrice) / 100);
 
       const discountPrice = final - discountInit;
-      console.log(discountPrice);
 
       const orderItems = await Cart.aggregate([
         {
@@ -1570,8 +2082,6 @@ const orderCheck = async (req, res) => {
         product: orderItems,
         orderType: "PayPal",
       });
-
-      console.log("order saved");
 
       let lots = discountPrice * 0.012;
       let paytm = parseInt(lots);
@@ -1685,7 +2195,7 @@ const orderCheck = async (req, res) => {
         { $match: { id: new mongoose.Types.ObjectId(req.body.address) } },
       ]);
       let nowDate = Date.now();
-      console.log(nowDate);
+
       newOrder = new Order({
         customer: userDetails._id,
         status: "placed",
@@ -1760,7 +2270,6 @@ const orderCheck = async (req, res) => {
 
 const checkPayment = async (req, res) => {
   const email = req.session.auth;
-  console.log(newOrder.address[0].name);
 
   const addressExist = await User.findOne({
     email: email,
@@ -1773,7 +2282,7 @@ const checkPayment = async (req, res) => {
       },
     },
   });
-  console.log(addressExist);
+
   if (!addressExist) {
     await User.updateOne(
       { email: email },
@@ -1792,12 +2301,8 @@ const checkPayment = async (req, res) => {
   }
 
   newOrder.save();
-  console.log(newOrder);
 
   for (let i = 0; i < newOrder.product.length; i++) {
-    console.log(newOrder.product[i].productId);
-    console.log(newOrder.product[i].qtyItems);
-
     await Product.updateOne(
       {
         _id: newOrder.product[i].productId,
@@ -1880,8 +2385,6 @@ const cancelOrder = async (req, res) => {
 };
 
 const checkPassword = async (req, res) => {
-  console.log("hereeeee");
-  console.log(req.body.data);
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
   const match = await bcrypt.compare(req.body.data, userDetails.password);
@@ -1980,9 +2483,8 @@ const initRazor = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
   const couponData = await Coupon.findOne({ discount: req.body.couponText });
-  console.log(couponData);
+
   if (couponData !== null) {
-    console.log("Entering Coupon Mode");
     await User.updateOne(
       { email: email },
       {
@@ -2027,7 +2529,6 @@ const initRazor = async (req, res) => {
     let discountInit = Math.round((final * finalPrice) / 100);
 
     const discountPrice = final - discountInit;
-    console.log(discountPrice);
 
     const orderItems = await Cart.aggregate([
       {
@@ -2082,8 +2583,6 @@ const initRazor = async (req, res) => {
       orderType: "RazorPay",
     });
 
-    console.log("order saved");
-
     var options = {
       amount: final * 100, // amount in the smallest currency unit
       currency: "INR",
@@ -2092,14 +2591,13 @@ const initRazor = async (req, res) => {
     instance.orders.create(options, function (err, order) {
       if (err) {
         console.log(err);
-        console.log("online payment error");
+
         res.json({ fail: true });
       } else {
         res.json({ order, newOrder });
       }
     });
   } else {
-    console.log("Entering no Coupon Mode");
     const cartItems = await Cart.aggregate([
       { $match: { customer: userDetails._id } },
       { $unwind: "$products" },
@@ -2164,7 +2662,7 @@ const initRazor = async (req, res) => {
       { $match: { id: new mongoose.Types.ObjectId(req.body.address) } },
     ]);
     let nowDate = Date.now();
-    console.log(nowDate);
+
     newOrder = new Order({
       customer: userDetails._id,
       status: "placed",
@@ -2194,7 +2692,7 @@ const initRazor = async (req, res) => {
     instance.orders.create(options, function (err, order) {
       if (err) {
         console.log(err);
-        console.log("online payment error");
+
         res.json({ fail: true });
       } else {
         res.json({ order, newOrder });
@@ -2235,6 +2733,18 @@ const contactPage = async (req, res) => {
     wishData,
     usersession,
   });
+};
+
+const clearFilter = async (req, res) => {
+  stocked = null;
+  colorFilter = null;
+  categoryFilter = null;
+  searchFilter = null;
+
+  product = productEmers.slice(0, 6);
+  current = 1;
+  pages = 2;
+  res.json({ succes: true });
 };
 
 module.exports = {
@@ -2293,4 +2803,6 @@ module.exports = {
   initRazor,
   verifyRazor,
   contactPage,
+  clearFilter,
+  searchProduct,
 };

@@ -86,7 +86,7 @@
                             </button>
                           </div>
                           <div class="col-12">
-                            <button class="text-dark bg-white border-0" onclick="getColor('Khakhi')">
+                            <button class="text-dark bg-white border-0" onclick="getColor('KHAKHI')">
                               <span><i class="bi bi-arrow-right"></i></span>
                               Khakhi
                             </button>
@@ -228,20 +228,8 @@
                 method: "patch",
                 data: { cat: catId },
                 success: (res) => {
-                  products = res.data
-                  $('#product333').html('');
-                  $('#pageloader').html('');
-                  $('#searchFilter').attr('value', catId)
-                    .attr('name', 'category')
-                  products.forEach(function (items) {
-                    $('#product333').append(
-                      '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
-
-                    );
-
-
-
-                  });
+                  $('#product333').load(location.href + ' #product333')
+                  $('#pageloader').load(location.href + ' #pageloader')
                 }
 
               })
@@ -258,18 +246,8 @@
                 method: "patch",
                 data: { cat: catId },
                 success: (res) => {
-                  products = res.data
-                  $('#pageloader').html('');
-                  $('#product333').html('');
-                  $('#searchFilter').attr('value', catId)
-                    .attr('name', 'color')
-                  products.forEach(function (items) {
-                    $('#product333').append(
-                      '<div class="col-lg-4 d-flex justify-content-center p-4"> <div class="card justify-content-center" style="width: 100%;"> <a href="/product-page/?id=' + items._id + '" class=""><img src="' + items.image[0].url + '" class="card-img-top" alt="..."></a> <div class="card-body"> <a href="/product-page/?id=' + items._id + '" > <center id="imagePro" class="card-title" style="font-size: large; font-weight: bold;"> ' + items.name + ' </center> <center>Stock : ' + items.stock + ' </center> <center>Price : ' + items.price + ' </center> </a> </div> </div> </div>'
-
-                    );
-
-                  });
+                  $('#product333').load(location.href + ' #product333')
+                  $('#pageloader').load(location.href + ' #pageloader')
                 }
 
               })
@@ -325,27 +303,64 @@
           <div class="col-md-9">
             <div class="row ">
 
-              <form class="text-center d-flex justify-content-center">
+              <form id="searchForm" onclick="preventSubmit()" class="text-center d-flex justify-content-center">
 
                 <div class="col-md-6">
                   <input type="text" hidden id="searchFilter" name="searchFilter">
-                  <input type="text" name="search" id="" class="form-control my-2"
+                  <input onkeyup="searchProduct(this.value)" type="text" name="search" id="" class="form-control my-2"
                     placeholder="Enter Product Name or Model or category name">
 
 
                 </div>
-                <div class="col-md-3 d-flex justify-content-center align-items-center">
+                <script>
 
 
-                  <button class="btn btn-dark py-1" style="width: 80%; height:75%;" value="search">Search</button>
+                  function searchProduct(catId) {
+      
+                    $.ajax({
+                      url: "/search",
+                      method: "patch",
+                      data: { cat: catId },
+                      success: (res) => {
+                        $('#product333').load(location.href + ' #product333')
+                        $('#pageloader').load(location.href + ' #pageloader')
+                      }
+      
+                    })
+                  }
+                </script>
+      
+                
+                <div class="col-md-6 d-flex justify-content-center align-items-center">
 
-                </div>
-                <div class="col-md-3 d-flex justify-content-center align-items-center">
-
-                  <a href="/shop"><button class="btn btn-grey">Show All</button></a>
+                  <a><button onclick="clearFilter()" class="btn btn-grey">Show All</button></a>
                 </div>
               </form>
             </div>
+            <script>
+              function preventSubmit(){
+                $('#searchForm').submit(function(e){
+                  e.preventDefault();
+                })
+              }
+            </script>
+            <script>
+              function clearFilter(){
+                $.ajax({
+                url: "/clear-filter",
+                method: "patch",
+                data: { cat: 'clear' },
+                success: (res) => {
+                  products = res.data
+                  $('#product333').load(location.href + ' #product333')
+                  $('#pageloader').load(location.href + ' #pageloader')
+
+
+                }
+
+              })
+              }
+            </script>
 
 
 
