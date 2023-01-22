@@ -8,7 +8,7 @@
 
     <div class="card mb-4 px-2">
 
-        <div class="card-body">
+        <div class="card-body table-responsive">
             <% if(details !=null) { %>
                 <table id="datatablesSimple">
                     <thead>
@@ -27,19 +27,24 @@
 
                         </tr>
                     </thead>
-                    
+
                     <tbody>
-                        
-                        <% details.forEach(function(item){ %>
+
+                        <% details.forEach(function(item, index){ %>
                             <tr class="border">
                                 <td class="border">
                                     <%= item.name %>
                                 </td>
                                 <td class="border">
+                                    <span class="short-img" id="cell-img<%= index %>"><img class="img-thumbnail" src="<%=item.image[0].url%>" alt="" height="100px"
+                                        width="75px"> </span>
+                                    <span class="long-img" id="cell-img<%= index %>" style="display:none;">
                                     <% for(i=0;i<6; i++) {%>
-                                        <img class="img-thumbnail" src="<%=item.image[i].url%>" alt=""
-                                             height="100px" width="75px">
+                                        <img class="img-thumbnail" src="<%=item.image[i].url%>" alt="" height="100px"
+                                            width="75px">
                                         <%}%>
+                                    </span>
+                                    <a href="#" class="read-more-img" data-cell="cell-img<%= index %>">Read more</a>
                                 </td>
 
                                 <td class="border">
@@ -51,7 +56,9 @@
                                 </td>
 
                                 <td class="border">
-                                    <%= item.description %>
+                                    <span class="short-text" id="cell<%= index %>"> <%= item.description.substring(0,20) %>...</span>
+                                    <span class="long-text" id="cell<%= index %>" style="display:none;"> <%= item.description %> </span>
+                                    <a href="#" class="read-more" data-cell="cell<%= index %>">Read more</a>
                                 </td>
                                 <td>
                                     <%= item.color %>
@@ -101,8 +108,62 @@
     </div>
 
 
+    
+    <script>
+        const readMoreImgs = document.querySelectorAll('.read-more-img');
+        readMoreImgs.forEach(link => {
+          link.addEventListener('click', event => {
+            event.preventDefault();
+            const cellId = link.getAttribute('data-cell');
+            const shortImgElements = document.querySelectorAll('.short-img');
+            const longImgElements = document.querySelectorAll('.long-img');
+            shortImgElements.forEach((shortImg, i) => {
+              if (shortImg.id === cellId) {
+                if (link.textContent === "Read more") {
+                  shortImg.style.display = 'none';
+                  longImgElements[i].style.display = 'block';
+                  link.textContent = 'Read less';
+                } else {
+                  shortImg.style.display = 'block';
+                  longImgElements[i].style.display = 'none';
+                  link.textContent = 'Read more';
+                }
+              }
+            });
+          });
+        });
+      </script>
 
 
+    <script>
+        const readMoreLinks = document.querySelectorAll('.read-more');
+        readMoreLinks.forEach(link => {
+          link.addEventListener('click', event => {
+            event.preventDefault();
+            const cellId = link.getAttribute('data-cell');
+            const shortTextElements = document.querySelectorAll('.short-text');
+            const longTextElements = document.querySelectorAll('.long-text');
+            shortTextElements.forEach((shortText, i) => {
+              if (shortText.id === cellId) {
+                if (link.textContent === "Read more") {
+                  shortText.style.display = 'none';
+                  longTextElements[i].style.display = 'block';
+                  link.textContent = 'Read less';
+                } else {
+                  shortText.style.display = 'block';
+                  longTextElements[i].style.display = 'none';
+                  link.textContent = 'Read more';
+                }
+              }
+            });
+          });
+        });
+      </script>
+
+
+
+
+  
     <script>
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
@@ -115,7 +176,7 @@
 
     <script src="/public/js/scripts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-    <script src="/public/js/datatables-simple-demo.js"></script>
-</body>
 
-</html>
+    </body>
+
+    </html>
