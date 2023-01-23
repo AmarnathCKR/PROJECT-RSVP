@@ -56,11 +56,13 @@
           <div class="col-lg-5 d-flex justify-content-around mx-5 mb-4">
 
             <div class="card " style="width: 100%;">
+              <a href="/shop/?id=<%= data._id%>" >
               <img loading="lazy" src="<%=data.image%>" class="card-img-top" alt="...">
               <div class="card-body d-flex justify-content-between">
                 <center class="card-title" style="font-size: larger; font-weight: bold;"><%=data.name%></center>
                 
                 <a href="/shop/?id=<%= data._id%>" class="btn btn-dark p-2">Browse</a>
+              </a>
               </div>
             </div>
           </div>
