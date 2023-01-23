@@ -64,69 +64,7 @@
 
                     </div>
                   </div>
-                  <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingTwo">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Color
-                      </button>
-                    </h2>
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                      data-bs-parent="#accordionExample">
-                      <div class="accordion-body">
-
-                        <div class="row">
-
-                          <!-- choices category -->
-
-                          <div class="col-12">
-                            <button class="text-dark bg-white border-0" onclick="getColor('Black')">
-                              <span><i class="bi bi-arrow-right"></i></span>
-                              Black
-                            </button>
-                          </div>
-                          <div class="col-12">
-                            <button class="text-dark bg-white border-0" onclick="getColor('KHAKHI')">
-                              <span><i class="bi bi-arrow-right"></i></span>
-                              Khakhi
-                            </button>
-                          </div>
-
-                          <div class="col-12">
-                            <button class="text-dark bg-white border-0" onclick="getColor('Croco-Navy')">
-                              <span><i class="bi bi-arrow-right"></i></span>
-                              Croco-Navy
-                            </button>
-                          </div>
-                          <div class="col-12">
-                            <button class="text-dark bg-white border-0" onclick="getColor('COGNAC')">
-                              <span><i class="bi bi-arrow-right"></i></span>
-                              COGNAC
-                            </button>
-                          </div>
-                          <div class="col-12">
-                            <button class="text-dark bg-white border-0" onclick="getColor('Brown')">
-                              <span><i class="bi bi-arrow-right"></i></span>
-                              Brown
-                            </button>
-                          </div>
-                          <div class="col-12">
-                            <button class="text-dark bg-white border-0" onclick="getColor('LEAT')">
-                              <span><i class="bi bi-arrow-right"></i></span>
-                              LEAT
-                            </button>
-                          </div>
-
-
-
-
-
-                        </div>
-
-
-                      </div>
-                    </div>
-                  </div>
+                 
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingThree">
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -415,37 +353,37 @@
                 <% if (pages> 0) { %>
                   <ul id="1100" class="pagination text-center rounded ">
                     <% if (current==1) { %>
-                      <li id="2200" class="disabled p-3 btn-dark rounded"><a style="color: black;">First</a></li>
+                      <li id="2200" class="disabled p-3 btn btn-dark border rounded"><a style="color: white;">First</a></li>
                       <% } else { %>
-                        <li id="3300" class="p-3 btn-dark"><a style="color: black;" onclick="pageButton(1)">First</a>
+                        <li id="3300" class="p-3 btn btn-dark border rounded"><a style="color: white;" onclick="pageButton(1)">First</a>
                         </li>
                         <% } %>
                           <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
                             <% if (i !==1) { %>
-                              <li id="4400" class="disabled p-3 btn-dark"><a style="color: black;">...</a></li>
+                              <li id="4400" class="disabled btn p-3 border rounded btn-dark"><a style="color: white;">...</a></li>
                               <% } %>
                                 <% for (; i <=(Number(current) + 4) && i <=pages; i++) { %>
                                   <% if (i==current) { %>
-                                    <li id="5500" class="active p-3 btn-dark"><a style="color: black;">
+                                    <li id="5500" class=" btn active p-3 border rounded btn-dark"><a style="color: white;">
                                         <%= i %>
                                       </a></li>
                                     <% } else { %>
 
 
-                                      <li id="6600" class="p-3 btn-dark"><a style="color: black;"
+                                      <li id="6600" class="btn p-3 btn-dark border rounded"><a style="color: white;"
                                           onclick="pageButton('<%= i %>')">
                                           <%= i %>
                                         </a></li>
 
                                       <% } %>
                                         <% if (i==Number(current) + 4 && i < pages) { %>
-                                          <li id="7700" class="disabled p-3 btn-dark"><a>...</a></li>
+                                          <li id="7700" class="btn disabled p-3 btn-dark border rounded"><a style="color: white;">...</a></li>
                                           <% } %>
                                             <% } %>
                                               <% if (current==pages) { %>
-                                                <li id="8800" class="disabled p-3 btn-dark"><a>Last</a></li>
+                                                <li id="8800" class="btn disabled p-3 btn-dark border rounded"><a style="color: white;">Last</a></li>
                                                 <% } else { %>
-                                                  <li id="9900" class="p-3 btn-dark"><a style="color: black;"
+                                                  <li id="9900" class="btn p-3 btn-dark border rounded"><a style="color: white;"
                                                       onclick="pageButton('<%= pages %>')">Last</a></li>
                                                   <% } %>
                   </ul>

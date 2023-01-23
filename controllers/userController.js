@@ -641,6 +641,7 @@ const addCart = async (req, res) => {
     const userDetails = await User.findOne({ email: email });
 
     let userCart = await Cart.findOne({ customer: userDetails._id });
+
     await Wishlist.updateOne(
       { customer: userDetails._id },
       { $pull: { products: req.query.id } }
@@ -651,12 +652,23 @@ const addCart = async (req, res) => {
     });
 
     if (itemIndex > -1) {
-      let a = await Cart.updateOne(
-        { customer: userDetails._id, "products.productId": req.query.id },
-        {
-          $inc: { "products.$.quantity": 1 },
-        }
-      );
+      const cartQuantity = await Cart.findOne({
+        customer: userDetails._id,
+        products: { $elemMatch: { productId: req.query.id } },
+      });
+
+      const productStock = await Product.findOne({ _id: req.query.id });
+
+      if (cartQuantity.products[0].quantity < productStock.stock) {
+        let a = await Cart.updateOne(
+          { customer: userDetails._id, "products.productId": req.query.id },
+          {
+            $inc: { "products.$.quantity": 1 },
+          }
+        );
+      } else {
+        res.redirect("/cart");
+      }
     } else {
       await Cart.updateOne(
         { customer: userDetails._id },
@@ -729,14 +741,23 @@ const incrimentQuantity = async (req, res) => {
   try {
     const email = req.session.auth;
     const userDetails = await User.findOne({ email: email });
-
-    let a = await Cart.updateOne(
-      { customer: userDetails._id, "products.productId": req.query.id },
-      {
-        $inc: { "products.$.quantity": 1 },
-      }
-    );
-
+    const cartQuantity = await Cart.findOne({
+      customer: userDetails._id,
+      products: { $elemMatch: { productId: req.query.id } },
+    });
+    console.log(cartQuantity.products[0].quantity);
+    const productStock = await Product.findOne({ _id: req.query.id });
+    console.log(productStock.stock);
+    if (cartQuantity.products[0].quantity < productStock.stock) {
+      let a = await Cart.updateOne(
+        { customer: userDetails._id, "products.productId": req.query.id },
+        {
+          $inc: { "products.$.quantity": 1 },
+        }
+      );
+    } else {
+      res.redirect("/cart");
+    }
     res.redirect("/cart");
   } catch (err) {
     console.log(err);
@@ -765,7 +786,7 @@ const searchProduct = async (req, res) => {
   if (categoryFilter) {
     let dummy = categoryFilter;
     searchFilter = [];
-    const regex = new RegExp(req.body.cat,'i');
+    const regex = new RegExp(req.body.cat, "i");
     dummy.forEach(function (item) {
       if (regex.exec(item.name) || regex.exec(item.model)) {
         searchFilter.push(item);
@@ -783,13 +804,13 @@ const searchProduct = async (req, res) => {
     }
 
     res.json({
-      menu : req.body.cat,
+      menu: req.body.cat,
     });
   } else if (colorFilter) {
     let dummy = colorFilter;
 
     searchFilter = [];
-    const regex = new RegExp(req.body.cat,'i');
+    const regex = new RegExp(req.body.cat, "i");
     dummy.forEach(function (item) {
       if (regex.exec(item.name) || regex.exec(item.model)) {
         searchFilter.push(item);
@@ -807,13 +828,13 @@ const searchProduct = async (req, res) => {
     }
 
     res.json({
-      menu : req.body.cat,
+      menu: req.body.cat,
     });
   } else if (stocked) {
     let dummy = stocked;
 
     searchFilter = [];
-    const regex = new RegExp(req.body.cat,'i');
+    const regex = new RegExp(req.body.cat, "i");
     dummy.forEach(function (item) {
       if (regex.exec(item.name) || regex.exec(item.model)) {
         searchFilter.push(item);
@@ -831,21 +852,19 @@ const searchProduct = async (req, res) => {
     }
 
     res.json({
-      menu : req.body.cat,
+      menu: req.body.cat,
     });
   } else {
     let dummy = productEmers;
 
     searchFilter = [];
-   
 
-    const regex = new RegExp(req.body.cat,'i');
+    const regex = new RegExp(req.body.cat, "i");
     dummy.forEach(function (item) {
       if (regex.exec(item.name) || regex.exec(item.model)) {
         searchFilter.push(item);
       }
     });
-      
 
     if (searchFilter.length > 6) {
       product = searchFilter.slice(0, 6);
@@ -858,14 +877,14 @@ const searchProduct = async (req, res) => {
     }
 
     res.json({
-      menu : req.body.cat,
+      menu: req.body.cat,
     });
   }
 };
 
 let categoryFilter;
 const catFiltering = async (req, res) => {
-  const proData= await Category.findOne({_id : req.body.cat})
+  const proData = await Category.findOne({ _id: req.body.cat });
   if (searchFilter) {
     let dummy = searchFilter;
 
@@ -887,7 +906,7 @@ const catFiltering = async (req, res) => {
     }
 
     res.json({
-      menu : proData.name,
+      menu: proData.name,
     });
   } else if (colorFilter) {
     let dummy = colorFilter;
@@ -910,7 +929,7 @@ const catFiltering = async (req, res) => {
     }
 
     res.json({
-      menu : proData.name,
+      menu: proData.name,
     });
   } else if (stocked) {
     let dummy = stocked;
@@ -933,7 +952,7 @@ const catFiltering = async (req, res) => {
     }
 
     res.json({
-      menu : proData.name,
+      menu: proData.name,
     });
   } else {
     let dummy = productEmers;
@@ -956,7 +975,7 @@ const catFiltering = async (req, res) => {
     }
 
     res.json({
-      menu : proData.name,
+      menu: proData.name,
     });
   }
 };
@@ -965,52 +984,51 @@ const colorFiltering = async (req, res) => {
   if (searchFilter) {
     let dummy = searchFilter;
 
-    searchFilter = [];
+    let blah = [];
     dummy.forEach(function (item) {
       if (item.color == req.body.cat) {
-        searchFilter.push(item);
+        blah.push(item);
       }
     });
 
-    if (searchFilter.length > 6) {
-      product = searchFilter.slice(0, 6);
+    if (blah.length > 6) {
+      product = blah.slice(0, 6);
       pages = 2;
       current = 1;
     } else {
-      product = searchFilter;
+      product = blah;
       pages = 1;
       current = 1;
     }
 
     res.json({
-      menu : req.body.cat,
+      menu: req.body.cat,
     });
   } else if (categoryFilter) {
     let dummy = categoryFilter;
 
-    categoryFilter = [];
+    let blah = [];
     dummy.forEach(function (item) {
       if (item.color == req.body.cat) {
-        categoryFilter.push(item);
+        blah.push(item);
       }
     });
 
-    if (categoryFilter.length > 6) {
-      product = categoryFilter.slice(0, 6);
+    if (blah.length > 6) {
+      product = blah.slice(0, 6);
       pages = 2;
       current = 1;
     } else {
-      product = categoryFilter;
+      product = blah;
       pages = 1;
       current = 1;
     }
 
     res.json({
-      menu : req.body.cat,
+      menu: req.body.cat,
     });
   } else if (stocked) {
     let dummy = stocked;
-
     colorFilter = [];
     dummy.forEach(function (item) {
       if (item.color == req.body.cat) {
@@ -1029,7 +1047,7 @@ const colorFiltering = async (req, res) => {
     }
 
     res.json({
-      menu : req.body.cat,
+      menu: req.body.cat,
     });
   } else {
     let dummy = productEmers;
@@ -1052,7 +1070,7 @@ const colorFiltering = async (req, res) => {
     }
 
     res.json({
-      menu : req.body.cat,
+      menu: req.body.cat,
     });
   }
 };
@@ -1337,7 +1355,7 @@ const pageStatus = async (req, res) => {
   const userDetails = await User.findOne({ email: email });
   var perPage = 6;
   var page = req.body.cat || 1;
-  if(searchFilter){
+  if (searchFilter) {
     let count = searchFilter.length;
     let dummy = [];
     dummy = searchFilter;
@@ -1793,7 +1811,7 @@ const orderCheck = async (req, res) => {
   if (req.body.paymentMethod == "COD") {
     const couponData = await Coupon.findOne({ discount: req.body.couponText });
 
-    if(couponData){
+    if (couponData) {
       const cartItems = await Cart.aggregate([
         { $match: { customer: userDetails._id } },
         { $unwind: "$products" },
@@ -1979,7 +1997,7 @@ const orderCheck = async (req, res) => {
   } else {
     const couponData = await Coupon.findOne({ discount: req.body.couponText });
 
-    if(couponData){
+    if (couponData) {
       const cartItems = await Cart.aggregate([
         { $match: { customer: userDetails._id } },
         { $unwind: "$products" },
@@ -2259,16 +2277,15 @@ const orderCheck = async (req, res) => {
 
 const checkPayment = async (req, res) => {
   const email = req.session.auth;
-  
-    const couponData = await Coupon.findOne({discount : newOrder.coupon})
-    if(couponData)
+
+  const couponData = await Coupon.findOne({ discount: newOrder.coupon });
+  if (couponData)
     await User.updateOne(
       { email: email },
       {
         $push: { coupons: [couponData._id] },
       }
     );
-
 
   const addressExist = await User.findOne({
     email: email,
@@ -2484,7 +2501,6 @@ const initRazor = async (req, res) => {
   const couponData = await Coupon.findOne({ discount: req.body.couponText });
 
   if (couponData !== null) {
-    
     const cartItems = await Cart.aggregate([
       { $match: { customer: userDetails._id } },
       { $unwind: "$products" },

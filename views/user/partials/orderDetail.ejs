@@ -59,7 +59,12 @@
 
 
                 <%if(orderDetails!=null){%>
-                    <div class="row text-center" id="printData">
+                    <div class="container"  id="printData">
+                    
+                    <div class="row text-center d-flex justify-content-center">
+                        <p class="" style="font-size: 2rem;" >
+                        RSVP
+                        </p>
                         <div class="row py-4 mx-0 py-0 g-0">
                             <h4>Order Details</h4>
                         </div>
@@ -236,6 +241,7 @@
 
 
                     </div>
+                </div>
 
                     <div class="col-lg-12 my-4">
                         <div class="row justify-content-between">
@@ -307,6 +313,7 @@
 
             <script>
                 function printOrder(divName) {
+                   
                     var printContents = document.getElementById(divName).innerHTML;
                     var originalContents = document.body.innerHTML;
 
