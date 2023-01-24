@@ -8,6 +8,15 @@ const mongoose = require("mongoose");
 const excelJS = require("exceljs");
 const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
+const path = require('path')
+
+const ejs= require('ejs')
+const pdf=require('html-pdf')
+const fs= require('fs')
+
+const http = require('http');
+const { off } = require('process')
+
 
 const adminSignin = (req, res) => {
   if (req.session.adminAuth) {
@@ -173,7 +182,6 @@ const submitEditCategory = async (req, res) => {
         { width: 1440, height: 1920, gravity: "face", crop: "fill" },
       ],
     });
-  
 
     resp
       .then((data) => {
@@ -193,7 +201,6 @@ const submitEditCategory = async (req, res) => {
       .catch((err) => {
         console.log(err);
       });
-
   }
 };
 
@@ -235,8 +242,6 @@ const addCategory = (req, res) => {
 
 const categorySubmit = (req, res) => {
   try {
-
-
     cloudinary.config({
       cloud_name: process.env.CLOUD_NAME,
       api_key: process.env.CLOUD_API,
@@ -245,7 +250,7 @@ const categorySubmit = (req, res) => {
 
     // Upload
     let fileName = req.file;
-    console.log(fileName)
+    console.log(fileName);
     const resp = cloudinary.uploader.upload(fileName.path, {
       transformation: [
         { width: 1440, height: 1920, gravity: "face", crop: "fill" },
@@ -260,18 +265,15 @@ const categorySubmit = (req, res) => {
         console.log(data.secure_url);
         let newCategory = new Category({
           name: req.body.name,
-    
+
           image: data.secure_url,
         });
         newCategory.save();
         res.redirect("/admin/category");
-        
       })
       .catch((err) => {
         console.log(err);
       });
-
-    
   } catch (error) {
     console.log(error.message);
   }
@@ -618,7 +620,6 @@ const addBanner = async (req, res) => {
 
 const submitBanner = async (req, res) => {
   try {
-
     cloudinary.config({
       cloud_name: process.env.CLOUD_NAME,
       api_key: process.env.CLOUD_API,
@@ -627,21 +628,20 @@ const submitBanner = async (req, res) => {
 
     // Upload
     let fileName = req.file;
-    console.log(fileName)
+    console.log(fileName);
 
     const resp = cloudinary.uploader.upload(fileName.path, {
       transformation: [
         { width: 1341, height: 213, gravity: "face", crop: "fill" },
       ],
     });
-  
 
     resp
       .then((data) => {
         console.log(data.secure_url);
         let newBanner = new Banner({
           status: true,
-          image:data.secure_url,
+          image: data.secure_url,
         });
         newBanner.save();
         res.redirect("/admin/banner");
@@ -649,11 +649,6 @@ const submitBanner = async (req, res) => {
       .catch((err) => {
         console.log(err);
       });
-
-
-
-
-    
   } catch (error) {
     console.log(error.message);
   }
@@ -701,54 +696,149 @@ const changeOrder = async (req, res) => {
 
 const salesReport = async (req, res) => {
   if (req.session.adminAuth) {
-    const OrderDetails = await Order.find({})
+    const OrderDetails = await Order.find({ date : { $gt :  req.body.from, $lt : req.body.toDate}})
       .populate("product.productId")
       .populate("customer");
     try {
-      const workbook = new excelJS.Workbook();
-      const worksheet = workbook.addWorksheet("Sales Roport");
-      worksheet.columns = [
-        { header: "s no.", key: "s_no" },
-        { header: "Date", key: "data" },
-        { header: "User", key: "user" },
-        { header: "Payment", key: "payment" },
-        { header: "Status", key: "status" },
-        { header: "Items", key: "item" },
-        { header: "total", key: "total" },
-      ];
-      let counter = 1;
+      if (req.body.type === "excell") {
+        const workbook = new excelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Sales Roport");
+        worksheet.columns = [
+          { header: "s no.", key: "s_no" },
+          { header: "Date", key: "data" },
+          { header: "User", key: "user" },
+          { header: "Payment", key: "payment" },
+          { header: "Status", key: "status" },
+          { header: "Items", key: "item" },
+          { header: "total", key: "total" },
+        ];
+        let counter = 1;
 
-      OrderDetails.forEach((sale) => {
-        const date = sale.date;
-        const isoString = date.toISOString();
-        const newDate = isoString.split("T")[0];
-        sale.data = newDate;
-        sale.s_no = counter;
-        sale.user = sale.address[0].name;
-        sale.payment = sale.orderType;
-        sale.total = sale.finalPrice;
-        sale.item = sale.product.length;
-        worksheet.addRow(sale);
-        counter++;
-      });
+        OrderDetails.forEach((sale) => {
+          const date = sale.date;
+          const isoString = date.toISOString();
+          const newDate = isoString.split("T")[0];
+          sale.data = newDate;
+          sale.s_no = counter;
+          sale.user = sale.address[0].name;
+          sale.payment = sale.orderType;
+          sale.total = sale.finalPrice;
+          sale.item = sale.product.length;
+          worksheet.addRow(sale);
+          counter++;
+        });
 
-      worksheet.getRow(1).eachCell((cell) => {
-        cell.font = { bold: true };
-      });
+        worksheet.getRow(1).eachCell((cell) => {
+          cell.font = { bold: true };
+        });
 
-      res.setHeader(
-        "Content-Type",
-        "application/vnd.openxmlformats-officedocument.spreadsheatml.sheet"
-      );
+        res.setHeader(
+          "Content-Type",
+          "application/vnd.openxmlformats-officedocument.spreadsheatml.sheet"
+        );
 
-      res.setHeader(
-        "Content-Disposition",
-        `attachment; filename=sales_Report.xlsx`
-      );
+        res.setHeader(
+          "Content-Disposition",
+          `attachment; filename=sales_Report_from_${req.body.from}_to_${req.body.toDate}.xlsx`
+        );
 
-      return workbook.xlsx.write(res).then(() => {
-        res.status(200);
-      });
+        return workbook.xlsx.write(res).then(() => {
+          res.status(200);
+        });
+      }else if(req.body.type === "csv"){
+        const workbook = new excelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Sales Roport");
+        worksheet.columns = [
+          { header: "s no.", key: "s_no" },
+          { header: "Date", key: "data" },
+          { header: "User", key: "user" },
+          { header: "Payment", key: "payment" },
+          { header: "Status", key: "status" },
+          { header: "Items", key: "item" },
+          { header: "total", key: "total" },
+        ];
+        let counter = 1;
+
+        OrderDetails.forEach((sale) => {
+          const date = sale.date;
+          const isoString = date.toISOString();
+          const newDate = isoString.split("T")[0];
+          sale.data = newDate;
+          sale.s_no = counter;
+          sale.user = sale.address[0].name;
+          sale.payment = sale.orderType;
+          sale.total = sale.finalPrice;
+          sale.item = sale.product.length;
+          worksheet.addRow(sale);
+          counter++;
+        });
+
+        worksheet.getRow(1).eachCell((cell) => {
+          cell.font = { bold: true };
+        });
+
+        res.setHeader(
+          "Content-Type",
+          "application/vnd.openxmlformats-officedocument.spreadsheatml.sheet"
+        );
+
+        res.setHeader(
+          "Content-Disposition",
+          `attachment; filename=sales_Report_from_${req.body.from}_to_${req.body.toDate}.csv`
+        );
+
+        return workbook.csv.write(res).then(()=>{
+
+          res.status(200)
+       })
+      }else if(req.body.type === "pdf"){
+        
+        
+        
+        
+        const data={
+
+          productData:OrderDetails,from : req.body.from, toDate : req.body.toDate
+        
+      }
+      let option={
+
+          format:'A3',
+          // width:800,
+          // height:600
+      }
+      const filePath= path.resolve(__dirname,'../views/admin/layouts/sales_report_pdf.ejs')
+      const htmlString=fs.readFileSync(filePath).toString()
+      const ejsData= ejs.render(htmlString,data)
+
+    
+      pdf.create(ejsData,option).toFile('sales_report.pdf',(err,file)=>{
+          if(err){
+
+              console.log(err);
+          }
+
+        const filePath= path.resolve(__dirname,'../sales_report.pdf')
+              fs.readFile(filePath,(err,file)=>{
+
+                  if(err){
+
+                      console.log(err)
+                  }
+                       
+                       res.setHeader('Content-Type','application/pdf');
+                       res.setHeader('Content-Disposition','attachement;filename="sales_report_from_'+req.body.from+'_to_'+req.body.toDate+'.pdf"');
+                       res.send(file)
+                      console.log('pdf generated')
+
+                      
+              
+
+              })
+          
+      })
+      
+      }
     } catch (error) {
       console.log(error.message);
     }

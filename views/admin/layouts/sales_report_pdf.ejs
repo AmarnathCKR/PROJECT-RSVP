@@ -1,0 +1,121 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<style>
+  table{
+
+    margin-top: 25px;
+  }
+  h4{
+
+    margin-top: 30px;
+    margin-left: 10px;
+  }
+  th{
+ text-align: start;
+  
+  }
+  .total{
+
+    margin-top: 40px;
+    
+
+   
+  }
+
+  h4 b{
+    border-bottom: 2px solid black;
+    width: 30%;
+  }
+  .total div{
+    margin-right: 115px;
+    width: 225px;
+    height: 180px;
+    background: rgb(244, 244, 244)
+  }
+  .card{
+
+    width: 25%;
+    border: none;
+    
+  }
+  h6{
+
+    margin-left: 10px;
+  }
+
+</style>
+<body>
+    <%var totalPrice=0%>
+    <% productData.forEach(function (data){%>
+    <%if(productData.status !='cancelled'){%>
+        <% var final = parseInt(data.finalPrice) %>
+        <%totalPrice= totalPrice+ final%>
+        <%}%>
+        <%})%>
+    
+    <div class="container m-5 p-3">
+        <div class="row text-center m-2">
+            <h4 class="text-center">RSVP</h4>
+        </div>
+        <div class="row text-center m-2">
+            <h5 class="text-center">Sales From <%=from %> to <%= toDate%></h5>
+        </div>
+
+        <table>
+            <thead>
+                <th>
+                    Date
+                </th>
+                <th>Customer Name</th>
+                <th>Product Details</th>
+                <th>Coupons Used</th>
+                <th>Payment Method</th>
+                <th>Total Payment</th>
+            </thead>
+            <tbody>
+                <%productData.forEach(function(item){%>
+                <tr>
+                    <%let date = item.date%>
+                    <%let isoString = date.toISOString()%>
+                    <%let newDate = isoString.split('T')[0]%>
+              
+                    <td><%=newDate%></td>
+                    <td><%=item.customer.fname%></td>
+                    <td>
+                        <%for(i=0;i< item.product.length; i++ ){%>
+                            <b><%=item.product[i].productId.name%></b>X
+                            <b><%=item.product[i].qtyItems%></b><br>
+                            <%}%>
+                    </td>
+                    <td><%=item.coupon%></td>
+                    <td><%=item.orderType%></td>
+                    <td><%=item.finalPrice%></td>
+                </tr>
+                <%})%>
+            </tbody>
+        </table>
+        <center class="m-5" style="font-size: x-large;font-weight: bolder;" >Total Earning Excluding Cancellation :  ₹<%=totalPrice%> </center>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"></script>
+
+
+
+
+</body>
+
+</html>

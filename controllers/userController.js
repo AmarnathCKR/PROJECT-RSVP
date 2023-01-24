@@ -1055,6 +1055,7 @@ const catFiltering = async (req, res) => {
     });
   }
 };
+
 let colorFilter;
 const colorFiltering = async (req, res) => {
   if (searchFilter) {

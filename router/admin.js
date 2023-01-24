@@ -56,7 +56,7 @@ router.get('/logout', adminController.adminLogOut)
 
 router.patch('/change-stat', adminController.changeOrder)
 
-router.get('/sales-report',adminController.salesReport)
+router.post('/sales-report',adminController.salesReport)
 
 router.get('/chart-data',adminController.chartReport)
 
