@@ -29,6 +29,9 @@ const userHome = async (req, res) => {
         home: "active",
         wishData,
         usersession,
+        homeActive: 'active',
+        shopActive: null,
+        contactActive: null,
       });
     } else {
       res.render("user/partials/homepage", {
@@ -37,6 +40,9 @@ const userHome = async (req, res) => {
         home: "active",
         wishData: null,
         usersession,
+        homeActive: 'active',
+        shopActive: null,
+        contactActive: null,
       });
     }
   } catch (err) {
@@ -50,6 +56,9 @@ const userLogin = (req, res) => {
       error: "Enter your email and Password",
       wishData: null,
       usersession: req.session.auth,
+      homeActive: null,
+      shopActive: null,
+      contactActive: null,
     });
   } catch (err) {
     console.log(err);
@@ -71,6 +80,9 @@ const userVerification = async (req, res) => {
           error: "Invalid Password",
           wishData: null,
           usersession: req.session.auth,
+          homeActive: null,
+          shopActive: null,
+          contactActive: null,
         });
       }
     } else {
@@ -78,6 +90,9 @@ const userVerification = async (req, res) => {
         error: "User not found",
         wishData: null,
         usersession: req.session.auth,
+        homeActive: null,
+        shopActive: null,
+        contactActive: null,
       });
     }
   } catch (err) {
@@ -86,6 +101,9 @@ const userVerification = async (req, res) => {
       error: "Invalid Credentials",
       wishData: null,
       usersession: req.session.auth,
+      homeActive: null,
+      shopActive: null,
+      contactActive: null,
     });
   }
 };
@@ -96,6 +114,9 @@ const userSignUp = (req, res) => {
       error: "Please Login to Enjoy Our Products.",
       wishData: null,
       usersession: req.session.auth,
+      homeActive: null,
+      shopActive: null,
+      contactActive: null,
     });
   } catch (err) {
     console.log(err);
@@ -118,6 +139,9 @@ const checkSignUp = async (req, res) => {
         error: "Email Already Exists.",
         wishData: null,
         usersession: req.session.auth,
+        homeActive: null,
+        shopActive: null,
+        contactActive: null,
       });
     } else {
       const hashPassword = await bcrypt.hash(req.body.password, 10);
@@ -183,6 +207,9 @@ const otpVerify = async (req, res) => {
         error: "Incorrect OTP",
         wishData: null,
         usersession: req.session.auth,
+        homeActive: null,
+        shopActive: null,
+        contactActive: null,
       });
     }
   } catch (err) {
@@ -207,6 +234,9 @@ const otpVerifyPage = (req, res) => {
       res.render("user/partials/verifyOTP", {
         wishData: null,
         usersession: req.session.auth,
+        homeActive: null,
+        shopActive: null,
+        contactActive: null,
       });
     }
   } catch (err) {
@@ -259,6 +289,9 @@ const forgotPassword = (req, res) => {
     res.render("user/partials/forgotPassword", {
       wishData: null,
       usersession: req.session.auth,
+      homeActive: null,
+      shopActive: null,
+      contactActive: null,
     });
   } catch (err) {
     console.log(err);
@@ -323,6 +356,9 @@ const sendEmail = async (req, res) => {
         error: "Email does not exit.Please sign up",
         wishData: null,
         usersession: req.session.auth,
+        homeActive: null,
+        shopActive: null,
+        contactActive: null,
       });
     }
   } catch (err) {
@@ -336,6 +372,9 @@ const verifyEmailPage = (req, res) => {
       res.render("user/partials/verifyEmailOTP", {
         wishData: null,
         usersession: req.session.auth,
+        homeActive: null,
+        shopActive: null,
+        contactActive: null,
       });
     }
   } catch (err) {
@@ -393,6 +432,9 @@ const verifyEmailOTP = (req, res) => {
         error: "Incorrect OTP",
         wishData: null,
         usersession: req.session.auth,
+        homeActive: null,
+        shopActive: null,
+        contactActive: null,
       });
     }
   } catch (err) {
@@ -406,6 +448,9 @@ const newPassword = (req, res) => {
       res.render("user/partials/newPassword", {
         wishData: null,
         usersession: req.session.auth,
+        homeActive: null,
+        shopActive: null,
+        contactActive: null,
       });
     }
   } catch (err) {
@@ -431,6 +476,9 @@ const submitPassword = async (req, res) => {
             error: "Cannot use previous password.",
             wishData: null,
             usersession: req.session.auth,
+            homeActive: null,
+            shopActive: null,
+            contactActive: null,
           });
         } else {
           const updatePassword = await User.updateOne(
@@ -449,6 +497,9 @@ const submitPassword = async (req, res) => {
           error: "Password Does Not Match",
           wishData: null,
           usersession: req.session.auth,
+          homeActive: null,
+        shopActive :null,
+        contactActive : null
         });
       }
     }
@@ -501,6 +552,9 @@ const productPage = async (req, res) => {
         categories: categoryData,
         current,
         pages,
+        homeActive: null,
+        shopActive : 'active',
+        contactActive : null
       });
     } else {
       res.render("user/partials/product", {
@@ -511,6 +565,9 @@ const productPage = async (req, res) => {
         categories: categoryData,
         current,
         pages,
+        homeActive: null,
+        shopActive :'active',
+        contactActive : null
       });
     }
   } catch (err) {
@@ -543,6 +600,9 @@ const productDetails = async (req, res) => {
         wishDetails,
         wishData,
         usersession: req.session.auth,
+        homeActive: null,
+        shopActive :'active',
+        contactActive : null
       });
     }
   } catch (err) {
@@ -561,6 +621,9 @@ const wishListPage = async (req, res) => {
     res.render("user/partials/wishList", {
       wishData,
       usersession: req.session.auth,
+      homeActive: null,
+        shopActive :'active',
+        contactActive : null
     });
   } catch (err) {
     console.log(err);
@@ -629,6 +692,9 @@ const cartPage = async (req, res) => {
       cartList: proimg,
       wishData,
       usersession: req.session.auth,
+      homeActive: null,
+        shopActive :'active',
+        contactActive : null
     });
   } catch (err) {
     console.log(err);
@@ -745,20 +811,27 @@ const incrimentQuantity = async (req, res) => {
       customer: userDetails._id,
       products: { $elemMatch: { productId: req.query.id } },
     });
-    console.log(cartQuantity.products[0].quantity);
+    let quantity = 0
+    cartQuantity.products.forEach(function(items){
+      if(items.productId == req.query.id){
+        quantity = items.quantity
+      }
+    })
+    console.log(quantity);
     const productStock = await Product.findOne({ _id: req.query.id });
     console.log(productStock.stock);
-    if (cartQuantity.products[0].quantity < productStock.stock) {
-      let a = await Cart.updateOne(
+    if (quantity < productStock.stock) {
+       await Cart.updateOne(
         { customer: userDetails._id, "products.productId": req.query.id },
         {
           $inc: { "products.$.quantity": 1 },
         }
       );
+      res.redirect("/cart");
     } else {
       res.redirect("/cart");
     }
-    res.redirect("/cart");
+    
   } catch (err) {
     console.log(err);
   }
@@ -779,6 +852,9 @@ const checkoutPage = async (req, res) => {
     wishData,
     usersession: req.session.auth,
     userDetails,
+    homeActive: null,
+        shopActive :'active',
+        contactActive : null
   });
 };
 let searchFilter;
@@ -1435,6 +1511,9 @@ const profilePage = async (req, res) => {
     wishData,
     usersession: req.session.auth,
     userData: userDetails,
+    homeActive: null,
+        shopActive :'active',
+        contactActive : null
   });
 };
 
@@ -1461,6 +1540,9 @@ const addressPage = async (req, res) => {
     wishData,
     usersession: req.session.auth,
     userData: userDetails,
+    homeActive: null,
+        shopActive :'active',
+        contactActive : null
   });
 };
 
@@ -2349,6 +2431,9 @@ const checkPayment = async (req, res) => {
     usersession: req.session.auth,
     userDetails,
     newOrder,
+    homeActive: null,
+        shopActive :'active',
+        contactActive : null
   });
 };
 
@@ -2368,6 +2453,9 @@ const orderPage = async (req, res) => {
     usersession: req.session.auth,
     userDetails,
     orderDetails,
+    homeActive: null,
+        shopActive :'active',
+        contactActive : null
   });
 };
 
@@ -2387,6 +2475,9 @@ const orderDetailPage = async (req, res) => {
     usersession: req.session.auth,
     userDetails,
     orderDetails,
+    homeActive: null,
+        shopActive :'active',
+        contactActive : null
   });
 };
 
@@ -2454,27 +2545,13 @@ const orderFailed = async (req, res) => {
     usersession: req.session.auth,
     userDetails,
     orderDetails,
+    homeActive: null,
+        shopActive :'active',
+        contactActive : null
   });
 };
 
-const test = async (req, res) => {
-  const email = req.session.auth;
-  const userDetails = await User.findOne({ email: email });
-  const wishData = await Wishlist.findOne({
-    customer: userDetails._id,
-  }).populate("products");
 
-  const orderDetails = await Order.find({ customer: userDetails._id }).populate(
-    "product.productId"
-  );
-
-  res.render("user/layouts/header1", {
-    wishData,
-    usersession: req.session.auth,
-    userDetails,
-    orderDetails,
-  });
-};
 
 const addNewAddress = async (req, res) => {
   const email = req.session.auth;
@@ -2742,6 +2819,9 @@ const contactPage = async (req, res) => {
     home: "active",
     wishData,
     usersession,
+    homeActive: null,
+        shopActive :null,
+        contactActive : 'active'
   });
 };
 
@@ -2808,7 +2888,7 @@ module.exports = {
   checkPassword,
   passwordChange,
   orderFailed,
-  test,
+  
   addNewAddress,
   initRazor,
   verifyRazor,

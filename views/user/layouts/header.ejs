@@ -37,6 +37,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
   <style>
+    .nav-drop {
+      text-decoration: none;
+    }
+
+    .nav-active {
+      border-bottom: 1px solid black;
+      text-shadow: 1px 1px rgb(146, 145, 145);
+    }
+
+    .nav-drop :hover {
+      text-shadow: 1px 1px rgb(146, 145, 145);
+      border-bottom: 1px solid black;
+    }
+
     @font-face {
       font-family: baton;
       src: url(/public/fonts/Baton-Sans.otf);
@@ -121,7 +135,7 @@
 
       <span class="navbar-brand d-flex justify-content-between ms-4 mx-0 px-0 g-0 col-5">
         <a href="/">
-          <center style="font-size: 2.6rem; letter-spacing: 42px;" >RSVP</center>
+          <center style="font-size: 2.6rem; letter-spacing: 42px;">RSVP</center>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
           aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -130,19 +144,43 @@
       </span>
       <div class="collapse navbar-collapse mx-0 px-0 g-0 col-6" id="navbarNavDropdown">
 
-       <center><ul class="navbar-nav text-center">
-          <li class="nav-item text-center">
-            <a class="nav-link active" aria-current="page" href="/">Home</a>
-          </li>
-          <li class="nav-item text-center">
-            <a class="nav-link" href="/shop">Shop</a>
-          </li>
-          <li class="nav-item text-center">
-            <a class="nav-link" href="/contact">Contact</a>
-          </li>
+        <center>
+          <ul class="navbar-nav text-center">
+            <%if(homeActive){%>
+              <li class="nav-item text-center">
+                <a class="nav-link nav-active active" aria-current="page" href="/">Home</a>
+              </li>
+              <%}else{%>
+                <li class="nav-item nav-drop text-center">
+                  <a class="nav-link" aria-current="page" href="/">Home</a>
+                </li>
+                <%}%>
+                  <%if(shopActive){%>
+                    <li class="nav-item text-center">
+                      <a class="nav-link nav-active active" href="/shop">Shop</a>
+
+                    </li>
+                    <%}else{%>
+                      <li class="nav-item nav-drop text-center">
+                        <a class="nav-link" href="/shop">Shop</a>
+
+                      </li>
+                      <%}%>
+                        <%if(contactActive){%>
+                          <li class="nav-item text-center">
+                            <a class="nav-link nav-active active" href="/contact">Contact</a>
+
+                          </li>
+                          <%}else{%>
+                            <li class="nav-item nav-drop text-center">
+                              <a class="nav-link" href="/contact">Contact</a>
+
+                            </li>
+                            <%}%>
 
 
-        </ul></center>
+          </ul>
+        </center>
 
         <span class="d-flex align-items-center ms-auto justify-content-center dropstart">
           <%if(usersession){%>

@@ -80,7 +80,6 @@ router.patch('/search',userController.searchProduct)
 
 
 
-router.get('/test',userSession.isLogin, userController.test)
 
 
 
