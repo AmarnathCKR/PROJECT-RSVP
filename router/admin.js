@@ -16,8 +16,6 @@ router.get('/order', adminController.adminOrder)
 router.get('/banner',adminController.bannerPage)
 
 
-// router.get('/adduser', adminController.addUserPage)
-// router.post('/adduser', adminController.addUser);
 
 router.get('/block-user', adminController.blockUser)
 router.get('/unBlock-user', adminController.unBlockUser)
@@ -49,8 +47,6 @@ router.get('/unBlock-banner',adminController.unBlockBanner)
 
 
     
-// router.get('/edit-user', adminController.editUser)
-// router.post('/edit-user', adminController.adminEdited)
 
 router.get('/logout', adminController.adminLogOut)
 

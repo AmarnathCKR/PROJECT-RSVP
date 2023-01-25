@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 
 const Product = require("./productModel");
 
-// creating objectSchema
 
 const couponSchema = new mongoose.Schema({
     name: {

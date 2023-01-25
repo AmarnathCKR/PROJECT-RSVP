@@ -215,7 +215,6 @@
       fetch('/admin/chart-data', {
         method: 'get'
       }).then(res => res.json()).then(data => {
-        console.log(data)
         new Chart(chartData, {
           type: 'doughnut',
           data: {

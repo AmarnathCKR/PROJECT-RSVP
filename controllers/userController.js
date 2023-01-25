@@ -161,7 +161,7 @@ const checkSignUp = async (req, res) => {
         status: true,
       });
 
-      var transporter = nodemailer.createTransport({
+      let transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
           user: process.env.NODEMAIL,
@@ -169,7 +169,7 @@ const checkSignUp = async (req, res) => {
         },
       });
 
-      var mailOptions = {
+      let mailOptions = {
         from: "amarnathchakkiyar@gmail.com",
         to: req.body.email,
         subject: "YOUR OTP",
@@ -254,7 +254,7 @@ const resendOTP = (req, res) => {
       req.session.authOTP = false;
     }, 180000);
 
-    var transporter = nodemailer.createTransport({
+    let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.NODEMAIL,
@@ -262,7 +262,7 @@ const resendOTP = (req, res) => {
       },
     });
 
-    var mailOptions = {
+    let mailOptions = {
       from: "amarnathchakkiyar@gmail.com",
       to: req.session.emailOTP,
       subject: "YOUR OTP",
@@ -317,7 +317,7 @@ const sendEmail = async (req, res) => {
         }, 180000);
 
         // email
-        var transporter = nodemailer.createTransport({
+        let transporter = nodemailer.createTransport({
           service: "gmail",
           auth: {
             user: process.env.NODEMAIL,
@@ -325,11 +325,10 @@ const sendEmail = async (req, res) => {
           },
         });
 
-        var mailOptions = {
+        let mailOptions = {
           from: "amarnathchakkiyar@gmail.com",
           to: req.body.email,
           subject: "YOUR OTP",
-          //   text: `enterotp`
           html: `<h3>Your OTP is here<h3> <br> <p>${otp}</p>`,
         };
 
@@ -338,10 +337,6 @@ const sendEmail = async (req, res) => {
             console.log(error);
           } else {
             res.redirect("/verifyEmail");
-
-            // req.session.email = req.body.email;
-            // req.session.fname = req.body.fname;
-            // req.session.password = hashPassword;
           }
         });
       } else {
@@ -385,7 +380,6 @@ const verifyEmailPage = (req, res) => {
 const resendEmail = (req, res) => {
   try {
     const otp = Math.floor(Math.random() * 1000000 + 1);
-    // const authPassword = "icnzdiqbjvqrydak";
     req.session.resendEmailOtp = otp;
 
     setTimeout(() => {
@@ -393,7 +387,7 @@ const resendEmail = (req, res) => {
     }, 180000);
 
     ``;
-    var transporter = nodemailer.createTransport({
+    let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.NODEMAIL,
@@ -401,7 +395,7 @@ const resendEmail = (req, res) => {
       },
     });
 
-    var mailOptions = {
+    let mailOptions = {
       from: "amarnathchakkiyar@gmail.com",
       to: req.session.emailAuth,
       subject: "YOUR OTP",
@@ -525,8 +519,8 @@ const productPage = async (req, res) => {
     const wishData = await Wishlist.findOne({
       customer: userDetails._id,
     }).populate("products");
-    var perPage = 6;
-    var page = req.query.page || 1;
+    let perPage = 6;
+    let page = req.query.page || 1;
 
     let count = 0;
 
@@ -817,9 +811,7 @@ const incrimentQuantity = async (req, res) => {
         quantity = items.quantity
       }
     })
-    console.log(quantity);
     const productStock = await Product.findOne({ _id: req.query.id });
-    console.log(productStock.stock);
     if (quantity < productStock.stock) {
        await Cart.updateOne(
         { customer: userDetails._id, "products.productId": req.query.id },
@@ -1430,8 +1422,8 @@ const sortStatus = async (req, res) => {
 const pageStatus = async (req, res) => {
   const email = req.session.auth;
   const userDetails = await User.findOne({ email: email });
-  var perPage = 6;
-  var page = req.body.cat || 1;
+  let perPage = 6;
+  let page = req.body.cat || 1;
   if (searchFilter) {
     let count = searchFilter.length;
     let dummy = [];
@@ -1669,7 +1661,7 @@ const checkCoupon = async (req, res) => {
       let currentDate = Date.now();
 
       function formatDate(date) {
-        var d = new Date(date),
+        let d = new Date(date),
           month = "" + (d.getMonth() + 1),
           day = "" + d.getDate(),
           year = d.getFullYear();
@@ -1708,7 +1700,7 @@ const checkCoupon = async (req, res) => {
             },
           },
         ]);
-        var final = 0;
+        let final = 0;
         const Total = cartItems.forEach(function (items) {
           let costValue = parseInt(items.price);
           addValue = costValue * items.qty;
@@ -1756,7 +1748,7 @@ const checkCoupon = async (req, res) => {
               },
             },
           ]);
-          var final = 0;
+          let final = 0;
           const Total = cartItems.forEach(function (items) {
             let costValue = parseInt(items.price);
             addValue = costValue * items.qty;
@@ -1795,7 +1787,7 @@ const checkCoupon = async (req, res) => {
             },
           },
         ]);
-        var final = 0;
+        let final = 0;
         const Total = cartItems.forEach(function (items) {
           let costValue = parseInt(items.price);
           addValue = costValue * items.qty;
@@ -1831,7 +1823,7 @@ const checkCoupon = async (req, res) => {
           },
         },
       ]);
-      var final = 0;
+      let final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -1867,7 +1859,7 @@ const checkCoupon = async (req, res) => {
         },
       },
     ]);
-    var final = 0;
+    let final = 0;
     const Total = cartItems.forEach(function (items) {
       let costValue = parseInt(items.price);
       addValue = costValue * items.qty;
@@ -1885,7 +1877,7 @@ paypal.configure({
   client_secret: process.env.CLIENT_SECRET,
 });
 
-var newOrder;
+let newOrder;
 
 const orderCheck = async (req, res) => {
   const email = req.session.auth;
@@ -1920,7 +1912,7 @@ const orderCheck = async (req, res) => {
           },
         },
       ]);
-      var final = 0;
+      let final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -2014,7 +2006,7 @@ const orderCheck = async (req, res) => {
           },
         },
       ]);
-      var final = 0;
+      let final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -2106,7 +2098,7 @@ const orderCheck = async (req, res) => {
           },
         },
       ]);
-      var final = 0;
+      let final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -2246,7 +2238,7 @@ const orderCheck = async (req, res) => {
           },
         },
       ]);
-      var final = 0;
+      let final = 0;
       const Total = cartItems.forEach(function (items) {
         let costValue = parseInt(items.price);
         addValue = costValue * items.qty;
@@ -2604,7 +2596,7 @@ const initRazor = async (req, res) => {
         },
       },
     ]);
-    var final = 0;
+    let final = 0;
     const Total = cartItems.forEach(function (items) {
       let costValue = parseInt(items.price);
       addValue = costValue * items.qty;
@@ -2671,8 +2663,8 @@ const initRazor = async (req, res) => {
       orderType: "RazorPay",
     });
 
-    var options = {
-      amount: final * 100, // amount in the smallest currency unit
+    let options = {
+      amount: final * 100,
       currency: "INR",
       receipt: "order_rcptid_11",
     };
@@ -2711,7 +2703,7 @@ const initRazor = async (req, res) => {
         },
       },
     ]);
-    var final = 0;
+    let final = 0;
     const Total = cartItems.forEach(function (items) {
       let costValue = parseInt(items.price);
       addValue = costValue * items.qty;
@@ -2772,8 +2764,8 @@ const initRazor = async (req, res) => {
       orderType: "RazorPay",
     });
 
-    var options = {
-      amount: final * 100, // amount in the smallest currency unit
+    let options = {
+      amount: final * 100,
       currency: "INR",
       receipt: "order_rcptid_11",
     };

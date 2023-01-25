@@ -90,20 +90,20 @@
 </script>
 
 <script>
-  let timeRemaining = localStorage.getItem("timeRemaining") || 30; // retrieve the time remaining from local storage or set it to 60 seconds
+  let timeRemaining = localStorage.getItem("timeRemaining") || 30;
   document.getElementById("resend-button").disabled = true;
   const interval = setInterval(() => {
 
-    timeRemaining--; // decrease the time remaining by 1 second
-    localStorage.setItem("timeRemaining", timeRemaining); // update the time remaining in local storage
+    timeRemaining--; 
+    localStorage.setItem("timeRemaining", timeRemaining); 
     document.getElementById("resend-button").innerHTML = `Resend (${timeRemaining} seconds)`;
     if (timeRemaining <= 0) {
-      clearInterval(interval); // stop the timer when it reaches 0
-      localStorage.removeItem("timeRemaining"); // remove the time remaining from local storage
+      clearInterval(interval); 
+      localStorage.removeItem("timeRemaining"); 
       document.getElementById("resend-button").innerHTML = "Resend";
-      document.getElementById("resend-button").disabled = false; // enable the button again
+      document.getElementById("resend-button").disabled = false;
     }
-  }, 1000); // run the interval every 1000 milliseconds (1 second)
+  }, 1000); 
 
 </script>
 
@@ -119,9 +119,8 @@
   integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 <script>
   document.getElementById("resend-button").addEventListener("click", () => {
-    localStorage.setItem("timeRemaining", 30); // reset the timer and store the new time remaining in local storage
-    // disable the button
-    window.location = 'http://127.0.0.1:3000/resend';
+    localStorage.setItem("timeRemaining", 30);
+       window.location = 'http://127.0.0.1:3000/resend';
   });
 
 </script>

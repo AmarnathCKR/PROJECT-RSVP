@@ -90,7 +90,6 @@
                                 var inputContact = $('#contactAdd').val()
                                 var inputName = $('#nameAdd').val()
                                 var inputPin = $('#pinAdd').val()
-                                console.log('nsfksdfns')
                                 if (inputAddress == "" || inputContact == "" || inputName == "" || inputPin == "") {
                                     $('#submit-checkout').css('pointer-events', 'none')
                                 } else if (inputAddress != "" && inputContact != "" && inputName != "" && inputPin != "") {
@@ -382,7 +381,6 @@
                 data: { cat: catId },
                 success: (res) => {
                     adds = res.data
-                    console.log(adds)
 
 
 

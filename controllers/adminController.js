@@ -38,7 +38,6 @@ const adminVerification = (req, res) => {
     if (req.body) {
       if (email == adminDetails.email && password == adminDetails.password) {
         req.session.adminAuth = email;
-        console.log("Admin session created");
         res.redirect("/admin/dashboard");
       } else {
         res.render("admin/layouts/adminLogin", {
@@ -51,7 +50,6 @@ const adminVerification = (req, res) => {
       });
     }
   } catch (error) {
-    console.log(" Admin verification error: " + error.message);
     res.render("admin/layouts/adminLogin", {
       invalid: "Invalid Credentials",
     });
@@ -112,7 +110,6 @@ const unBlockUser = async (req, res) => {
 
 const adminLogOut = (req, res) => {
   req.session.destroy();
-  console.log("Admin session destroyed");
   res.redirect("/admin/");
   res.end();
 };
@@ -185,7 +182,6 @@ const submitEditCategory = async (req, res) => {
 
     resp
       .then((data) => {
-        console.log(data.secure_url);
         Category.updateOne(
           { _id: req.query.id },
           {
@@ -250,19 +246,13 @@ const categorySubmit = (req, res) => {
 
     // Upload
     let fileName = req.file;
-    console.log(fileName);
     const resp = cloudinary.uploader.upload(fileName.path, {
       transformation: [
         { width: 1440, height: 1920, gravity: "face", crop: "fill" },
       ],
     });
-    // const resp = cloudinary.url(filenamesss,{ transformation: [
-    //   { width: 485, height: 485, gravity: "face", crop: "fill" },
-    // ]})
-
     resp
       .then((data) => {
-        console.log(data.secure_url);
         let newCategory = new Category({
           name: req.body.name,
 
@@ -316,9 +306,6 @@ const submitProduct = async (req, res) => {
     });
 
     let allImages = [];
-
-    console.log(allImages);
-
     const files = req.files;
     const promises = await files.map((file) => {
       return new Promise((resolve, reject) => {
@@ -341,7 +328,6 @@ const submitProduct = async (req, res) => {
     });
 
     Promise.all(promises).then(async (results) => {
-      console.log("All files uploaded successfully", results);
       let newProduct = new Product({
         name: req.body.name,
         model: req.body.model,
@@ -353,7 +339,6 @@ const submitProduct = async (req, res) => {
         price: req.body.price,
         image: results,
       });
-      // newProduct.save();
 
       newProduct.save();
 
@@ -416,7 +401,6 @@ const submitEditProduct = async (req, res) => {
   });
 
   Promise.all(promises).then(async (results) => {
-    console.log("All files uploaded successfully", results);
     await Product.updateOne(
       { _id: req.query.id },
       {
@@ -554,8 +538,6 @@ const addCoupon = async (req, res) => {
 
 const submitCoupon = async (req, res) => {
   try {
-    console.log(req.body.newProduct);
-
     let newCoupon = new Coupon({
       name: req.body.name,
 
@@ -628,8 +610,6 @@ const submitBanner = async (req, res) => {
 
     // Upload
     let fileName = req.file;
-    console.log(fileName);
-
     const resp = cloudinary.uploader.upload(fileName.path, {
       transformation: [
         { width: 1341, height: 213, gravity: "face", crop: "fill" },
@@ -638,7 +618,6 @@ const submitBanner = async (req, res) => {
 
     resp
       .then((data) => {
-        console.log(data.secure_url);
         let newBanner = new Banner({
           status: true,
           image: data.secure_url,
@@ -683,8 +662,6 @@ const unBlockBanner = async (req, res) => {
 };
 
 const changeOrder = async (req, res) => {
-  console.log("been here");
-
   await Order.updateOne(
     { _id: req.body.id },
     {
@@ -792,10 +769,6 @@ const salesReport = async (req, res) => {
           res.status(200)
        })
       }else if(req.body.type === "pdf"){
-        
-        
-        
-        
         const data={
 
           productData:OrderDetails,from : req.body.from, toDate : req.body.toDate
@@ -804,8 +777,6 @@ const salesReport = async (req, res) => {
       let option={
 
           format:'A3',
-          // width:800,
-          // height:600
       }
       const filePath= path.resolve(__dirname,'../views/admin/layouts/sales_report_pdf.ejs')
       const htmlString=fs.readFileSync(filePath).toString()
@@ -829,7 +800,6 @@ const salesReport = async (req, res) => {
                        res.setHeader('Content-Type','application/pdf');
                        res.setHeader('Content-Disposition','attachement;filename="sales_report_from_'+req.body.from+'_to_'+req.body.toDate+'.pdf"');
                        res.send(file)
-                      console.log('pdf generated')
 
                       
               
@@ -859,7 +829,6 @@ const chartReport = async (req, res) => {
       pay = pay + 1;
     }
   }
-  console.log(cod + " " + pay);
   res.json({ cod, pay });
 };
 
@@ -879,9 +848,6 @@ const areaChartReport = async (req, res) => {
   let oct = 0;
   let nov = 0;
   let dec = 0;
-
-  // console.log(OrderDetails)
-
   OrderDetails.forEach(function (items) {
     if (items.month == 1) {
       jan = jan + items.price;
