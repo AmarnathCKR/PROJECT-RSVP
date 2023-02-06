@@ -254,7 +254,7 @@ const resendOTP = (req, res) => {
       req.session.authOTP = false;
     }, 180000);
 
-    let transporter = nodemailer.createTransport({
+    var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.NODEMAIL,
@@ -262,7 +262,7 @@ const resendOTP = (req, res) => {
       },
     });
 
-    let mailOptions = {
+    var mailOptions = {
       from: "amarnathchakkiyar@gmail.com",
       to: req.session.emailOTP,
       subject: "YOUR OTP",
@@ -2823,6 +2823,9 @@ const clearFilter = async (req, res) => {
   colorFilter = null;
   categoryFilter = null;
   searchFilter = null;
+  const productCount = await Product.find({ status: true });
+  
+  productEmers = productCount;
 
   product = productEmers.slice(0, 6);
   current = 1;
